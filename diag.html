@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="icons/icon-192.png">
+<title>Connection test</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="kicker">Diagnostics</div>
+<h1>Connection test</h1>
+<p class="subtitle">Does this browser see your piano? Run it, then send me what it says.</p>
+
+<p>This page deliberately does <em>not</em> use the workspace's own MIDI code — it
+probes the browser directly, so it still tells the truth even if something in
+<code>assets/midi.js</code> is broken.</p>
+
+<div class="drill-controls" style="justify-content:flex-start">
+  <button class="drill-btn" id="run">Run the test</button>
+  <button class="drill-btn drill-btn-ghost" id="copy">Copy results</button>
+</div>
+
+<div id="report"></div>
+
+<h2>Live note log</h2>
+<p>Once the test has run, <strong>play a few keys</strong>. Every message the
+browser receives appears here. If the report above says a device was found but
+nothing shows up here, the piano is connected but not transmitting.</p>
+
+<div class="drill-box">
+  <div class="drill-label">Raw incoming messages</div>
+  <pre id="log" style="max-height:16rem;overflow:auto;font-size:.8rem;margin:0">— nothing yet —</pre>
+</div>
+
+<h2>If it isn't working</h2>
+
+<ol>
+  <li><strong>Is the piano's Bluetooth on?</strong> On the FP-10 it is on by
+  default, and the <code>[FUNCTION]</code> button lights when a connection is
+  live. Roland's toggle is <code>[FUNCTION]</code> + <strong>C7♯</strong> for on,
+  <code>[FUNCTION]</code> + <strong>D7</strong> for off.</li>
+  <li><strong>Did you pair inside the app?</strong> This is the step nearly
+  everyone misses. Bluetooth MIDI devices <em>never</em> appear in iOS
+  Settings → Bluetooth. Pairing happens in the app's own Bluetooth MIDI
+  screen — confirmed in the
+  <a href="https://www.manualslib.com/manual/1854388/Roland-Fp-10.html?page=10">FP-10 manual</a>.</li>
+  <li><strong>Are you in the right browser?</strong> On iPad, Safari can never
+  do this. Use the free
+  <a href="https://apps.apple.com/us/app/web-midi-browser/id953846217">Web MIDI Browser</a>,
+  pair the piano with its Bluetooth button, then load this page in it.</li>
+  <li><strong>Order matters.</strong> Piano on → open the app → pair → then open
+  this page.</li>
+</ol>
+
+<div class="ask-agent">
+  Send me the report — screenshot it or hit <strong>Copy results</strong> and
+  paste it. It tells me exactly which step is failing, which saves us guessing
+  back and forth.
+</div>
+
+<div class="nav">
+  <span><a href="index.html">← Course index</a></span>
+  <span><a href="lessons/0001-keyboard-geography.html">Lesson 1 →</a></span>
+</div>
+
+<script>
+(function () {
+  var report = document.getElementById("report");
+  var logEl = document.getElementById("log");
+  var lines = [];
+  var msgCount = 0;
+
+  function row(label, value, verdict) {
+    return { label: label, value: String(value), verdict: verdict || "" };
+  }
+
+  function render(rows) {
+    var t = document.createElement("table");
+    rows.forEach(function (r) {
+      var tr = document.createElement("tr");
+      var th = document.createElement("td");
+      th.style.textAlign = "left";
+      th.innerHTML = "<strong>" + r.label + "</strong>";
+      var td = document.createElement("td");
+      td.style.textAlign = "left";
+      td.style.wordBreak = "break-word";
+      td.textContent = r.value;
+      if (r.verdict === "good") { td.style.color = "var(--good)"; }
+      if (r.verdict === "bad") { td.style.color = "var(--bad)"; }
+      tr.appendChild(th); tr.appendChild(td);
+      t.appendChild(tr);
+    });
+    report.innerHTML = "";
+    report.appendChild(t);
+  }
+
+  function shapeOf(a) {
+    if (!a) return "no MIDIAccess";
+    var src = a.inputs;
+    if (!src && typeof a.getInputs === "function") return "getInputs() method (old spec)";
+    if (!src) return "no .inputs at all";
+    if (typeof Map !== "undefined" && src instanceof Map) return "Map (current spec)";
+    if (Array.isArray(src)) return "Array (old spec / shim)";
+    if (typeof src.length === "number") return "array-like, length " + src.length;
+    return Object.prototype.toString.call(src);
+  }
+
+  function listInputs(a) {
+    var out = [];
+    var src = a && a.inputs;
+    if (!src && a && typeof a.getInputs === "function") src = a.getInputs();
+    if (!src) return out;
+    if (typeof src.forEach === "function") src.forEach(function (i) { if (i) out.push(i); });
+    else if (typeof src.length === "number") for (var k = 0; k < src.length; k++) out.push(src[k]);
+    return out;
+  }
+
+  function logMessage(e) {
+    msgCount++;
+    var d = e.data || [];
+    var bytes = [];
+    for (var i = 0; i < d.length; i++) bytes.push(d[i]);
+    var names = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    var note = bytes.length > 1 ? bytes[1] : null;
+    var pretty = note !== null ? names[((note % 12) + 12) % 12] + (Math.floor(note / 12) - 1) : "";
+    lines.unshift("[" + bytes.join(" ") + "]  " + pretty);
+    if (lines.length > 40) lines.pop();
+    logEl.textContent = lines.join("\n");
+  }
+
+  function baseRows() {
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+    var secure = window.isSecureContext === true || location.protocol === "https:";
+    var has = typeof navigator.requestMIDIAccess === "function";
+    return [
+      row("Page URL", location.href),
+      row("Secure context", secure ? "yes" : "NO — Web MIDI cannot work", secure ? "good" : "bad"),
+      row("Looks like iOS/iPadOS", isIOS ? "yes" : "no"),
+      row("Touch points", navigator.maxTouchPoints),
+      row("requestMIDIAccess exists", has ? "YES" : "NO — this browser cannot do MIDI",
+          has ? "good" : "bad"),
+      row("Browser", ua)
+    ];
+  }
+
+  function run() {
+    var rows = baseRows();
+    if (typeof navigator.requestMIDIAccess !== "function") {
+      rows.push(row("Verdict",
+        "This browser will never see the piano. On iPad, use the Web MIDI Browser app.", "bad"));
+      render(rows);
+      return;
+    }
+    rows.push(row("Status", "asking for MIDI access…"));
+    render(rows);
+
+    function done(a, how) {
+      var inputs = listInputs(a);
+      var names = inputs.map(function (i) { return i.name || "unnamed"; });
+      inputs.forEach(function (i) { i.onmidimessage = logMessage; });
+      var r = baseRows();
+      r.push(row("Access granted", "yes (" + how + ")", "good"));
+      r.push(row("inputs shape", shapeOf(a)));
+      r.push(row("Devices found", inputs.length));
+      r.push(row("Device names", names.length ? names.join(", ") : "— none —",
+                 names.length ? "good" : "bad"));
+      r.push(row("Verdict", names.length
+        ? "Connected. Now play some keys and watch the log below."
+        : "MIDI works, but no device is paired. Pair the piano inside this app, then re-run.",
+        names.length ? "good" : "bad"));
+      render(r);
+    }
+
+    function failed(err, tried) {
+      var r = baseRows();
+      r.push(row("Access granted", "NO", "bad"));
+      r.push(row("Tried", tried));
+      r.push(row("Error", (err && (err.message || err.name)) || "unknown"));
+      r.push(row("Verdict", "The browser refused MIDI access. Check its permissions.", "bad"));
+      render(r);
+    }
+
+    try {
+      navigator.requestMIDIAccess().then(
+        function (a) { done(a, "no sysex"); },
+        function () {
+          // Some builds of the iOS shim only grant access when sysex is asked for.
+          try {
+            navigator.requestMIDIAccess({ sysex: true }).then(
+              function (a) { done(a, "with sysex"); },
+              function (e) { failed(e, "plain, then sysex"); });
+          } catch (e2) { failed(e2, "plain, then sysex (threw)"); }
+        });
+    } catch (e) { failed(e, "plain (threw synchronously)"); }
+  }
+
+  document.getElementById("run").onclick = run;
+  document.getElementById("copy").onclick = function () {
+    var text = "";
+    report.querySelectorAll("tr").forEach(function (tr) {
+      text += tr.children[0].textContent + ": " + tr.children[1].textContent + "\n";
+    });
+    text += "\nMessages received: " + msgCount + "\n" + lines.slice(0, 10).join("\n");
+    if (navigator.clipboard) navigator.clipboard.writeText(text);
+    this.textContent = "Copied";
+    var b = this;
+    setTimeout(function () { b.textContent = "Copy results"; }, 1500);
+  };
+
+  render(baseRows());
+})();
+</script>
+
+</body>
+</html>

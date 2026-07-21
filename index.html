@@ -18,18 +18,57 @@
 
 <div class="callout">
   <span class="callout-label">Which device to use</span>
-  <strong>On a computer, in Chrome or Edge:</strong> the drills read your keyboard
-  directly and grade what you actually play. This is the way to practise.
+  <strong>Computer, in Chrome or Edge:</strong> works out of the box. The drills
+  read your keyboard and grade what you actually play.
   <br><br>
-  <strong>On iPad or iPhone:</strong> the lessons and reference sheets work fine —
-  add this to your home screen and it opens like an app, which makes a good music
-  stand next to the piano. But <em>no</em> iOS browser can read a MIDI keyboard
-  (<a href="https://caniuse.com/midi">Web MIDI has never shipped in WebKit</a>, and
-  every iOS browser is required to use WebKit — so Chrome for iOS is no better than
-  Safari). On iPad the drills work by <em>tapping</em> the on-screen keys. Useful
-  for the naming drills; not a substitute for playing.
+  <strong>iPad:</strong> works too, but it needs a different browser — see below.
+  Safari and Firefox on desktop have no Web MIDI either; in any browser without
+  it, the drills fall back to tapping the on-screen keys.
   <br><br>
-  Safari and Firefox on desktop have no Web MIDI either — same tapping fallback.
+  Not sure what your setup is doing? Run the <a href="diag.html">connection test</a>.
+</div>
+
+<h2 id="ipad">Setting up the iPad</h2>
+
+<p>Your piano and your iPad get along fine — GarageBand reads it happily. The
+snag is narrower than it sounds: <strong>Safari refuses to hand MIDI to web
+pages.</strong> Apple
+<a href="https://caniuse.com/midi">declined the Web MIDI API in 2020</a> over
+fingerprinting concerns and has never shipped it, and because every iOS browser
+is required to use Apple's engine, Chrome for iOS is no better. So there is
+nothing to install <em>into</em> Safari — you need a browser that bridges MIDI
+itself.</p>
+
+<p>One exists, it's free, and it is the only one:
+<a href="https://apps.apple.com/us/app/web-midi-browser/id953846217">Web MIDI
+Browser</a>. Do this in order — the order is the part people get wrong:</p>
+
+<ol>
+  <li><strong>Turn the piano on</strong> and make sure Bluetooth is enabled. On
+  the FP-10 it is on by default, and the <code>[FUNCTION]</code> button lights
+  when a connection is live. The toggle is <code>[FUNCTION]</code> +
+  <strong>C7♯</strong> for on, <code>[FUNCTION]</code> + <strong>D7</strong> for off.</li>
+  <li><strong>Open Web MIDI Browser</strong> — not Safari.</li>
+  <li><strong>Pair the piano using the app's own Bluetooth button.</strong>
+  This is the step that catches everyone: Bluetooth MIDI instruments
+  <em>never</em> show up in iOS Settings → Bluetooth. Pairing always happens
+  inside the app that wants the MIDI. Roland's
+  <a href="https://www.manualslib.com/manual/1854388/Roland-Fp-10.html?page=10">own
+  manual</a> pairs through the app's screen for the same reason.</li>
+  <li><strong>Then</strong> load this site in that browser and open a lesson.</li>
+</ol>
+
+<div class="callout">
+  <span class="callout-label">Worth knowing</span>
+  Web MIDI Browser was last updated in 2016, so it may or may not behave on a
+  current iPad. If anything looks wrong, open the
+  <a href="diag.html">connection test</a> — it reports exactly what the browser
+  can and can't see, which is far faster than guessing.
+  <br><br>
+  Also: a third-party browser can't "Add to Home Screen". So on iPad it's
+  <strong>Safari</strong> for reading (install it to the home screen — it makes a
+  good music stand) and <strong>Web MIDI Browser</strong> for graded drills. Two
+  icons, two jobs.
 </div>
 
 <h2>Lessons</h2>
