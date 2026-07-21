@@ -1,0 +1,13 @@
+# Personal study records — deliberately NOT published.
+#
+# GitHub Pages requires a public repo on a free plan, and these files hold the
+# user's goals, instrument details and a running record of specific weak spots
+# and repertoire ambitions. The site works identically without them; nothing
+# under lessons/, reference/ or index.html links to them.
+MISSION.md
+NOTES.md
+RESOURCES.md
+learning-records/
+
+.DS_Store
+__pycache__/

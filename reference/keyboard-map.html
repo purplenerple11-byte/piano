@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Reference · Keyboard Map</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+</head>
+<body>
+
+<div class="kicker">Reference</div>
+<h1>The keyboard map</h1>
+<p class="subtitle">One octave, every name. Print it, or keep it open beside the keys.</p>
+
+<div id="kb-ref"
+     data-keyboard
+     data-from="60"
+     data-octaves="1"
+     data-labels="all"
+     data-groups="true"
+     data-interactive="true"
+     data-caption="Starting at middle C (MIDI note 60). Play a key to light it."></div>
+
+<h2>Finding anything, fast</h2>
+
+<table>
+  <tr><th>To find</th><th>Look for</th></tr>
+  <tr><td><strong>C</strong></td><td>White key left of the <strong>2</strong>-group</td></tr>
+  <tr><td><strong>D</strong></td><td>White key <em>between</em> the 2-group</td></tr>
+  <tr><td><strong>E</strong></td><td>White key right of the <strong>2</strong>-group</td></tr>
+  <tr><td><strong>F</strong></td><td>White key left of the <strong>3</strong>-group</td></tr>
+  <tr><td><strong>G</strong></td><td>White key between the 1st and 2nd of the 3-group</td></tr>
+  <tr><td><strong>A</strong></td><td>White key between the 2nd and 3rd of the 3-group</td></tr>
+  <tr><td><strong>B</strong></td><td>White key right of the <strong>3</strong>-group</td></tr>
+</table>
+
+<p>The two seams with <em>no</em> black key between them are <strong>E–F</strong>
+and <strong>B–C</strong>. Everything that goes wrong on this keyboard goes wrong
+at one of those two seams.</p>
+
+<h2>The five black keys, both names</h2>
+
+<table>
+  <tr><th>Group</th><th>Sharp name</th><th>Flat name</th><th>Sits between</th></tr>
+  <tr><td rowspan="2">2-group</td><td>C♯</td><td>D♭</td><td>C and D</td></tr>
+  <tr><td>D♯</td><td>E♭</td><td>D and E</td></tr>
+  <tr><td rowspan="3">3-group</td><td>F♯</td><td>G♭</td><td>F and G</td></tr>
+  <tr><td>G♯</td><td>A♭</td><td>G and A</td></tr>
+  <tr><td>A♯</td><td>B♭</td><td>A and B</td></tr>
+</table>
+
+<div class="callout">
+  <span class="callout-label">The rule, not the table</span>
+  <strong>Sharp = one key to the right. Flat = one key to the left.</strong>
+  Applied to <em>any</em> note, including white ones: E♯ is the key right of E,
+  which is F. The table above is just this rule run five times — learn the rule
+  and you can regenerate the table, which is why the rule is the thing worth
+  memorising.
+</div>
+
+<h2>Numbers worth knowing</h2>
+
+<table>
+  <tr><th>Quantity</th><th>Count</th></tr>
+  <tr><td>Keys in an octave</td><td>12</td></tr>
+  <tr><td>White keys in an octave</td><td>7</td></tr>
+  <tr><td>Black keys in an octave</td><td>5 (as 2 + 3)</td></tr>
+  <tr><td>Keys on a full piano</td><td>88 (A0 to C8)</td></tr>
+  <tr><td>MIDI number of middle C</td><td>60 (called C4)</td></tr>
+</table>
+
+<div class="ask-agent">
+  This sheet is deliberately thin — it holds only what lesson 1 established.
+  It will grow as later lessons add the staff landmarks, key signatures, and
+  chord shapes. Ask me to extend it whenever something here feels incomplete.
+</div>
+
+<div class="nav">
+  <span><a href="../index.html">← Course index</a></span>
+  <span><a href="../lessons/0001-keyboard-geography.html">Lesson 1: Keyboard geography →</a></span>
+</div>
+
+</body>
+</html>

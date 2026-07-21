@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 1 · Keyboard Geography</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/keydrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 01 · Geography</div>
+<h1>Name any key in under a second</h1>
+<p class="subtitle">The black keys are not obstacles. They are the map legend.</p>
+
+<p>You know C chords, which means you know one shape in one place. The reason the
+rest of the keyboard feels far away is that you find notes by <em>counting up
+from C</em>. Counting is fine at three notes a minute and useless at three notes a
+second. This lesson replaces counting with recognition.</p>
+
+<p>Here is the whole idea, and it is genuinely the whole idea:</p>
+
+<div class="callout">
+  <span class="callout-label">The one thing</span>
+  Black keys repeat forever in a group of <strong>two</strong> and a group of
+  <strong>three</strong>. <strong>C</strong> is the white key immediately left of
+  the group of two. <strong>F</strong> is the white key immediately left of the
+  group of three. Everything else is counted from one of those, never from the
+  end of the keyboard.
+</div>
+
+<p>That is why the pattern exists at all: seven white keys and five black keys
+per octave, and five will not split evenly into a symmetric pattern — so it
+splits 2 and 3, and that asymmetry is exactly what makes the keyboard readable
+by touch. A perfectly even keyboard would be unplayable in the dark.</p>
+
+<h2>Connect your keyboard</h2>
+
+<p>Plug the keyboard into the computer by USB and press connect. The drills below
+will then grade what you actually <em>play</em>, not what you click — which is the
+point, since the skill is in your hands, not your mouse.</p>
+
+<div data-midi-bar></div>
+
+<p class="subtitle" style="font-size:.9rem">No keyboard to hand? Everything still
+works — just click the on-screen keys instead.</p>
+
+<h2>The map</h2>
+
+<p>Play anything. It lights up. Find the group of two, then the group of three,
+then the group of two again — say <em>"two, three, two, three"</em> out loud as you
+move up. You are learning to see the grouping before you see any letter.</p>
+
+<div id="kb-explore"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="all"
+     data-groups="true"
+     data-interactive="true"
+     data-title="Explore — play or click"
+     data-caption="Notice: <strong>C</strong> hugs the left of every 2-group, <strong>F</strong> hugs the left of every 3-group, and the pattern restarts every twelve keys. Two octaves shown; your keyboard is the same thing repeated."></div>
+
+<h3>Why every black key has two names</h3>
+
+<p>A black key is named by the white key it leans on. <strong>Sharp (♯)</strong>
+means <em>one key to the right</em>; <strong>flat (♭)</strong> means <em>one key to
+the left</em>. The black key between D and E is therefore D♯ <em>and</em> E♭ — one
+key, two names, depending on which neighbour you came from. Two names is not a
+complication to memorise later; it is the fastest way to find the key now,
+because you can approach it from whichever side you already know.</p>
+
+<div class="callout">
+  <span class="callout-label">Watch for</span>
+  There is <em>no</em> black key between E–F or between B–C. Those two pairs are
+  the seams of the 2-group and 3-group. Nearly every beginner mistake on this
+  keyboard is a note found by assuming a black key sits there.
+</div>
+
+<h2>Drill 1 · Name → key</h2>
+
+<p>A name appears. Play it, in any octave, as fast as you can. The clock starts
+the instant the name appears, so don't read it twice.</p>
+
+<div id="kb-drill1"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-drill="find"
+     data-kb="kb-drill1"
+     data-pool="black"
+     data-rounds="12"
+     data-title="Black keys only — play what you're shown"
+     data-caption="Black keys only, deliberately. This is the part you said felt foreign, and the only way it stops feeling foreign is repetition under mild time pressure."></div>
+
+<p>When black keys are landing near a second, run the same drill on everything —
+white and black interleaved. <a href="#" onclick="mixPool(event)">Switch this
+drill to all twelve keys.</a></p>
+
+<h2>Drill 2 · Key → name</h2>
+
+<p>Now the other direction. A key lights up; name it. Recognising a key and
+producing a key are two different skills, and only drilling both makes the map
+work in both directions — which is what sight reading will demand of you later.</p>
+
+<div id="kb-drill2"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="false"
+     data-live="false"></div>
+
+<div data-drill="name"
+     data-kb="kb-drill2"
+     data-pool="all"
+     data-rounds="12"
+     data-title="Which key is lit?"
+     data-caption="Answer from the grouping, not from counting. If you catch yourself walking up from C, that is the habit this drill exists to break."></div>
+
+<h2>Check yourself</h2>
+
+<p>No keyboard for this part — answer from memory. Getting it wrong here is more
+useful than getting it right with the keyboard in front of you.</p>
+
+<div class="retrieval-quiz" data-quiz="geo-quiz"></div>
+
+<script type="application/json" id="geo-quiz">
+[
+  { "q": "Which white key sits immediately to the left of a group of two black keys?",
+    "a": "C", "choices": ["C", "F", "G", "B"] },
+  { "q": "Which white key sits immediately to the left of a group of three black keys?",
+    "a": "F", "choices": ["F", "C", "E", "A"] },
+  { "q": "Between which pair of white keys is there no black key at all?",
+    "a": "E and F", "choices": ["E and F", "F and G", "A and B", "C and D"] },
+  { "q": "The black key directly to the right of D also goes by which other name?",
+    "a": "E flat", "choices": ["E flat", "C sharp", "D flat", "F sharp"] },
+  { "q": "How many black keys are there in one full octave of the keyboard?",
+    "a": "Five", "choices": ["Five", "Four", "Six", "Seven"] },
+  { "q": "You are lost on the keyboard. What is the fastest thing to look at?",
+    "a": "The black key grouping", "choices": ["The black key grouping", "The lowest note there is", "The letters on the staff", "The gap in the middle"] }
+]
+</script>
+
+<h2>What to do between sessions</h2>
+
+<p>Ten minutes is enough. Two minutes of Drill 1, two of Drill 2, then spend the
+rest playing a C chord and moving the whole shape up to sit on D, then E, then F
+— naming out loud each key you land on. It will sound wrong on some of them.
+That is a later lesson, and hearing why it sounds wrong is a head start on it.</p>
+
+<div class="callout">
+  <span class="callout-label">Primary source</span>
+  Read <a href="https://www.musicandtheory.com/how-to-read-music-using-intervals-and-landmark-notes-vs-mnemonics/">
+  "How to Read Music Using Intervals and Landmark Notes vs. Mnemonics"</a>
+  (Music and Theory). It is the case against the mnemonics you have probably met
+  — <em>Every Good Boy Deserves Fudge</em> and friends — and for the landmark
+  method this course uses instead. Lesson 2 applies the same logic to the staff
+  that this lesson applied to the keys: memorise a handful of anchors, read
+  everything else as a distance from one of them. Skim it now; it will make
+  lesson 2 half the work.
+</div>
+
+<div class="ask-agent">
+  <strong>Stuck, curious, or think something here is wrong?</strong> Ask me — I'm
+  your teacher for this, not just the author of the page. Good things to ask
+  after this lesson: why sharps and flats both exist when they name the same key,
+  why the keyboard has twelve notes rather than some rounder number, or what your
+  median time actually needs to be before moving on. (Roughly: under 1.5s on all
+  twelve, with 11 of 12 correct.)
+</div>
+
+<div class="nav">
+  <span><a href="../index.html">← Course index</a></span>
+  <span><a href="../reference/keyboard-map.html">Reference: Keyboard map →</a></span>
+</div>
+
+<script>
+// The "switch to all twelve" link retargets drill 1's pool and rebuilds it in
+// place, so the harder version lives in the same lesson rather than a new page.
+function mixPool(e) {
+  e.preventDefault();
+  var d = document.querySelector('[data-drill="find"]');
+  d.setAttribute("data-pool", "all");
+  d.setAttribute("data-title", "All twelve keys — play what you're shown");
+  d.setAttribute("data-caption", "Interleaved white and black. Harder than either alone, and the reason it is harder is exactly why it works.");
+  KeyDrill.build(d);
+  d.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+
+</body>
+</html>

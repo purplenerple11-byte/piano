@@ -1,0 +1,456 @@
+/* Shared stylesheet for the Piano workspace — lessons and reference sheets.
+   Tufte-inspired: serif body, generous whitespace, minimal chrome.
+   Structure deliberately mirrors the clep-precalculus workspace stylesheet so
+   both courses feel like they came from the same hand; the accent differs so a
+   glance tells you which course you're in. */
+
+:root {
+  --bg: #fdfcf9;
+  --text: #1a1a1a;
+  --muted: #5c5c5c;
+  --rule: #d9d5ca;
+  --accent: #3f4c86;
+  --accent-soft: #e7e9f4;
+  --code-bg: #f1efe8;
+  --good: #2e6b3e;
+  --good-soft: #e5f1e6;
+  --bad: #a1332a;
+  --bad-soft: #f7e6e4;
+  --key-white: #fbfaf6;
+  --key-white-edge: #b9b4a7;
+  --key-black: #23211d;
+  --max-width: 720px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1a18;
+    --text: #ecebe6;
+    --muted: #a8a49a;
+    --rule: #393730;
+    --accent: #9aa8e6;
+    --accent-soft: #262a41;
+    --code-bg: #282621;
+    --good: #7fbf8f;
+    --good-soft: #22331f;
+    --bad: #e08278;
+    --bad-soft: #3a201d;
+    --key-white: #dedbd2;
+    --key-white-edge: #6f6b61;
+    --key-black: #171613;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1b1a18;
+  --text: #ecebe6;
+  --muted: #a8a49a;
+  --rule: #393730;
+  --accent: #9aa8e6;
+  --accent-soft: #262a41;
+  --code-bg: #282621;
+  --good: #7fbf8f;
+  --good-soft: #22331f;
+  --bad: #e08278;
+  --bad-soft: #3a201d;
+  --key-white: #dedbd2;
+  --key-white-edge: #6f6b61;
+  --key-black: #171613;
+}
+
+:root[data-theme="light"] {
+  --bg: #fdfcf9;
+  --text: #1a1a1a;
+  --muted: #5c5c5c;
+  --rule: #d9d5ca;
+  --accent: #3f4c86;
+  --accent-soft: #e7e9f4;
+  --code-bg: #f1efe8;
+  --good: #2e6b3e;
+  --good-soft: #e5f1e6;
+  --bad: #a1332a;
+  --bad-soft: #f7e6e4;
+  --key-white: #fbfaf6;
+  --key-white-edge: #b9b4a7;
+  --key-black: #23211d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.55;
+  max-width: var(--max-width);
+  margin: 3.5rem auto;
+  padding: 0 1.5rem 4rem;
+}
+
+h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+h1 { font-size: 1.9rem; margin-bottom: 0.2rem; }
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.3rem;
+}
+h3 { font-size: 1.1rem; margin-top: 1.8rem; }
+
+.kicker {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle { color: var(--muted); font-size: 1.05rem; margin-top: 0; }
+
+a, a:visited { color: var(--accent); }
+
+.rule { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+.callout {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 0.9rem 1.1rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.callout-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.05em 0.3em;
+  border-radius: 3px;
+}
+
+table { border-collapse: collapse; width: 100%; margin: 1.2rem 0; font-size: 0.95rem; }
+th, td { border: 1px solid var(--rule); padding: 0.45rem 0.7rem; text-align: center; }
+th {
+  background: var(--code-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ask-agent {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--code-bg);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-top: 2rem;
+}
+
+/* ── Quiz (shared with clep-precalculus) ─────────────────── */
+
+.quiz-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 1.3rem 1.4rem;
+  margin: 1.2rem 0;
+}
+.quiz-progress { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+.quiz-q {
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.quiz-choices { display: flex; flex-direction: column; gap: 0.5rem; }
+.quiz-choice-btn, .quiz-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+.quiz-choice-btn:hover, .quiz-btn:hover { border-color: var(--accent); }
+.quiz-choice-btn:disabled { opacity: 0.6; cursor: default; }
+.quiz-form { display: flex; gap: 0.6rem; }
+.quiz-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--text);
+}
+.quiz-feedback { display: none; margin-top: 0.9rem; padding: 0.6rem 0.8rem; border-radius: 5px; font-size: 0.9rem; }
+.quiz-good { background: var(--good-soft); color: var(--good); display: block; }
+.quiz-bad { background: var(--bad-soft); color: var(--bad); display: block; }
+.quiz-next { margin-top: 0.8rem; }
+.quiz-done { font-size: 1.2rem; margin-bottom: 0.8rem; }
+
+/* ── MIDI connection banner ──────────────────────────────── */
+
+.midi-bar {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  margin: 1.5rem 0;
+}
+
+.midi-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--muted);
+  flex: none;
+}
+.midi-dot-on { background: var(--good); }
+.midi-dot-off { background: var(--bad); }
+
+.midi-msg { color: var(--muted); flex: 1; min-width: 12rem; line-height: 1.4; }
+.midi-msg strong { color: var(--text); font-weight: 600; }
+
+.midi-btn {
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  flex: none;
+}
+.midi-btn:hover { filter: brightness(0.96); }
+.midi-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ── Keyboard widget ─────────────────────────────────────── */
+
+.kbd-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.kbd-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.kbd-svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+
+.kbd-w { fill: var(--key-white); stroke: var(--key-white-edge); stroke-width: 1.5; }
+.kbd-b { fill: var(--key-black); stroke: var(--key-black); stroke-width: 1.5; }
+.kbd-key { cursor: pointer; }
+.kbd-key-static { cursor: default; }
+
+/* Highlight states. Marked !important so they beat the base fill regardless of
+   which class was written first in the file. */
+.kbd-hi { fill: var(--accent) !important; stroke: var(--accent) !important; }
+.kbd-good { fill: var(--good) !important; stroke: var(--good) !important; }
+.kbd-bad { fill: var(--bad) !important; stroke: var(--bad) !important; }
+
+.kbd-name {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.kbd-name-w { fill: var(--muted); }
+.kbd-name-b { fill: var(--key-white); }
+
+/* The two-black / three-black grouping brackets drawn above the keys. */
+.kbd-group { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.55; }
+.kbd-group-txt {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-anchor: middle;
+  fill: var(--accent);
+}
+
+.kbd-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Key drill ───────────────────────────────────────────── */
+
+.drill-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.2rem 1.3rem;
+  margin: 1.5rem 0;
+}
+
+.drill-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.drill-stage {
+  text-align: center;
+  padding: 1.1rem 0.5rem 0.9rem;
+  border-radius: 6px;
+  background: var(--code-bg);
+  margin-bottom: 0.9rem;
+}
+
+.drill-cue {
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--text);
+  display: block;
+  min-height: 3.4rem;
+}
+.drill-cue-small { font-size: 1.15rem; line-height: 1.4; color: var(--muted); }
+
+.drill-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; min-height: 1.2rem; }
+.drill-sub-good { color: var(--good); font-weight: 600; }
+.drill-sub-bad { color: var(--bad); font-weight: 600; }
+
+.drill-stats {
+  display: flex;
+  gap: 1.4rem;
+  justify-content: center;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.8rem;
+  margin-top: 0.9rem;
+  flex-wrap: wrap;
+}
+.drill-stat { text-align: center; }
+.drill-stat-val { display: block; font-size: 1.3rem; color: var(--accent); }
+.drill-stat-key {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.drill-controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+.drill-btn {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+.drill-btn:hover { filter: brightness(0.96); }
+.drill-btn-ghost { background: var(--bg); border-color: var(--rule); color: var(--muted); font-weight: 400; }
+
+.drill-answers { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.drill-ans {
+  font-family: inherit;
+  font-size: 0.95rem;
+  min-width: 3.4rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.drill-ans:hover:not(:disabled) { border-color: var(--accent); }
+.drill-ans:disabled { opacity: 0.45; cursor: default; }
+.drill-ans-good { opacity: 1 !important; border-color: var(--good); background: var(--good-soft); color: var(--good); }
+.drill-ans-bad { opacity: 1 !important; border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+
+.drill-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Index card list ─────────────────────────────────────── */
+
+.card-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.2rem 0 2rem; }
+.card {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  text-decoration: none;
+  color: var(--text);
+}
+.card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.card-num {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--accent);
+  margin-bottom: 0.15rem;
+}
+.card-title {
+  display: block;
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.15rem;
+  margin-bottom: 0.2rem;
+}
+.card-note {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+@media print {
+  body { max-width: 100%; font-size: 12pt; margin: 0; padding: 0.5in; }
+  .ask-agent, .nav, .midi-bar, .drill-controls, .drill-answers { display: none; }
+  a { color: var(--text); text-decoration: none; }
+  .kbd-w { fill: #fff; stroke: #000; }
+  .kbd-b { fill: #000; stroke: #000; }
+}
