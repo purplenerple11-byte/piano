@@ -454,3 +454,59 @@ th {
   .kbd-w { fill: #fff; stroke: #000; }
   .kbd-b { fill: #000; stroke: #000; }
 }
+
+/* ── Grand staff ─────────────────────────────────────────── */
+
+.staff-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.staff-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.staff-svg { width: 100%; height: auto; display: block; }
+
+.staff-line { stroke: var(--text); stroke-width: 1.3; }
+.staff-ledger { stroke-width: 1.6; }
+.staff-brace { stroke: var(--text); stroke-width: 3; }
+
+.staff-clef { fill: var(--text); }
+.staff-clef-fallback {
+  fill: var(--text);
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 34px;
+  font-style: italic;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.staff-note { fill: var(--text); stroke: none; }
+.staff-note-mark { fill: var(--accent); }
+.staff-note-good { fill: var(--good); }
+.staff-note-bad { fill: var(--bad); }
+
+.staff-acc {
+  fill: var(--text);
+  font-size: 20px;
+  text-anchor: middle;
+}
+
+.staff-notelabel {
+  fill: var(--accent);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.staff-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }

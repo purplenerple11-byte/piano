@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 2 · Staff Landmarks</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 02 · Reading</div>
+<h1>Three notes, and everything else is a distance</h1>
+<p class="subtitle">You don't read music by naming notes. You read it by knowing
+where you are.</p>
+
+<h2>First — two minutes on last lesson</h2>
+
+<p>No keyboard. Answer from memory. You scored 3 of 6 on these last time, which
+is the most useful number you've given me: it means you can <em>do</em> it with
+the keyboard in front of you but can't yet <em>picture</em> it. Those feel
+identical while practising and completely different a month later.</p>
+
+<div class="retrieval-quiz" data-quiz="warmup"></div>
+
+<script type="application/json" id="warmup">
+[
+  { "q": "Which white key sits immediately left of the group of two black keys?",
+    "a": "C", "choices": ["C", "F", "G", "B"] },
+  { "q": "Which white key sits immediately left of the group of three black keys?",
+    "a": "F", "choices": ["F", "C", "E", "A"] },
+  { "q": "Name the two pairs of white keys with no black key between them.",
+    "a": "E–F and B–C", "choices": ["E–F and B–C", "F–G and C–D", "A–B and D–E", "G–A and E–F"] },
+  { "q": "Sharp means the key one to the ___ ; flat means one to the ___ .",
+    "a": "right, left", "choices": ["right, left", "left, right", "up, down", "black, white"] }
+]
+</script>
+
+<h2>Why not "Every Good Boy Deserves Fudge"</h2>
+
+<p>You have probably met the mnemonics. They are a trap, and it's worth knowing
+why before we do anything else. A mnemonic makes you <em>recite</em> to find a
+note: you start at the bottom line and walk up a sentence. That is a
+counting strategy, and it fails for exactly the reason counting up from C failed
+you last lesson — it's fine at three notes a minute and useless at three notes a
+second. Good readers don't name notes at all. They see a <strong>shape</strong>
+relative to a place they already know
+(<a href="https://www.musicandtheory.com/how-to-read-music-using-intervals-and-landmark-notes-vs-mnemonics/">Music
+and Theory</a>).</p>
+
+<p>So we do the same thing that worked on the keyboard: memorise a few anchors,
+then read everything else as a distance from the nearest one.</p>
+
+<div class="callout">
+  <span class="callout-label">The three landmarks</span>
+  <strong>Treble G</strong> — the line the treble clef curls around. That's why
+  it's also called the <em>G clef</em>.<br>
+  <strong>Bass F</strong> — the line the bass clef's two dots straddle. The
+  <em>F clef</em>.<br>
+  <strong>Middle C</strong> — the short ledger line floating between the two
+  staves. It's the same key both times, written twice.
+  <br><br>
+  The clefs are not decoration. Each one is a <em>label pointing at its own
+  landmark</em>. Once you see that, two of the three are free.
+</div>
+
+<div id="staff-map"
+     data-staff
+     data-clefs="both"
+     data-landmarks="true"
+     data-title="The whole map, for now"
+     data-caption="Everything you will read for the next while is within a few steps of one of these three. Notice Middle C appears <strong>twice</strong> — once below the treble staff, once above the bass. One key, two addresses, depending on which hand plays it."></div>
+
+<h3>Steps and skips</h3>
+
+<p>Once you're on a landmark, the staff only moves two ways. <strong>Line to the
+very next space</strong> (or space to the next line) is a <em>step</em> — the
+adjacent white key. <strong>Line to the next line</strong> (or space to space) is
+a <em>skip</em> — you miss one white key out. That's the entire mechanic, and it
+maps directly onto your hand: a step is a neighbouring finger, a skip is one
+finger gap.</p>
+
+<div class="callout">
+  <span class="callout-label">Careful</span>
+  A step on the staff means the next <em>letter</em>, not the next key. E to F is
+  a step even though they're touching with no black key between them — and so is
+  F to G, which has a black key in between. The staff counts letters; the
+  keyboard counts keys. Keeping those two apart is most of what makes sharps and
+  flats confusing later.
+</div>
+
+<h2>Now read it with your hands</h2>
+
+<p>A note appears. Play it. This is the whole skill in miniature — symbol in,
+key out — and it's the direction you're slowest in, so this is where the time
+should go.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="staff-drill" data-staff data-clefs="both"></div>
+
+<div id="kb-fb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-staffdrill
+     data-staff="staff-drill"
+     data-kb="kb-fb"
+     data-pool="landmarks"
+     data-rounds="9"
+     data-title="The three landmarks — play what you see"
+     data-caption="Octave matters now. Last lesson any C counted; a note on the staff names <em>one</em> key. Playing the right letter in the wrong octave is the most common miss there is, so the drill calls that out separately."></div>
+
+<p>When the three landmarks are landing without hesitation,
+<a href="#" onclick="widenPool(event)">add a step either side of each one</a> —
+that's eight notes, and the point is that you find them by
+<em>stepping from a landmark</em>, not by naming them.</p>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="staff-quiz"></div>
+
+<script type="application/json" id="staff-quiz">
+[
+  { "q": "The treble clef curls around the line belonging to which note?",
+    "a": "G above middle C", "choices": ["G above middle C", "F below middle C", "C above the staff", "E on the bottom line"] },
+  { "q": "The two dots of the bass clef sit either side of which note's line?",
+    "a": "F below middle C", "choices": ["F below middle C", "G above middle C", "A below the staff", "D on the middle line"] },
+  { "q": "A note moves from a line to the space directly above it. That is a:",
+    "a": "Step to the next letter", "choices": ["Step to the next letter", "Skip over one letter", "Jump of one octave", "Move to a black key"] },
+  { "q": "A note moves from one line to the very next line up. That is a:",
+    "a": "Skip over one letter", "choices": ["Skip over one letter", "Step to the next letter", "Repeat of the same note", "Change of clef"] },
+  { "q": "Why does middle C get drawn in two different places?",
+    "a": "One place per staff", "choices": ["One place per staff", "It is two different keys", "It marks the tempo", "It is always a ledger"] },
+  { "q": "You meet a note you don't recognise. What is the fastest move?",
+    "a": "Step from nearest landmark", "choices": ["Step from nearest landmark", "Recite up from the bottom", "Guess from the shape", "Count every line up"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes. Two of the warm-up quiz above (it will keep re-testing lesson 1
+until those facts are automatic), then the landmark drill until the median drops
+under two seconds. Then one thing away from the screen: <strong>look at your
+keyboard, close your eyes, and find Middle C, then Treble G, then Bass F by
+feel.</strong> That last exercise is aimed squarely at the gap you named —
+picturing the keyboard without looking at it.</p>
+
+<div class="callout">
+  <span class="callout-label">Where this is going</span>
+  <em>Für Elise</em> opens on E and D♯ just above Middle C — a step and a
+  half-step from a landmark you now know. <em>Arctic Nights</em> sits in E minor
+  and leans on F♯ and D♯. Two more lessons of this and the opening of Für Elise
+  stops being notation and starts being a thing your hands do.
+</div>
+
+<div class="ask-agent">
+  <strong>Ask me things.</strong> Especially: why a step on the staff isn't
+  always the next key along, what a ledger line actually is, or why middle C
+  gets two addresses. And tell me your median on the landmark drill — if it's
+  under two seconds we move to reading short phrases instead of single notes.
+</div>
+
+<div class="nav">
+  <span><a href="0001-keyboard-geography.html">← Lesson 1: Keyboard geography</a></span>
+  <span><a href="../reference/keyboard-map.html">Reference: Keyboard map →</a></span>
+</div>
+
+<script>
+function widenPool(e) {
+  e.preventDefault();
+  var d = document.querySelector('[data-staffdrill]');
+  d.setAttribute("data-pool", "steps");
+  d.setAttribute("data-rounds", "12");
+  d.setAttribute("data-title", "Landmarks, plus one step either side");
+  d.setAttribute("data-caption", "Eight notes now. Do not name them — land on the nearest landmark and step. Naming is the slow path and it will not scale.");
+  StaffDrill.build(d);
+  d.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+
+</body>
+</html>
