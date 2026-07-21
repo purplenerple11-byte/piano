@@ -21,9 +21,10 @@
   <strong>Computer, in Chrome or Edge:</strong> works out of the box. The drills
   read your keyboard and grade what you actually play.
   <br><br>
-  <strong>iPad:</strong> works too, but it needs a different browser — see below.
-  Safari and Firefox on desktop have no Web MIDI either; in any browser without
-  it, the drills fall back to tapping the on-screen keys.
+  <strong>iPad:</strong> works too — by cable <em>or</em> Bluetooth — but it needs
+  a different browser, not Safari. See below. On desktop, Safari and Firefox have
+  no Web MIDI either; in any browser without it, the drills fall back to tapping
+  the on-screen keys.
   <br><br>
   Not sure what your setup is doing? Run the <a href="diag.html">connection test</a>.
 </div>
@@ -41,12 +42,27 @@ itself.</p>
 
 <p>One exists, it's free, and it is the only one:
 <a href="https://apps.apple.com/us/app/web-midi-browser/id953846217">Web MIDI
-Browser</a>. Do this in order — the order is the part people get wrong:</p>
+Browser</a>. It reads <em>every</em> MIDI input iPadOS knows about — so you can
+feed it by <strong>cable</strong> or by <strong>Bluetooth</strong>. The cable is
+the more reliable of the two; pick whichever you prefer.</p>
 
+<h3>Option A — cable (fewer things to go wrong)</h3>
 <ol>
-  <li><strong>Turn the piano on</strong> and make sure Bluetooth is enabled. On
-  the FP-10 it is on by default, and the <code>[FUNCTION]</code> button lights
-  when a connection is live. The toggle is <code>[FUNCTION]</code> +
+  <li><strong>Connect the piano to the iPad</strong> with a genuine
+  <em>Apple USB Camera Adapter</em> (Lightning or USB-C, matching your iPad) and
+  the piano's USB-B "printer" cable. It must be Apple's own adapter — clones
+  often don't pass enough power. The FP-10 is class-compliant, so no driver is
+  needed.</li>
+  <li><strong>Open Web MIDI Browser</strong> — not Safari.</li>
+  <li><strong>Load this site</strong> in it and open a lesson. There is nothing
+  to "pair" over a cable; the piano just appears.</li>
+</ol>
+
+<h3>Option B — Bluetooth (no adapter, but one fiddly step)</h3>
+<ol>
+  <li><strong>Turn the piano on</strong> with Bluetooth enabled. On the FP-10 it
+  is on by default, and the <code>[FUNCTION]</code> button lights when a
+  connection is live. The toggle is <code>[FUNCTION]</code> +
   <strong>C7♯</strong> for on, <code>[FUNCTION]</code> + <strong>D7</strong> for off.</li>
   <li><strong>Open Web MIDI Browser</strong> — not Safari.</li>
   <li><strong>Pair the piano using the app's own Bluetooth button.</strong>
