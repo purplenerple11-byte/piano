@@ -50,6 +50,7 @@
     var mode = mount.getAttribute("data-drill");
     var poolName = mount.getAttribute("data-pool") || "all";
     var rounds = parseInt(mount.getAttribute("data-rounds") || "12", 10);
+    var secs = Math.max(10, parseInt(mount.getAttribute("data-seconds") || "60", 10));
     var kbMount = document.getElementById(mount.getAttribute("data-kb"));
     var kb = kbMount && kbMount.keyboard;
     if (!kb) { console.error("KeyDrill: no keyboard found for", mount); return; }
@@ -59,8 +60,10 @@
 
     // A drill can be rebuilt in place (e.g. a lesson swapping the pool from
     // black-only to all twelve). Drop the previous instance's MIDI subscriber
-    // first — otherwise the stale closure keeps scoring alongside the new one.
+    // and any live sprint clock first — otherwise a stale closure keeps scoring
+    // (or ticking) alongside the new one.
     if (mount._drillUnsub) { mount._drillUnsub(); mount._drillUnsub = null; }
+    if (mount._timer) { mount._timer.stop(); mount._timer = null; }
 
     mount.classList.add("drill-box");
     mount.innerHTML = "";
@@ -93,6 +96,13 @@
     startBtn.className = "drill-btn";
     startBtn.textContent = "Start";
     controls.appendChild(startBtn);
+    var sprintBtn = document.createElement("button");
+    sprintBtn.className = "drill-btn drill-btn-ghost";
+    controls.appendChild(sprintBtn);
+    var clock = document.createElement("span");
+    clock.className = "drill-clock";
+    clock.style.display = "none";
+    controls.appendChild(clock);
     mount.appendChild(controls);
 
     var stats = document.createElement("div");
@@ -111,11 +121,33 @@
     var times = [], streak = 0, bestStreak = 0;
     var targetPC = null, cuedNote = null, askedAt = 0, queue = [];
 
+    function resetState() {
+      round = 0; correct = 0; times = []; streak = 0; bestStreak = 0;
+      targetPC = null; queue = [];
+    }
+
+    // Sprint toggle + countdown (shared with staffdrill via DrillCore). Untimed is
+    // the fixed-rounds run; sprint races the clock and scores keys-per-minute.
+    var sc = window.DrillCore.sprintControls(
+      { sprintBtn: sprintBtn, clock: clock }, secs,
+      function () { return running; },
+      function (sprint) {
+        resetState(); renderStats();
+        kb.clear(); answers.innerHTML = "";
+        sub.className = "drill-sub"; sub.textContent = "";
+        cue.className = "drill-cue drill-cue-small";
+        cue.textContent = sprint
+          ? "Sprint — name as many as you can in " + secs + "s. Press Start."
+          : "Press Start.";
+      },
+      function () { if (running) finish(); });
+
     function renderStats() {
       var med = median(times);
+      var perMin = times.length ? Math.round(correct * 60 / secs) + "" : "—";
       stats.innerHTML = "";
-      [["Round", round + " / " + rounds],
-       ["Correct", correct + ""],
+      [sc.isSprint() ? ["Correct", correct + ""] : ["Round", round + " / " + rounds],
+       sc.isSprint() ? ["Per min", perMin] : ["Correct", correct + ""],
        ["Median", times.length ? (med / 1000).toFixed(2) + "s" : "—"],
        ["Best streak", bestStreak + ""]].forEach(function (pair) {
         var d = document.createElement("div");
@@ -136,18 +168,21 @@
     }
 
     function start() {
-      running = true; round = 0; correct = 0; times = []; streak = 0; bestStreak = 0;
-      targetPC = null; queue = [];
+      sc.stopClock();
+      running = true; resetState();
       startBtn.textContent = "Restart";
+      sc.startClock();
+      mount._timer = sc.timer();   // so a rebuild can stop a live clock
       ask();
     }
 
     function ask() {
+      if (!running) return;
       kb.clear();
       answers.innerHTML = "";
       sub.className = "drill-sub";
       sub.textContent = "";
-      if (round >= rounds) { finish(); return; }
+      if (!sc.isSprint() && round >= rounds) { finish(); return; }
       round++;
       targetPC = nextPC();
       renderStats();
@@ -236,22 +271,35 @@
     });
 
     function finish() {
+      if (!running) return;
       running = false; locked = true;
+      sc.stopClock();
       kb.clear();
       answers.innerHTML = "";
       cue.className = "drill-cue drill-cue-small";
       var med = median(times);
-      var verdict = correct < rounds * 0.8
-        ? "Accuracy first — run it again before chasing speed."
-        : med <= 1000
-          ? "Under a second and accurate. That is the target — keep it warm."
-          : med <= 2000
-            ? "Accurate. Now shave the time: look for the black-key group first, then count."
-            : "Accurate but slow. You are still counting up from C — find the group, not the letter.";
-      cue.textContent = verdict;
-      sub.className = "drill-sub";
-      sub.textContent = correct + " of " + rounds + " correct, median " +
-        (times.length ? (med / 1000).toFixed(2) + "s" : "—");
+      if (sc.isSprint()) {
+        cue.textContent = correct === 0
+          ? "Accuracy first — speed is worth nothing without it."
+          : med <= 1000
+            ? "Fast and accurate. That is the target — beat that number next run."
+            : "Good pace. Shave it by finding the black-key group before the letter.";
+        sub.className = "drill-sub";
+        sub.textContent = correct + " correct in " + secs + "s — " +
+          Math.round(correct * 60 / secs) + "/min, median " +
+          (times.length ? (med / 1000).toFixed(2) + "s" : "—");
+      } else {
+        cue.textContent = correct < rounds * 0.8
+          ? "Accuracy first — run it again before chasing speed."
+          : med <= 1000
+            ? "Under a second and accurate. That is the target — keep it warm."
+            : med <= 2000
+              ? "Accurate. Now shave the time: look for the black-key group first, then count."
+              : "Accurate but slow. You are still counting up from C — find the group, not the letter.";
+        sub.className = "drill-sub";
+        sub.textContent = correct + " of " + rounds + " correct, median " +
+          (times.length ? (med / 1000).toFixed(2) + "s" : "—");
+      }
       renderStats();
     }
 

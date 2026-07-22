@@ -30,10 +30,10 @@
           data-length="5"          <!-- notes per line, phrase mode only -->
           data-seconds="60"></div>  <!-- sprint length when timed -->
 
-   Timing and stats mirror keydrill.js (median, not mean). The three drills share
-   their CSS but not their code; if a fourth appears, extract the shared
-   scaffold/stats/median/timer plumbing into a drillcore module rather than
-   copying it again. */
+   Timing and stats mirror keydrill.js (median, not mean). The sprint timer and
+   toggle already live in drillcore.js, shared with keydrill; the per-drill
+   scaffold/stats/median are still duplicated, and that's the next thing to move
+   into DrillCore if these files grow again. */
 (function () {
   var POOLS = {
     // [midi, clef] — the three guide notes every method starts from.
@@ -85,28 +85,6 @@
   }
 
   function samePC(a, b) { return (((a % 12) + 12) % 12) === (((b % 12) + 12) % 12); }
-
-  function mmss(ms) {
-    var s = Math.ceil(ms / 1000);
-    return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
-  }
-
-  /* A countdown that ticks a display and fires once when it hits zero. Kept
-     dumb on purpose: the drill decides what "expired" means (it calls finish),
-     the timer just watches the clock. */
-  function makeTimer(seconds, onTick, onExpire) {
-    var iv = null, endAt = 0, done = false;
-    function tick() {
-      var rem = Math.max(0, endAt - performance.now());
-      onTick(rem);
-      if (rem <= 0 && !done) { done = true; stop(); onExpire(); }
-    }
-    function stop() { if (iv) { clearInterval(iv); iv = null; } }
-    return {
-      start: function () { done = false; endAt = performance.now() + seconds * 1000; tick(); iv = setInterval(tick, 200); },
-      stop: stop
-    };
-  }
 
   /* Build a line by walking from a landmark. A mild bias toward continuing in the
      same direction gives the line a shape you can feel under the hand, rather than
@@ -200,37 +178,11 @@
     return Math.max(10, parseInt(mount.getAttribute("data-seconds") || "60", 10));
   }
 
-  /* Wire the sprint toggle + countdown for either mode. Returns helpers the mode's
-     start/ask/finish call: isSprint(), startClock(), stopClock(). Toggling while a
-     run is live is ignored — Restart is how you change your mind mid-drill. */
-  function sprintControls(ui, secs, isRunning, onToggle, onExpire) {
-    var sprint = false, timer = null;
-    ui.sprintBtn.textContent = "⏱ " + secs + "s sprint";
-    ui.sprintBtn.onclick = function () {
-      if (isRunning()) return;
-      sprint = !sprint;
-      ui.sprintBtn.textContent = sprint ? "∞ Untimed" : "⏱ " + secs + "s sprint";
-      ui.clock.style.display = sprint ? "" : "none";
-      ui.clock.classList.remove("drill-clock-low");
-      ui.clock.textContent = mmss(secs * 1000);
-      onToggle(sprint);
-    };
-    return {
-      isSprint: function () { return sprint; },
-      startClock: function () {
-        if (!sprint) return;
-        if (timer) timer.stop();
-        ui.clock.style.display = "";
-        timer = makeTimer(secs, function (rem) {
-          ui.clock.textContent = mmss(rem);
-          ui.clock.classList.toggle("drill-clock-low", rem <= 10000);
-        }, onExpire);
-        timer.start();
-        return timer;
-      },
-      stopClock: function () { if (timer) { timer.stop(); timer = null; } },
-      timer: function () { return timer; }
-    };
+  // The sprint toggle + countdown live in DrillCore (shared with keydrill). Each
+  // mode passes its toggle button and clock, and wires its own onToggle/onExpire.
+  function sprintFor(ui, secs, isRunning, onToggle, onExpire) {
+    return window.DrillCore.sprintControls(
+      { sprintBtn: ui.sprintBtn, clock: ui.clock }, secs, isRunning, onToggle, onExpire);
   }
 
   /* ── SINGLE-NOTE MODE (Lesson 2) ─────────────────────────── */
@@ -247,7 +199,7 @@
     var running = false, locked = true, round = 0, correct = 0;
     var times = [], streak = 0, best = 0, queue = [], target = null, askedAt = 0;
 
-    var sc = sprintControls(ui, secs, function () { return running; },
+    var sc = sprintFor(ui, secs, function () { return running; },
       function (sprint) {
         resetState(); renderStats();
         sub.className = "drill-sub";
@@ -386,7 +338,7 @@
     var times = [], cleanPhrases = 0, streak = 0, best = 0;
     var totalNotes = 0, cleanNotes = 0;
 
-    var sc = sprintControls(ui, secs, function () { return running; },
+    var sc = sprintFor(ui, secs, function () { return running; },
       function (sprint) {
         resetState(); renderStats();
         sub.className = "drill-sub";
