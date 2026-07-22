@@ -155,13 +155,16 @@
     if (showBass) addClef("bass", BASS_TOP);
 
     // Paint order = append order: the cursor band sits behind everything so it
-    // reads as a "you are here" column rather than covering a notehead.
+    // reads as a "you are here" column rather than covering a notehead; the flash
+    // layer sits on top so a "here's what you just played" hint is never hidden.
     var cursorLayer = el("g", {});
     var noteLayer = el("g", {});
     var markLayer = el("g", {});
+    var flashLayer = el("g", {});
     svg.appendChild(cursorLayer);
     svg.appendChild(markLayer);
     svg.appendChild(noteLayer);
+    svg.appendChild(flashLayer);
     mount.appendChild(svg);
 
     /* Fit the clef glyphs by MEASUREMENT, not by magic numbers. Whichever font
@@ -287,7 +290,27 @@
           }
         };
       },
-      clear: function () { noteLayer.innerHTML = ""; cursorLayer.innerHTML = ""; },
+      /* A transient "here's what you just played" hint: the note you pressed,
+         drawn at its real staff position with its letter, that bounces in and
+         fades away (the animation is CSS; see .staff-flash). It never touches the
+         note/cursor layers, so it can fire mid-drill without disturbing grading —
+         the point is to weld key → position → letter together every time a finger
+         lands. On a grand staff the clef is chosen by pitch; on a single-clef
+         staff it follows that clef. */
+      flash: function (midi, clef) {
+        var useClef = clef || (!showBass ? "treble"
+                             : !showTreble ? "bass"
+                             : midi >= 60 ? "treble" : "bass");
+        var g = el("g", { class: "staff-flash" });
+        flashLayer.appendChild(g);
+        drawNote(g, midi, useClef, NOTE_X, "staff-note-hint", stepOf(midi).letter);
+        var gone = function () { if (g.parentNode) g.parentNode.removeChild(g); };
+        g.addEventListener("animationend", gone);
+        setTimeout(gone, 1500);   // belt-and-braces if animationend never fires
+      },
+      clear: function () {
+        noteLayer.innerHTML = ""; cursorLayer.innerHTML = ""; flashLayer.innerHTML = "";
+      },
       /* The three guide notes every method starts with: Treble G, Middle C,
          Bass F. Everything else is read as a distance from one of these. */
       landmarks: function (on) {

@@ -137,6 +137,10 @@
     var sprintBtn = document.createElement("button");
     sprintBtn.className = "drill-btn drill-btn-ghost";
     controls.appendChild(sprintBtn);
+    var hintsBtn = document.createElement("button");
+    hintsBtn.className = "drill-btn drill-btn-ghost";
+    hintsBtn.textContent = "💡 Hints";
+    controls.appendChild(hintsBtn);
     var clock = document.createElement("span");
     clock.className = "drill-clock";
     clock.style.display = "none";
@@ -154,7 +158,20 @@
       cap.innerHTML = captionText;
       mount.appendChild(cap);
     }
-    return { sub: sub, startBtn: startBtn, sprintBtn: sprintBtn, clock: clock, stats: stats };
+    return { sub: sub, startBtn: startBtn, sprintBtn: sprintBtn, hintsBtn: hintsBtn, clock: clock, stats: stats };
+  }
+
+  /* Wire the Hints toggle: when on, every note the player lands flashes onto the
+     staff with its letter (see staff.flash). Returns a getter the MIDI handler
+     checks. Independent of Start/sprint — you can flick it on any time. */
+  function hintsToggle(ui, staff) {
+    var on = false;
+    ui.hintsBtn.onclick = function () {
+      on = !on;
+      ui.hintsBtn.classList.toggle("drill-btn-on", on);
+      ui.hintsBtn.textContent = on ? "💡 Hints on" : "💡 Hints";
+    };
+    return { on: function () { return on; } };
   }
 
   function renderStatPairs(stats, pairs) {
@@ -208,6 +225,7 @@
           : "Press Start. A note appears — play it.";
       },
       function () { if (running) finish(); });
+    var hints = hintsToggle(ui, staff);
 
     function resetState() {
       round = 0; correct = 0; times = []; streak = 0; best = 0; queue = []; target = null;
@@ -257,7 +275,9 @@
     }
 
     mount._unsub = window.PianoMIDI.subscribe(function (e) {
-      if (!running || locked || !e.on) return;
+      if (!e.on) return;
+      if (hints.on()) staff.flash(e.note);   // echo every key, running or not
+      if (!running || locked) return;
       locked = true;
       var ms = performance.now() - askedAt;
       var want = target[0];
@@ -347,6 +367,7 @@
           : "Press Start. A line of notes appears — play it left to right.";
       },
       function () { if (running) finish(); });
+    var hints = hintsToggle(ui, staff);
 
     function resetState() {
       round = 0; times = []; cleanPhrases = 0; streak = 0; best = 0;
@@ -394,7 +415,9 @@
     }
 
     mount._unsub = window.PianoMIDI.subscribe(function (e) {
-      if (!running || locked || !e.on) return;
+      if (!e.on) return;
+      if (hints.on()) staff.flash(e.note);   // echo every key, running or not
+      if (!running || locked) return;
       var want = phrase.midiAt(pos);
       if (e.note === want) {
         phrase.mark(pos, "staff-note-good");

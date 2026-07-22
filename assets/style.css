@@ -513,6 +513,31 @@ th {
    the current note's position without hiding it. */
 .staff-cursor { fill: var(--accent); opacity: 0.14; }
 
+/* Hint echo: the note you just played, popped onto the staff and animated. Blue
+   so it never reads as a graded (green/red) or target (black) note — it's a hint,
+   not a verdict. Bounces up and in, settles, then fades. transform-box:fill-box
+   pins the scale to the group's own centre; WebKit (the iPad) needs it. */
+.staff-note-hint { fill: var(--accent); }
+.staff-flash {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: staff-flash 1.1s ease-out forwards;
+}
+@keyframes staff-flash {
+  0%   { opacity: 0; transform: translateY(-7px) scale(0.6); }
+  22%  { opacity: 1; transform: translateY(0) scale(1.18); }
+  38%  { transform: scale(1); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-3px) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .staff-flash { animation: staff-flash-fade 1.1s ease-out forwards; }
+  @keyframes staff-flash-fade { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
+}
+
+/* A toggle button (sprint, hints) showing its "on" state. */
+.drill-btn-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
 .staff-acc {
   fill: var(--text);
   font-size: 20px;
