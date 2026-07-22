@@ -14,17 +14,25 @@
        drill generates lines procedurally (a bounded random walk by step/skip),
        tracks a cursor through the line, and grades note by note.
 
+   Either mode can also run as a SPRINT: a per-drill countdown (default 60s). The
+   fixed-rounds run measures how well you read; the sprint measures how fast, by
+   throughput — the whole course is about automaticity, and a clock is the missing
+   pressure. It's a toggle on every drill, so you can warm up untimed and then
+   race. The buzzer stops the drill wherever it is; a half-finished item just
+   doesn't count.
+
    Mount:
      <div data-staffdrill
           data-staff="staff-id"    <!-- a [data-staff] mount -->
           data-kb="kb-id"          <!-- a [data-keyboard] mount, for feedback -->
           data-pool="treble-steps"
           data-rounds="8"
-          data-length="5"></div>   <!-- notes per line, phrase mode only -->
+          data-length="5"          <!-- notes per line, phrase mode only -->
+          data-seconds="60"></div>  <!-- sprint length when timed -->
 
    Timing and stats mirror keydrill.js (median, not mean). The three drills share
    their CSS but not their code; if a fourth appears, extract the shared
-   scaffold/stats/median/queue plumbing into a drillcore module rather than
+   scaffold/stats/median/timer plumbing into a drillcore module rather than
    copying it again. */
 (function () {
   var POOLS = {
@@ -78,6 +86,28 @@
 
   function samePC(a, b) { return (((a % 12) + 12) % 12) === (((b % 12) + 12) % 12); }
 
+  function mmss(ms) {
+    var s = Math.ceil(ms / 1000);
+    return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+  }
+
+  /* A countdown that ticks a display and fires once when it hits zero. Kept
+     dumb on purpose: the drill decides what "expired" means (it calls finish),
+     the timer just watches the clock. */
+  function makeTimer(seconds, onTick, onExpire) {
+    var iv = null, endAt = 0, done = false;
+    function tick() {
+      var rem = Math.max(0, endAt - performance.now());
+      onTick(rem);
+      if (rem <= 0 && !done) { done = true; stop(); onExpire(); }
+    }
+    function stop() { if (iv) { clearInterval(iv); iv = null; } }
+    return {
+      start: function () { done = false; endAt = performance.now() + seconds * 1000; tick(); iv = setInterval(tick, 200); },
+      stop: stop
+    };
+  }
+
   /* Build a line by walking from a landmark. A mild bias toward continuing in the
      same direction gives the line a shape you can feel under the hand, rather than
      the aimless back-and-forth a pure random walk produces — but reversals still
@@ -99,9 +129,9 @@
     return seq.map(function (st) { return { midi: stepToMidi(st), clef: cfg.clef }; });
   }
 
-  /* Shared DOM scaffold: label, live status line, Start button, stat row, caption.
-     Both modes render identically; only the stats they push and the grading
-     underneath differ. */
+  /* Shared DOM scaffold: label, live status line, Start + sprint-toggle buttons,
+     a countdown clock, stat row, caption. Both modes render identically; only the
+     stats they push and the grading underneath differ. */
   function scaffold(mount) {
     mount.classList.add("drill-box");
     mount.innerHTML = "";
@@ -126,6 +156,13 @@
     startBtn.className = "drill-btn";
     startBtn.textContent = "Start";
     controls.appendChild(startBtn);
+    var sprintBtn = document.createElement("button");
+    sprintBtn.className = "drill-btn drill-btn-ghost";
+    controls.appendChild(sprintBtn);
+    var clock = document.createElement("span");
+    clock.className = "drill-clock";
+    clock.style.display = "none";
+    controls.appendChild(clock);
     mount.appendChild(controls);
 
     var stats = document.createElement("div");
@@ -139,7 +176,7 @@
       cap.innerHTML = captionText;
       mount.appendChild(cap);
     }
-    return { sub: sub, startBtn: startBtn, stats: stats };
+    return { sub: sub, startBtn: startBtn, sprintBtn: sprintBtn, clock: clock, stats: stats };
   }
 
   function renderStatPairs(stats, pairs) {
@@ -159,12 +196,50 @@
     return { staff: staffEl && staffEl.staff, kb: kbEl && kbEl.keyboard };
   }
 
+  function seconds(mount) {
+    return Math.max(10, parseInt(mount.getAttribute("data-seconds") || "60", 10));
+  }
+
+  /* Wire the sprint toggle + countdown for either mode. Returns helpers the mode's
+     start/ask/finish call: isSprint(), startClock(), stopClock(). Toggling while a
+     run is live is ignored — Restart is how you change your mind mid-drill. */
+  function sprintControls(ui, secs, isRunning, onToggle, onExpire) {
+    var sprint = false, timer = null;
+    ui.sprintBtn.textContent = "⏱ " + secs + "s sprint";
+    ui.sprintBtn.onclick = function () {
+      if (isRunning()) return;
+      sprint = !sprint;
+      ui.sprintBtn.textContent = sprint ? "∞ Untimed" : "⏱ " + secs + "s sprint";
+      ui.clock.style.display = sprint ? "" : "none";
+      ui.clock.classList.remove("drill-clock-low");
+      ui.clock.textContent = mmss(secs * 1000);
+      onToggle(sprint);
+    };
+    return {
+      isSprint: function () { return sprint; },
+      startClock: function () {
+        if (!sprint) return;
+        if (timer) timer.stop();
+        ui.clock.style.display = "";
+        timer = makeTimer(secs, function (rem) {
+          ui.clock.textContent = mmss(rem);
+          ui.clock.classList.toggle("drill-clock-low", rem <= 10000);
+        }, onExpire);
+        timer.start();
+        return timer;
+      },
+      stopClock: function () { if (timer) { timer.stop(); timer = null; } },
+      timer: function () { return timer; }
+    };
+  }
+
   /* ── SINGLE-NOTE MODE (Lesson 2) ─────────────────────────── */
   function buildSingle(mount, pool) {
     var r = refs(mount);
     var staff = r.staff, kb = r.kb;
     if (!staff) { console.error("StaffDrill: no staff for", mount); return; }
     var rounds = parseInt(mount.getAttribute("data-rounds") || "10", 10);
+    var secs = seconds(mount);
 
     var ui = scaffold(mount);
     var sub = ui.sub, stats = ui.stats;
@@ -172,13 +247,31 @@
     var running = false, locked = true, round = 0, correct = 0;
     var times = [], streak = 0, best = 0, queue = [], target = null, askedAt = 0;
 
+    var sc = sprintControls(ui, secs, function () { return running; },
+      function (sprint) {
+        resetState(); renderStats();
+        sub.className = "drill-sub";
+        sub.textContent = sprint
+          ? "Sprint — name as many as you can in " + secs + "s. Press Start."
+          : "Press Start. A note appears — play it.";
+      },
+      function () { if (running) finish(); });
+
+    function resetState() {
+      round = 0; correct = 0; times = []; streak = 0; best = 0; queue = []; target = null;
+    }
+
     function renderStats() {
-      renderStatPairs(stats, [
-        ["Round", round + " / " + rounds],
-        ["Correct", correct + ""],
-        ["Median", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
-        ["Best streak", best + ""]
-      ]);
+      var perMin = times.length ? Math.round(correct * 60 / secs) : 0;
+      renderStatPairs(stats, sc.isSprint()
+        ? [["Correct", correct + ""],
+           ["Per min", correct ? perMin + "" : "—"],
+           ["Median", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
+           ["Best streak", best + ""]]
+        : [["Round", round + " / " + rounds],
+           ["Correct", correct + ""],
+           ["Median", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
+           ["Best streak", best + ""]]);
     }
 
     function next() {
@@ -191,10 +284,11 @@
     }
 
     function ask() {
+      if (!running) return;
       if (kb) kb.clear();
       sub.className = "drill-sub";
       sub.textContent = "Play it.";
-      if (round >= rounds) return finish();
+      if (!sc.isSprint() && round >= rounds) return finish();
       round++;
       target = next();
       staff.show(target[0], target[1]);
@@ -234,25 +328,36 @@
     });
 
     function finish() {
+      if (!running) return;
       running = false; locked = true;
+      sc.stopClock();
       staff.clear();
       if (kb) kb.clear();
       var med = median(times);
       sub.className = "drill-sub";
-      sub.innerHTML = "<strong>" + correct + " of " + rounds + "</strong>, median " +
-        (times.length ? (med / 1000).toFixed(2) + "s" : "—") + ". " +
-        (correct < rounds * 0.8
-          ? "Accuracy first. Find the landmark, then step from it."
-          : med <= 2000
-            ? "That is reading, not working it out. Keep it warm."
-            : "Accurate. Now stop counting up from the bottom line — jump to the nearest landmark first.");
+      if (sc.isSprint()) {
+        sub.innerHTML = "<strong>" + correct + " correct</strong> in " + secs + "s — " +
+          Math.round(correct * 60 / secs) + "/min, median " +
+          (times.length ? (med / 1000).toFixed(2) + "s" : "—") + ". " +
+          (correct === 0 ? "Start with accuracy; speed follows." : "Next run, beat that number.");
+      } else {
+        sub.innerHTML = "<strong>" + correct + " of " + rounds + "</strong>, median " +
+          (times.length ? (med / 1000).toFixed(2) + "s" : "—") + ". " +
+          (correct < rounds * 0.8
+            ? "Accuracy first. Find the landmark, then step from it."
+            : med <= 2000
+              ? "That is reading, not working it out. Keep it warm."
+              : "Accurate. Now stop counting up from the bottom line — jump to the nearest landmark first.");
+      }
       renderStats();
     }
 
     ui.startBtn.onclick = function () {
-      running = true; round = 0; correct = 0; times = [];
-      streak = 0; best = 0; queue = []; target = null;
+      sc.stopClock();
+      running = true; resetState();
       ui.startBtn.textContent = "Restart";
+      sc.startClock();
+      mount._timer = sc.timer();   // so a rebuild can stop a live clock
       ask();
     };
 
@@ -271,6 +376,7 @@
     var lenAttr = parseInt(mount.getAttribute("data-length") || "", 10);
     if (lenAttr) cfg.len = lenAttr;
     var rounds = parseInt(mount.getAttribute("data-rounds") || "8", 10);
+    var secs = seconds(mount);
 
     var ui = scaffold(mount);
     var sub = ui.sub, stats = ui.stats;
@@ -280,10 +386,25 @@
     var times = [], cleanPhrases = 0, streak = 0, best = 0;
     var totalNotes = 0, cleanNotes = 0;
 
+    var sc = sprintControls(ui, secs, function () { return running; },
+      function (sprint) {
+        resetState(); renderStats();
+        sub.className = "drill-sub";
+        sub.textContent = sprint
+          ? "Sprint — read as many lines as you can in " + secs + "s. Press Start."
+          : "Press Start. A line of notes appears — play it left to right.";
+      },
+      function () { if (running) finish(); });
+
+    function resetState() {
+      round = 0; times = []; cleanPhrases = 0; streak = 0; best = 0;
+      totalNotes = 0; cleanNotes = 0; phraseHadError = false;
+    }
+
     function renderStats() {
       var acc = totalNotes ? Math.round(cleanNotes / totalNotes * 100) + "%" : "—";
       renderStatPairs(stats, [
-        ["Line", round + " / " + rounds],
+        sc.isSprint() ? ["Lines", times.length + ""] : ["Line", round + " / " + rounds],
         ["Notes right", acc],
         ["Median / line", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
         ["Clean streak", best + ""]
@@ -291,8 +412,9 @@
     }
 
     function ask() {
+      if (!running) return;
       if (kb) kb.clear();
-      if (round >= rounds) return finish();
+      if (!sc.isSprint() && round >= rounds) return finish();
       round++;
       phrase = staff.phrase(genPhrase(cfg));
       pos = 0; missesHere = 0; phraseHadError = false;
@@ -354,27 +476,38 @@
     });
 
     function finish() {
+      if (!running) return;
       running = false; locked = true;
+      sc.stopClock();
       staff.clear();
       if (kb) kb.clear();
       var med = median(times);
       var acc = totalNotes ? cleanNotes / totalNotes : 0;
       sub.className = "drill-sub";
-      sub.innerHTML = "<strong>" + cleanPhrases + " of " + rounds + "</strong> lines clean, " +
-        Math.round(acc * 100) + "% of notes right first time, median " +
-        (times.length ? (med / 1000).toFixed(2) + "s" : "—") + " a line. " +
-        (acc < 0.8
-          ? "Slow down. Land on a landmark, then read each note as a step or a skip from the last."
-          : med <= 6000
-            ? "That is reading a line, not decoding it note by note. Now try the other hand."
-            : "Accurate. Push the pace — let your eye reach the next note while your hand plays this one.");
+      if (sc.isSprint()) {
+        sub.innerHTML = "<strong>" + times.length + " lines</strong> in " + secs + "s — " +
+          Math.round(times.length * 60 / secs) + "/min, " + Math.round(acc * 100) +
+          "% of notes right first time" + (cleanPhrases ? ", " + cleanPhrases + " clean" : "") + ". " +
+          (times.length === 0 ? "Accuracy first; the pace comes after." : "Next run, beat that.");
+      } else {
+        sub.innerHTML = "<strong>" + cleanPhrases + " of " + rounds + "</strong> lines clean, " +
+          Math.round(acc * 100) + "% of notes right first time, median " +
+          (times.length ? (med / 1000).toFixed(2) + "s" : "—") + " a line. " +
+          (acc < 0.8
+            ? "Slow down. Land on a landmark, then read each note as a step or a skip from the last."
+            : med <= 6000
+              ? "That is reading a line, not decoding it note by note. Now try the other hand."
+              : "Accurate. Push the pace — let your eye reach the next note while your hand plays this one.");
+      }
       renderStats();
     }
 
     ui.startBtn.onclick = function () {
-      running = true; round = 0; times = []; cleanPhrases = 0;
-      streak = 0; best = 0; totalNotes = 0; cleanNotes = 0;
+      sc.stopClock();
+      running = true; resetState();
       ui.startBtn.textContent = "Restart";
+      sc.startClock();
+      mount._timer = sc.timer();   // so a rebuild can stop a live clock
       ask();
     };
 
@@ -384,6 +517,7 @@
 
   function build(mount) {
     if (mount._unsub) { mount._unsub(); mount._unsub = null; }
+    if (mount._timer) { mount._timer.stop(); mount._timer = null; }
     var poolName = mount.getAttribute("data-pool") || "landmarks";
     if (PHRASE_POOLS[poolName]) return buildPhrase(mount, poolName);
     return buildSingle(mount, POOLS[poolName] || POOLS.landmarks);

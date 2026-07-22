@@ -393,6 +393,20 @@ th {
 .drill-btn:hover { filter: brightness(0.96); }
 .drill-btn-ghost { background: var(--bg); border-color: var(--rule); color: var(--muted); font-weight: 400; }
 
+/* Sprint countdown. Monospaced so the digits don't jitter as they tick; turns to
+   the warning colour in the last ten seconds. */
+.drill-clock {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  align-self: center;
+  min-width: 3.2ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.drill-clock-low { color: var(--bad); }
+
 .drill-answers { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.9rem; }
 .drill-ans {
   font-family: inherit;
