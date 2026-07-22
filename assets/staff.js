@@ -293,6 +293,69 @@
           xAt: function (i) { return groups[i] ? groups[i].x : NOTE_X; }
         };
       },
+      /* Two hands at once. Each event is { treble, bass } — either may be null,
+         which is how a passage where the hands ALTERNATE is written: the silent
+         hand simply has nothing in that column.
+
+         Deliberately not built on phrase(): phrase indexes one note per column,
+         and everything here has to address a column *and* a hand — mark the left
+         hand red while the right stays black, ask which notes a column still
+         wants. Bolting a second voice onto phrase() would have made every one of
+         its callers carry a hand argument it does not have. */
+      duet: function (events) {
+        noteLayer.innerHTML = "";
+        cursorLayer.innerHTML = "";
+        var n = events.length;
+        var x0 = 120, x1 = WIDTH - 45;
+        var cols = events.map(function (ev, i) {
+          var x = n === 1 ? NOTE_X : x0 + (x1 - x0) * (i / (n - 1));
+          var col = { x: x, treble: ev.treble, bass: ev.bass, g: {} };
+          ["treble", "bass"].forEach(function (hand) {
+            if (ev[hand] == null) return;
+            var g = el("g", {});
+            noteLayer.appendChild(g);
+            drawNote(g, ev[hand], hand, x, "");
+            col.g[hand] = g;
+          });
+          return col;
+        });
+        var top = (showTreble ? TREBLE_TOP : BASS_TOP) - 22;
+        var bot = (showBass ? BASS_BOTTOM : TREBLE_BOTTOM) + 22;
+        var band = el("rect", {
+          class: "staff-cursor", x: 0, y: top, width: 26, height: bot - top, rx: 6
+        });
+        band.style.display = "none";
+        cursorLayer.appendChild(band);
+        return {
+          length: n,
+          /* Which notes column i still expects, as [{hand, midi}] — the drill
+             works from this rather than reaching into the events array. */
+          notesAt: function (i) {
+            var c = cols[i];
+            if (!c) return [];
+            var out = [];
+            if (c.treble != null) out.push({ hand: "treble", midi: c.treble });
+            if (c.bass != null) out.push({ hand: "bass", midi: c.bass });
+            return out;
+          },
+          mark: function (i, hand, cls) {
+            var c = cols[i];
+            if (!c || !c.g[hand]) return;
+            c.g[hand].innerHTML = "";
+            drawNote(c.g[hand], c[hand], hand, c.x, cls);
+          },
+          markAll: function (i, cls) {
+            var self = this;
+            ["treble", "bass"].forEach(function (h) { self.mark(i, h, cls); });
+          },
+          cursor: function (i) {
+            if (i == null || !cols[i]) { band.style.display = "none"; return; }
+            band.setAttribute("x", cols[i].x - 13);
+            band.style.display = "";
+          },
+          xAt: function (i) { return cols[i] ? cols[i].x : NOTE_X; }
+        };
+      },
       /* A transient "here's what you just played" hint: the note you pressed,
          drawn at its real staff position with its letter, that bounces in and
          fades away (the animation is CSS; see .staff-flash). It never touches the
