@@ -513,11 +513,22 @@ th {
    the current note's position without hiding it. */
 .staff-cursor { fill: var(--accent); opacity: 0.14; }
 
-/* Hint echo: the note you just played, popped onto the staff and animated. Blue
-   so it never reads as a graded (green/red) or target (black) note — it's a hint,
-   not a verdict. Bounces up and in, settles, then fades. transform-box:fill-box
-   pins the scale to the group's own centre; WebKit (the iPad) needs it. */
+/* Hint echo: the note you just played, popped onto the staff at the column you
+   are actually reading, and animated. Bounces up and in, settles, then fades.
+   transform-box:fill-box pins the scale to the group's own centre; WebKit (the
+   iPad) needs it.
+
+   Colour carries the verdict: green when the key was the one due, red when it
+   wasn't, and neutral blue only when there is nothing to compare against (a
+   stray press before Start). An always-blue hint made a wrong note look the same
+   as a right one, which is the one thing a feedback loop must never do.
+
+   The letter label has to travel with the notehead — a green note with a blue
+   letter reads as two separate marks. */
 .staff-note-hint { fill: var(--accent); }
+.staff-flash-good .staff-note, .staff-flash-good .staff-notelabel { fill: var(--good); }
+.staff-flash-bad  .staff-note, .staff-flash-bad  .staff-notelabel { fill: var(--bad); }
+.staff-flash-good .staff-line, .staff-flash-bad .staff-line { stroke: currentColor; }
 .staff-flash {
   transform-box: fill-box;
   transform-origin: center;
@@ -537,6 +548,12 @@ th {
 
 /* A toggle button (sprint, hints) showing its "on" state. */
 .drill-btn-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* Inline icon inside a drill button. Stroked with currentColor rather than set
+   as an emoji, so it stays monochrome and follows the button's own colour
+   through light/dark and the on/off state. */
+.drill-btn-ico { vertical-align: -2px; margin-right: 0.35em; }
+.drill-btn-txt { vertical-align: baseline; }
 
 .staff-acc {
   fill: var(--text);

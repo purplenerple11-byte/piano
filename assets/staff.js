@@ -287,7 +287,10 @@
             if (i == null || !groups[i]) { band.style.display = "none"; return; }
             band.setAttribute("x", groups[i].x - 13);
             band.style.display = "";
-          }
+          },
+          /* Where note i sits horizontally, so a hint can be flashed in the
+             column the reader is actually on rather than at a fixed point. */
+          xAt: function (i) { return groups[i] ? groups[i].x : NOTE_X; }
         };
       },
       /* A transient "here's what you just played" hint: the note you pressed,
@@ -296,14 +299,27 @@
          note/cursor layers, so it can fire mid-drill without disturbing grading —
          the point is to weld key → position → letter together every time a finger
          lands. On a grand staff the clef is chosen by pitch; on a single-clef
-         staff it follows that clef. */
-      flash: function (midi, clef) {
+         staff it follows that clef.
+
+         opts.x       where to draw it. Defaults to the single-note column, but a
+                      phrase drill passes the column the reader is currently on,
+                      so the hint appears under the eye instead of jumping to the
+                      middle of the line.
+         opts.verdict "good" | "bad" | null. When the drill knows whether the key
+                      was right, the hint says so in colour; when it doesn't (a
+                      stray press before Start), it stays neutral. */
+      flash: function (midi, clef, opts) {
+        opts = opts || {};
         var useClef = clef || (!showBass ? "treble"
                              : !showTreble ? "bass"
                              : midi >= 60 ? "treble" : "bass");
-        var g = el("g", { class: "staff-flash" });
+        var verdict = opts.verdict === "good" || opts.verdict === "bad" ? opts.verdict : null;
+        var g = el("g", { class: "staff-flash" + (verdict ? " staff-flash-" + verdict : "") });
         flashLayer.appendChild(g);
-        drawNote(g, midi, useClef, NOTE_X, "staff-note-hint", stepOf(midi).letter);
+        drawNote(g, midi, useClef,
+                 typeof opts.x === "number" ? opts.x : NOTE_X,
+                 verdict ? "staff-note-" + verdict : "staff-note-hint",
+                 stepOf(midi).letter);
         var gone = function () { if (g.parentNode) g.parentNode.removeChild(g); };
         g.addEventListener("animationend", gone);
         setTimeout(gone, 1500);   // belt-and-braces if animationend never fires
