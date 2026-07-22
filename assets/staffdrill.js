@@ -1,26 +1,31 @@
-/* StaffDrill — a note appears on the staff; you PLAY it on the piano.
+/* StaffDrill — the sight-reading feedback loop: a symbol appears, you PLAY it,
+   graded instantly against what your hands actually did.
 
-   This is the sight-reading feedback loop in its smallest honest form: symbol in,
-   key out, graded instantly against what your hands actually did.
+   Two modes share this file:
+
+     SINGLE (Lesson 2) — one notehead at a time. data-pool = "landmarks" | "steps".
+       The skill is symbol→key for isolated notes; octave counts, so right-letter
+       wrong-octave is called out as its own kind of miss.
+
+     PHRASE (Lesson 3) — a whole LINE of notes; you play it left to right.
+       data-pool = "treble-steps" | "treble-skips" | "bass-steps" | "bass-skips".
+       The skill is different in kind: you stop reading each note from a landmark
+       and start reading each note as a step or a skip from the one before it. The
+       drill generates lines procedurally (a bounded random walk by step/skip),
+       tracks a cursor through the line, and grades note by note.
 
    Mount:
      <div data-staffdrill
           data-staff="staff-id"    <!-- a [data-staff] mount -->
           data-kb="kb-id"          <!-- a [data-keyboard] mount, for feedback -->
-          data-pool="landmarks"    <!-- landmarks | steps -->
-          data-rounds="10"></div>
+          data-pool="treble-steps"
+          data-rounds="8"
+          data-length="5"></div>   <!-- notes per line, phrase mode only -->
 
-   One difference from KeyDrill that matters pedagogically: this grades the
-   EXACT note, not the pitch class. Lesson 1 accepted C in any octave, because
-   the skill there was "where does C live in the pattern". A staff position
-   names one specific key, so playing the right letter in the wrong octave is
-   the wrong answer here — and it is the single most common beginner error, so
-   the feedback says so explicitly rather than just marking it wrong.
-
-   Timing and stats deliberately mirror keydrill.js (median, not mean). The two
-   share their CSS but not their code; if a third drill appears, extract the
-   stats/median/queue logic into a shared drillcore module rather than copying
-   it a third time. */
+   Timing and stats mirror keydrill.js (median, not mean). The three drills share
+   their CSS but not their code; if a fourth appears, extract the shared
+   scaffold/stats/median/queue plumbing into a drillcore module rather than
+   copying it again. */
 (function () {
   var POOLS = {
     // [midi, clef] — the three guide notes every method starts from.
@@ -30,7 +35,25 @@
             [65, "treble"], [69, "treble"], [62, "treble"],
             [52, "bass"], [55, "bass"]]
   };
-  var LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
+
+  /* Phrase generators. A "step" here is a diatonic step (see staff.js): the next
+     LETTER, on the next line/space. moves are those deltas — [-1,1] is steps only,
+     adding [-2,2] mixes in skips. lo/hi bound the walk so nothing runs off into
+     ledger-line territory; starts are the landmarks a line begins from. All white
+     keys — accidentals are a later lesson, and mixing them in here would test two
+     things at once. */
+  var PHRASE_POOLS = {
+    "treble-steps": { clef: "treble", moves: [-1, 1],        lo: 28, hi: 35, starts: [28, 32], len: 5 },
+    "treble-skips": { clef: "treble", moves: [-2, -1, 1, 2], lo: 28, hi: 35, starts: [28, 32], len: 5 },
+    "bass-steps":   { clef: "bass",   moves: [-1, 1],        lo: 21, hi: 28, starts: [24, 28], len: 5 },
+    "bass-skips":   { clef: "bass",   moves: [-2, -1, 1, 2], lo: 21, hi: 28, starts: [24, 28], len: 5 }
+  };
+
+  var WHITE_PC = [0, 2, 4, 5, 7, 9, 11];   // diatonic degree -> pitch class
+  function stepToMidi(s) {
+    var oct = Math.floor(s / 7);
+    return (oct + 1) * 12 + WHITE_PC[s - oct * 7];
+  }
 
   function shuffle(a) {
     a = a.slice();
@@ -53,18 +76,33 @@
     return info.letter + (info.sharp ? "♯" : "") + info.octave;
   }
 
-  function build(mount) {
-    if (mount._unsub) { mount._unsub(); mount._unsub = null; }
+  function samePC(a, b) { return (((a % 12) + 12) % 12) === (((b % 12) + 12) % 12); }
 
-    var staffEl = document.getElementById(mount.getAttribute("data-staff"));
-    var kbEl = document.getElementById(mount.getAttribute("data-kb"));
-    var staff = staffEl && staffEl.staff;
-    var kb = kbEl && kbEl.keyboard;
-    if (!staff) { console.error("StaffDrill: no staff for", mount); return; }
+  /* Build a line by walking from a landmark. A mild bias toward continuing in the
+     same direction gives the line a shape you can feel under the hand, rather than
+     the aimless back-and-forth a pure random walk produces — but reversals still
+     happen, because reading only one contour would teach only half the skill. */
+  function genPhrase(cfg) {
+    var s = cfg.starts[Math.floor(Math.random() * cfg.starts.length)];
+    var seq = [s], dir = 0;
+    for (var i = 1; i < cfg.len; i++) {
+      var opts = cfg.moves.filter(function (d) {
+        var nx = s + d; return nx >= cfg.lo && nx <= cfg.hi;
+      });
+      if (!opts.length) break;
+      var same = opts.filter(function (d) { return dir === 0 || (d > 0) === (dir > 0); });
+      var pick = (same.length && Math.random() < 0.62)
+        ? same[Math.floor(Math.random() * same.length)]
+        : opts[Math.floor(Math.random() * opts.length)];
+      s += pick; dir = pick; seq.push(s);
+    }
+    return seq.map(function (st) { return { midi: stepToMidi(st), clef: cfg.clef }; });
+  }
 
-    var pool = POOLS[mount.getAttribute("data-pool") || "landmarks"] || POOLS.landmarks;
-    var rounds = parseInt(mount.getAttribute("data-rounds") || "10", 10);
-
+  /* Shared DOM scaffold: label, live status line, Start button, stat row, caption.
+     Both modes render identically; only the stats they push and the grading
+     underneath differ. */
+  function scaffold(mount) {
     mount.classList.add("drill-box");
     mount.innerHTML = "";
 
@@ -101,23 +139,46 @@
       cap.innerHTML = captionText;
       mount.appendChild(cap);
     }
+    return { sub: sub, startBtn: startBtn, stats: stats };
+  }
+
+  function renderStatPairs(stats, pairs) {
+    stats.innerHTML = "";
+    pairs.forEach(function (p) {
+      var d = document.createElement("div");
+      d.className = "drill-stat";
+      d.innerHTML = '<span class="drill-stat-val">' + p[1] + "</span>" +
+                    '<span class="drill-stat-key">' + p[0] + "</span>";
+      stats.appendChild(d);
+    });
+  }
+
+  function refs(mount) {
+    var staffEl = document.getElementById(mount.getAttribute("data-staff"));
+    var kbEl = document.getElementById(mount.getAttribute("data-kb"));
+    return { staff: staffEl && staffEl.staff, kb: kbEl && kbEl.keyboard };
+  }
+
+  /* ── SINGLE-NOTE MODE (Lesson 2) ─────────────────────────── */
+  function buildSingle(mount, pool) {
+    var r = refs(mount);
+    var staff = r.staff, kb = r.kb;
+    if (!staff) { console.error("StaffDrill: no staff for", mount); return; }
+    var rounds = parseInt(mount.getAttribute("data-rounds") || "10", 10);
+
+    var ui = scaffold(mount);
+    var sub = ui.sub, stats = ui.stats;
 
     var running = false, locked = true, round = 0, correct = 0;
     var times = [], streak = 0, best = 0, queue = [], target = null, askedAt = 0;
 
     function renderStats() {
-      var med = median(times);
-      stats.innerHTML = "";
-      [["Round", round + " / " + rounds],
-       ["Correct", correct + ""],
-       ["Median", times.length ? (med / 1000).toFixed(2) + "s" : "—"],
-       ["Best streak", best + ""]].forEach(function (p) {
-        var d = document.createElement("div");
-        d.className = "drill-stat";
-        d.innerHTML = '<span class="drill-stat-val">' + p[1] + "</span>" +
-                      '<span class="drill-stat-key">' + p[0] + "</span>";
-        stats.appendChild(d);
-      });
+      renderStatPairs(stats, [
+        ["Round", round + " / " + rounds],
+        ["Correct", correct + ""],
+        ["Median", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
+        ["Best streak", best + ""]
+      ]);
     }
 
     function next() {
@@ -155,16 +216,10 @@
       var ms = performance.now() - askedAt;
       var want = target[0];
       var ok = e.note === want;
-      /* Right letter, wrong octave is the classic miss, and it means something
-         different from "wrong note" — the staff was read correctly but the hand
-         went to the wrong end of the keyboard. Say which it was. */
-      var rightLetter = (((e.note % 12) + 12) % 12) === (((want % 12) + 12) % 12);
+      var rightLetter = samePC(e.note, want);
 
       staff.show(want, target[1], ok ? "staff-note-good" : "staff-note-bad");
-      if (kb) {
-        if (!ok) kb.mark(e.note, "kbd-bad");
-        kb.mark(want, "kbd-good");
-      }
+      if (kb) { if (!ok) kb.mark(e.note, "kbd-bad"); kb.mark(want, "kbd-good"); }
       if (ok) {
         sub.className = "drill-sub drill-sub-good";
         sub.textContent = nameOf(want) + " — " + (ms / 1000).toFixed(2) + "s";
@@ -194,10 +249,10 @@
       renderStats();
     }
 
-    startBtn.onclick = function () {
+    ui.startBtn.onclick = function () {
       running = true; round = 0; correct = 0; times = [];
       streak = 0; best = 0; queue = []; target = null;
-      startBtn.textContent = "Restart";
+      ui.startBtn.textContent = "Restart";
       ask();
     };
 
@@ -205,7 +260,136 @@
     sub.textContent = "Press Start. A note appears — play it.";
   }
 
-  window.StaffDrill = { build: build, POOLS: POOLS };
+  /* ── PHRASE MODE (Lesson 3) ──────────────────────────────── */
+  function buildPhrase(mount, poolName) {
+    var r = refs(mount);
+    var staff = r.staff, kb = r.kb;
+    if (!staff) { console.error("StaffDrill: no staff for", mount); return; }
+
+    var cfg = {}, base = PHRASE_POOLS[poolName];
+    for (var k in base) cfg[k] = base[k];
+    var lenAttr = parseInt(mount.getAttribute("data-length") || "", 10);
+    if (lenAttr) cfg.len = lenAttr;
+    var rounds = parseInt(mount.getAttribute("data-rounds") || "8", 10);
+
+    var ui = scaffold(mount);
+    var sub = ui.sub, stats = ui.stats;
+
+    var running = false, locked = true, round = 0;
+    var phrase = null, pos = 0, missesHere = 0, phraseHadError = false, phraseStart = 0;
+    var times = [], cleanPhrases = 0, streak = 0, best = 0;
+    var totalNotes = 0, cleanNotes = 0;
+
+    function renderStats() {
+      var acc = totalNotes ? Math.round(cleanNotes / totalNotes * 100) + "%" : "—";
+      renderStatPairs(stats, [
+        ["Line", round + " / " + rounds],
+        ["Notes right", acc],
+        ["Median / line", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
+        ["Clean streak", best + ""]
+      ]);
+    }
+
+    function ask() {
+      if (kb) kb.clear();
+      if (round >= rounds) return finish();
+      round++;
+      phrase = staff.phrase(genPhrase(cfg));
+      pos = 0; missesHere = 0; phraseHadError = false;
+      phrase.cursor(0);
+      sub.className = "drill-sub";
+      sub.textContent = "Play the line, left to right.";
+      renderStats();
+      locked = false;
+      phraseStart = performance.now();
+    }
+
+    function finishPhrase() {
+      locked = true;
+      phrase.cursor(null);
+      var ms = performance.now() - phraseStart;
+      times.push(ms);
+      if (!phraseHadError) { cleanPhrases++; streak++; if (streak > best) best = streak; }
+      else streak = 0;
+      sub.className = phraseHadError ? "drill-sub" : "drill-sub drill-sub-good";
+      sub.textContent = phraseHadError
+        ? "Line done — " + (ms / 1000).toFixed(2) + "s, with slips."
+        : "Clean — " + (ms / 1000).toFixed(2) + "s.";
+      renderStats();
+      setTimeout(ask, 950);
+    }
+
+    mount._unsub = window.PianoMIDI.subscribe(function (e) {
+      if (!running || locked || !e.on) return;
+      var want = phrase.midiAt(pos);
+      if (e.note === want) {
+        phrase.mark(pos, "staff-note-good");
+        if (kb) { kb.clear("kbd-bad"); kb.clear("kbd-good"); kb.mark(want, "kbd-good"); }
+        totalNotes++;
+        if (missesHere === 0) cleanNotes++;
+        pos++; missesHere = 0;
+        if (pos >= phrase.length) { finishPhrase(); return; }
+        phrase.cursor(pos);
+        // Recover the neutral prompt if the last note was a slip.
+        if (sub.className.indexOf("bad") >= 0) {
+          sub.className = "drill-sub";
+          sub.textContent = "Play the line, left to right.";
+        }
+        renderStats();
+      } else {
+        phraseHadError = true;
+        missesHere++;
+        streak = 0;
+        if (kb) kb.mark(e.note, "kbd-bad");
+        sub.className = "drill-sub drill-sub-bad";
+        sub.textContent = samePC(e.note, want)
+          ? "Right letter, wrong octave — " + nameOf(e.note) +
+            " names it but at the wrong end. Play the one on the staff."
+          : "Not it — that was " + nameOf(e.note) +
+            ". Read it as a step or skip from the note before, and try again.";
+        // Stuck twice on the same note: reveal the key so a line never dead-ends.
+        if (missesHere >= 2 && kb) kb.mark(want, "kbd-good");
+        renderStats();
+      }
+    });
+
+    function finish() {
+      running = false; locked = true;
+      staff.clear();
+      if (kb) kb.clear();
+      var med = median(times);
+      var acc = totalNotes ? cleanNotes / totalNotes : 0;
+      sub.className = "drill-sub";
+      sub.innerHTML = "<strong>" + cleanPhrases + " of " + rounds + "</strong> lines clean, " +
+        Math.round(acc * 100) + "% of notes right first time, median " +
+        (times.length ? (med / 1000).toFixed(2) + "s" : "—") + " a line. " +
+        (acc < 0.8
+          ? "Slow down. Land on a landmark, then read each note as a step or a skip from the last."
+          : med <= 6000
+            ? "That is reading a line, not decoding it note by note. Now try the other hand."
+            : "Accurate. Push the pace — let your eye reach the next note while your hand plays this one.");
+      renderStats();
+    }
+
+    ui.startBtn.onclick = function () {
+      running = true; round = 0; times = []; cleanPhrases = 0;
+      streak = 0; best = 0; totalNotes = 0; cleanNotes = 0;
+      ui.startBtn.textContent = "Restart";
+      ask();
+    };
+
+    renderStats();
+    sub.textContent = "Press Start. A line of notes appears — play it left to right.";
+  }
+
+  function build(mount) {
+    if (mount._unsub) { mount._unsub(); mount._unsub = null; }
+    var poolName = mount.getAttribute("data-pool") || "landmarks";
+    if (PHRASE_POOLS[poolName]) return buildPhrase(mount, poolName);
+    return buildSingle(mount, POOLS[poolName] || POOLS.landmarks);
+  }
+
+  window.StaffDrill = { build: build, POOLS: POOLS, PHRASE_POOLS: PHRASE_POOLS };
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("[data-staffdrill]").forEach(build);
   });

@@ -154,8 +154,12 @@
     if (showTreble) addClef("treble", TREBLE_TOP);
     if (showBass) addClef("bass", BASS_TOP);
 
+    // Paint order = append order: the cursor band sits behind everything so it
+    // reads as a "you are here" column rather than covering a notehead.
+    var cursorLayer = el("g", {});
     var noteLayer = el("g", {});
     var markLayer = el("g", {});
+    svg.appendChild(cursorLayer);
     svg.appendChild(markLayer);
     svg.appendChild(noteLayer);
     mount.appendChild(svg);
@@ -239,7 +243,51 @@
         noteLayer.innerHTML = "";
         return drawNote(noteLayer, midi, clef || "treble", NOTE_X, cls || "");
       },
-      clear: function () { noteLayer.innerHTML = ""; },
+      /* Draw a whole LINE of notes across the staff, left to right, and hand back
+         a small controller so a drill can grade it one note at a time: recolour a
+         single notehead, and move a cursor band to whichever note is due next.
+         This is the jump from Lesson 2 (one symbol, one key) to reading — the eye
+         has to carry from one note to the next, and the drill needs to track where
+         in the line the player is. */
+      phrase: function (notes) {
+        noteLayer.innerHTML = "";
+        cursorLayer.innerHTML = "";
+        var n = notes.length;
+        var x0 = 120, x1 = WIDTH - 45;    // clears the clef on the left, staff edge on the right
+        var groups = notes.map(function (nt, i) {
+          var x = n === 1 ? NOTE_X : x0 + (x1 - x0) * (i / (n - 1));
+          var g = el("g", {});
+          noteLayer.appendChild(g);
+          var clef = nt.clef || "treble";
+          drawNote(g, nt.midi, clef, x, "");
+          return { x: x, g: g, midi: nt.midi, clef: clef };
+        });
+        // A translucent column marking the current note. Height spans whichever
+        // staves are drawn, so it works on a treble-only or bass-only staff too.
+        var top = (showTreble ? TREBLE_TOP : BASS_TOP) - 22;
+        var bot = (showBass ? BASS_BOTTOM : TREBLE_BOTTOM) + 22;
+        var band = el("rect", {
+          class: "staff-cursor", x: 0, y: top, width: 26, height: bot - top, rx: 6
+        });
+        band.style.display = "none";
+        cursorLayer.appendChild(band);
+        return {
+          length: n,
+          midiAt: function (i) { return groups[i] && groups[i].midi; },
+          mark: function (i, cls) {
+            var gr = groups[i];
+            if (!gr) return;
+            gr.g.innerHTML = "";
+            drawNote(gr.g, gr.midi, gr.clef, gr.x, cls);
+          },
+          cursor: function (i) {
+            if (i == null || !groups[i]) { band.style.display = "none"; return; }
+            band.setAttribute("x", groups[i].x - 13);
+            band.style.display = "";
+          }
+        };
+      },
+      clear: function () { noteLayer.innerHTML = ""; cursorLayer.innerHTML = ""; },
       /* The three guide notes every method starts with: Treble G, Middle C,
          Bass F. Everything else is read as a distance from one of these. */
       landmarks: function (on) {

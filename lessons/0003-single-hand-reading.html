@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 3 · Reading a line</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 03 · Reading</div>
+<h1>A note is a fact. A line is a habit.</h1>
+<p class="subtitle">Last lesson you found single notes from a landmark. Now you
+stop going back to the landmark every time — and read each note from the one
+before it.</p>
+
+<h2>First — thirty seconds on last lesson</h2>
+
+<p>No keyboard. These are the facts the reading is built on; if any of them still
+needs a moment's thought, the line drills below will feel like work rather than
+reading. That's the tell that they aren't automatic yet.</p>
+
+<div class="retrieval-quiz" data-quiz="warmup"></div>
+
+<script type="application/json" id="warmup">
+[
+  { "q": "The treble clef curls around the line belonging to which note?",
+    "a": "G above middle C", "choices": ["G above middle C", "F below middle C", "Middle C", "E on the bottom line"] },
+  { "q": "The two dots of the bass clef straddle which note's line?",
+    "a": "F below middle C", "choices": ["F below middle C", "G above middle C", "Middle C", "A below the staff"] },
+  { "q": "Line to the very next space is a ___ ; line to the next line is a ___ .",
+    "a": "step, skip", "choices": ["step, skip", "skip, step", "octave, step", "skip, octave"] },
+  { "q": "A step on the staff always moves to the next:",
+    "a": "Letter", "choices": ["Letter", "Key", "Black key", "Octave"] }
+]
+</script>
+
+<h2>The one idea in this lesson</h2>
+
+<p>Reading single notes, you had one move: find the nearest landmark, then step
+or skip to the note. That works, but it resets on every note — eyes back to the
+landmark, out to the note, back to the landmark. Good readers don't do that. Once
+they've placed the <em>first</em> note of a line, they read the second as a
+distance from the first, the third from the second, and so on. The landmark is
+where a line <em>starts</em>; the intervals carry you through the rest.</p>
+
+<p>So the whole line is just the two moves you already know, chained:</p>
+
+<div class="callout">
+  <span class="callout-label">The only two moves</span>
+  <strong>Step</strong> — line to the touching space, or space to the touching
+  line. The next letter. Under the hand, a neighbouring finger.<br>
+  <strong>Skip</strong> — line to the next line, or space to the next space. You
+  jump one letter. Under the hand, a finger's gap.<br>
+  <br>
+  A line of music is nothing but a string of these. Read the shape, not the
+  names.
+</div>
+
+<p>Here is a line to look at — not to name. See how it moves: up a step, up a
+step, down a step, then a <em>skip</em> up (notice it jumps from a space clear
+over the line to the next space). That contour is the thing to read.</p>
+
+<div id="demo-line" data-staff data-clefs="treble"
+     data-title="Read the shape, not the letters"
+     data-caption="C, D, E, D, F — but you shouldn't be reading letters. Read: up, up, down, then a skip up. The last jump is bigger on the page and bigger under your hand; that difference between a step and a skip is the entire skill this lesson drills."></div>
+
+<h2>Now read a line with your right hand</h2>
+
+<p>A line appears; a soft column marks the note you're on. Play it, and the column
+moves to the next. Play the whole line left to right. Stay in the <strong>treble
+staff, around Middle C and Treble G</strong> — the two landmarks you know — so the
+only new thing is carrying from note to note.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="treble-staff" data-staff data-clefs="treble"></div>
+
+<div id="treble-kb"
+     data-keyboard
+     data-from="60"
+     data-octaves="1"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div id="treble-drill" data-staffdrill
+     data-staff="treble-staff"
+     data-kb="treble-kb"
+     data-pool="treble-steps"
+     data-rounds="8"
+     data-title="Right hand — steps only"
+     data-caption="Every note is one letter from the last. Don't name them: land the first note from a landmark, then let each note pull you a step up or down. Miss a note twice and the key lights up so the line never dead-ends."></div>
+
+<p>When steps are landing smoothly —
+<a href="#" onclick="addSkips(event, 'treble-drill')">now mix in skips</a>. A
+skip looks like a bigger gap on the staff and feels like a bigger gap in your
+hand; the point of mixing them is that you have to <em>tell them apart</em> at a
+glance, which naming can't do fast enough.</p>
+
+<h2>Now the same thing, left hand</h2>
+
+<p>Down to the <strong>bass staff, around Bass F</strong>. Identical skill, other
+hand, other clef — and the clef is the point. The same shape on the page is a
+different set of keys down here, so you can't lean on "that pattern was C–D–E last
+time". You read the bass line as bass, from its own landmark.</p>
+
+<div id="bass-staff" data-staff data-clefs="bass"></div>
+
+<div id="bass-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="1"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div id="bass-drill" data-staffdrill
+     data-staff="bass-staff"
+     data-kb="bass-kb"
+     data-pool="bass-steps"
+     data-rounds="8"
+     data-title="Left hand — steps only"
+     data-caption="Bass F is your anchor here, the way Treble G was up top. Read each note as a step from the last, not by hunting its name. Same two moves, lower down the page."></div>
+
+<p>Same move once the left hand is steady —
+<a href="#" onclick="addSkips(event, 'bass-drill')">mix skips into the bass
+too</a>.</p>
+
+<div class="callout">
+  <span class="callout-label">Why hands separately</span>
+  Reading two staves at once is a real skill, and it's a later one — trying it now
+  just halves the attention each hand gets. Every good method reads hands
+  separately first and joins them only when each is close to automatic. We'll join
+  them at the chords lesson, where the left hand has a simpler job and there's a
+  reason to.
+</div>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="reading-quiz"></div>
+
+<script type="application/json" id="reading-quiz">
+[
+  { "q": "You've read the first note of a line. How should you read the second?",
+    "a": "As a step/skip from the first", "choices": ["As a step/skip from the first", "From the nearest landmark again", "By reciting up from the bottom line", "By its letter name"] },
+  { "q": "On the staff, a skip goes from a line to the:",
+    "a": "Next line", "choices": ["Next line", "Touching space", "Same line", "Next clef"] },
+  { "q": "The same written line in the bass clef gives you:",
+    "a": "Different keys than in treble", "choices": ["Different keys than in treble", "The same keys as in treble", "Only black keys", "A faster tempo"] },
+  { "q": "Under the hand, a step versus a skip is:",
+    "a": "Neighbour finger vs a gap", "choices": ["Neighbour finger vs a gap", "Same finger twice", "Left hand vs right", "Loud vs soft"] },
+  { "q": "Why read the right and left hands separately for now?",
+    "a": "Each hand gets full attention", "choices": ["Each hand gets full attention", "The clefs are unrelated", "Only one hand can read", "It is faster to skip one"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes, most days. Run the treble line drill until <strong>notes-right
+holds around ninety percent and the median line drops under about four
+seconds</strong>, then the same for the bass. Do steps until they're dull before
+you add skips — bored is the target; bored means automatic. One thing away from
+the screen: open any easy piece, put a finger on the first note of a phrase, and
+read the rest as up/down, step/skip <em>out loud</em> without playing. Naming the
+contour is what you're training; the keys will follow.</p>
+
+<div class="callout">
+  <span class="callout-label">Where this is going</span>
+  You now turn a written line into the right keys. What's missing is <em>when</em>
+  — how long each note is held and where the beat falls. That's the next lesson:
+  quarter, half, whole and eighth notes, counted against a pulse, laid straight
+  onto lines you can already read. Pitch first, then time on top of it — which is
+  the order that lets you actually play a phrase instead of spelling it.
+</div>
+
+<div class="ask-agent">
+  <strong>Tell me your numbers.</strong> Notes-right and median line, each hand
+  — that's what decides the next move. If skips are landing as easily as steps in
+  both clefs, say so and we go to rhythm. If one hand is dragging, we stay and
+  widen its range instead. And ask me things: what a ledger line really is once a
+  line climbs off the staff, or why the bass clef seems to "lie" about where C is.
+</div>
+
+<div class="nav">
+  <span><a href="0002-staff-landmarks.html">← Lesson 2: Staff landmarks</a></span>
+  <span><a href="../reference/keyboard-map.html">Reference: Keyboard map →</a></span>
+</div>
+
+<script>
+// Draw the illustrative line once the staff widget has built itself.
+window.addEventListener("load", function () {
+  var d = document.getElementById("demo-line");
+  if (d && d.staff) {
+    d.staff.phrase([
+      { midi: 60, clef: "treble" }, { midi: 62, clef: "treble" },
+      { midi: 64, clef: "treble" }, { midi: 62, clef: "treble" },
+      { midi: 65, clef: "treble" }
+    ]);
+  }
+});
+
+// "Add skips" — swap a running steps drill for its skips pool and rebuild.
+function addSkips(e, drillId) {
+  e.preventDefault();
+  var d = document.getElementById(drillId);
+  var hand = drillId === "bass-drill" ? "Left" : "Right";
+  d.setAttribute("data-pool", d.getAttribute("data-pool").replace("steps", "skips"));
+  d.setAttribute("data-rounds", "10");
+  d.setAttribute("data-title", hand + " hand — steps and skips mixed");
+  d.setAttribute("data-caption", "Now some notes jump a letter. Read the size of the gap, not the name: touching = step, one line clear = skip. Telling them apart at a glance is the whole reason this is harder than steps alone.");
+  window.StaffDrill.build(d);
+  d.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+
+</body>
+</html>

@@ -495,6 +495,10 @@ th {
 .staff-note-good { fill: var(--good); }
 .staff-note-bad { fill: var(--bad); }
 
+/* The "you are here" column in a reading line. Behind the noteheads, so it tints
+   the current note's position without hiding it. */
+.staff-cursor { fill: var(--accent); opacity: 0.14; }
+
 .staff-acc {
   fill: var(--text);
   font-size: 20px;
