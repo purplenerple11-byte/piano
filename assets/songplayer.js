@@ -93,6 +93,111 @@
     window.StaffDrill.build(drill);
   }
 
+  /* A both-hands, chord-graded play-along. Each column is a chord (notes in either
+     hand); it's satisfied when every note has been struck, in any order, and only
+     then does the cursor move on — playing a chord is agreeing on one moment, not
+     an ordered run. Built on staff.duet (which now stacks chords) plus its own
+     small grader, kept separate from Lesson 5's DuetDrill so neither disturbs the
+     other. */
+  function chordBlock(parent, opts) {
+    var all = [];
+    opts.columns.forEach(function (c) {
+      (c.treble || []).forEach(function (n) { all.push(n); });
+      (c.bass || []).forEach(function (n) { all.push(n); });
+    });
+    var staff = makeStaff(opts.id + "-staff", "both");
+    var kb = makeKeyboard(opts.id + "-kb", all);
+    var box = el("div", "drill-box");
+    box.appendChild(el("div", "drill-label", opts.title));
+    var sub = el("div", "drill-sub");
+    sub.style.textAlign = "center"; sub.style.minHeight = "1.4rem";
+    box.appendChild(sub);
+    var controls = el("div", "drill-controls");
+    var startBtn = el("button", "drill-btn"); startBtn.textContent = "Start";
+    controls.appendChild(startBtn);
+    box.appendChild(controls);
+    var stats = el("div", "drill-stats"); box.appendChild(stats);
+    if (opts.caption) box.appendChild(el("div", "drill-caption", opts.caption));
+
+    parent.appendChild(staff);
+    parent.appendChild(kb);
+    parent.appendChild(box);
+    window.StaffWidget.build(staff);
+    window.KeyboardWidget.build(kb);
+    var st = staff.staff, kbApi = kb.keyboard;
+
+    var running = false, line = null, pos = 0, pending = [], doneCols = 0, cleanCols = 0, colErr = false;
+    var total = opts.columns.length;
+
+    function renderStats() {
+      var acc = doneCols ? Math.round(cleanCols * 100 / doneCols) + "%" : "—";
+      stats.innerHTML = "";
+      [["Chord", Math.min(pos + (running ? 1 : 0), total) + " / " + total],
+       ["Chords clean", acc]].forEach(function (p) {
+        var d = el("div", "drill-stat");
+        d.innerHTML = '<span class="drill-stat-val">' + p[1] + '</span><span class="drill-stat-key">' + p[0] + "</span>";
+        stats.appendChild(d);
+      });
+    }
+    function arm() {
+      pending = line.notesAt(pos).map(function (nt) { return { hand: nt.hand, midi: nt.midi, done: false }; });
+      colErr = false;
+      line.cursor(pos);
+      if (kbApi) kbApi.clear();
+    }
+    function finish() {
+      running = false;
+      line.cursor(null);
+      var acc = doneCols ? cleanCols / doneCols : 0;
+      sub.className = "drill-sub";
+      sub.innerHTML = "<strong>" + Math.round(acc * 100) + "%</strong> of chords clean. " +
+        (acc >= 0.9 ? "That's the progression, both hands." :
+         acc >= 0.7 ? "Close — loop the chords that fought back." :
+         "Take it a chord at a time; there's no clock here.");
+      startBtn.textContent = "Restart";
+      renderStats();
+    }
+    startBtn.onclick = function () {
+      running = true; startBtn.textContent = "Restart";
+      doneCols = 0; cleanCols = 0; pos = 0;
+      line = st.duet(opts.columns);
+      arm();
+      sub.className = "drill-sub";
+      sub.textContent = "Play each chord — both hands. The notes can go down in any order.";
+      renderStats();
+    };
+    window.PianoMIDI.subscribe(function (e) {
+      if (!running || !e.on || !pending.length) return;
+      var want = null;
+      for (var i = 0; i < pending.length; i++) {
+        if (!pending[i].done && pending[i].midi === e.note) { want = pending[i]; break; }
+      }
+      if (!want) {
+        colErr = true;
+        if (kbApi) kbApi.mark(e.note, "kbd-bad");
+        sub.className = "drill-sub drill-sub-bad";
+        sub.textContent = "Not in this chord — play the notes shown, then the cursor moves on.";
+        return;
+      }
+      want.done = true;
+      line.markNote(pos, want.hand, want.midi, "staff-note-good");
+      if (kbApi) kbApi.mark(want.midi, "kbd-good");
+      if (pending.some(function (p) { return !p.done; })) {
+        sub.className = "drill-sub";
+        return;
+      }
+      doneCols++; if (!colErr) cleanCols++;
+      pos++;
+      renderStats();
+      pending = [];   // ignore stray keys during the brief gap before the next chord
+      if (pos >= line.length) { setTimeout(finish, 300); return; }
+      setTimeout(arm, 300);
+    });
+
+    renderStats();
+    sub.textContent = "Press Start. Each column is a chord — play all of its notes together.";
+  }
+
   function build(mount) {
     var srcId = mount.getAttribute("data-song-src");
     var srcEl = srcId && document.getElementById(srcId);
@@ -141,6 +246,20 @@
       title: "Full play-along",
       caption: "The cursor carries you through the whole song, phrase after phrase."
     });
+
+    // Optional both-hands chord pass: the harmony as block chords, hands together.
+    if (song.chords && song.chords.length) {
+      var wrap3 = el("div", "song-section song-full");
+      wrap3.appendChild(el("h3", null, song.chordsTitle || "Both hands — the chords"));
+      if (song.chordsNote) wrap3.appendChild(el("p", "song-note", song.chordsNote));
+      mount.appendChild(wrap3);
+      chordBlock(wrap3, {
+        id: idBase + "-chords",
+        columns: song.chords,
+        title: "The chord progression",
+        caption: "Left hand takes the bass note, right hand the chord above it. Play both hands on each column; the order the notes go down doesn't matter, landing them together does."
+      });
+    }
   }
 
   window.SongPlayer = { build: build };

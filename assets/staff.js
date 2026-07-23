@@ -309,13 +309,19 @@
         var x0 = 120, x1 = WIDTH - 45;
         var cols = events.map(function (ev, i) {
           var x = n === 1 ? NOTE_X : x0 + (x1 - x0) * (i / (n - 1));
-          var col = { x: x, treble: ev.treble, bass: ev.bass, g: {} };
+          // A hand may hold nothing (null), one note (a number), or a CHORD (an
+          // array of MIDI). Normalise to a flat list of noteheads so a chord is
+          // just several notes in the same column and hand.
+          var col = { x: x, notes: [] };
           ["treble", "bass"].forEach(function (hand) {
-            if (ev[hand] == null) return;
-            var g = el("g", {});
-            noteLayer.appendChild(g);
-            drawNote(g, ev[hand], hand, x, "");
-            col.g[hand] = g;
+            var v = ev[hand];
+            if (v == null) return;
+            (Array.isArray(v) ? v : [v]).forEach(function (midi) {
+              var g = el("g", {});
+              noteLayer.appendChild(g);
+              drawNote(g, midi, hand, x, "");
+              col.notes.push({ hand: hand, midi: midi, g: g });
+            });
           });
           return col;
         });
@@ -326,27 +332,30 @@
         });
         band.style.display = "none";
         cursorLayer.appendChild(band);
+        function paint(no, c, cls) { no.g.innerHTML = ""; drawNote(no.g, no.midi, no.hand, c.x, cls); }
         return {
           length: n,
-          /* Which notes column i still expects, as [{hand, midi}] — the drill
-             works from this rather than reaching into the events array. */
+          /* Every note column i still expects, as [{hand, midi}] — a chord is
+             several entries, and the drill satisfies them in any order. */
           notesAt: function (i) {
-            var c = cols[i];
-            if (!c) return [];
-            var out = [];
-            if (c.treble != null) out.push({ hand: "treble", midi: c.treble });
-            if (c.bass != null) out.push({ hand: "bass", midi: c.bass });
-            return out;
+            return cols[i] ? cols[i].notes.map(function (no) { return { hand: no.hand, midi: no.midi }; }) : [];
           },
+          // Mark every note of a hand (back-compat: a single-note hand is one note).
           mark: function (i, hand, cls) {
             var c = cols[i];
-            if (!c || !c.g[hand]) return;
-            c.g[hand].innerHTML = "";
-            drawNote(c.g[hand], c[hand], hand, c.x, cls);
+            if (!c) return;
+            c.notes.forEach(function (no) { if (no.hand === hand) paint(no, c, cls); });
+          },
+          // Mark one specific note of a chord.
+          markNote: function (i, hand, midi, cls) {
+            var c = cols[i];
+            if (!c) return;
+            c.notes.forEach(function (no) { if (no.hand === hand && no.midi === midi) paint(no, c, cls); });
           },
           markAll: function (i, cls) {
-            var self = this;
-            ["treble", "bass"].forEach(function (h) { self.mark(i, h, cls); });
+            var c = cols[i];
+            if (!c) return;
+            c.notes.forEach(function (no) { paint(no, c, cls); });
           },
           cursor: function (i) {
             if (i == null || !cols[i]) { band.style.display = "none"; return; }
