@@ -58,9 +58,19 @@
     return d;
   }
 
+  /* Pick how to notate a set of pitches. All at or above middle C → treble; all
+     below → bass; straddling it → "auto" per-note on a grand staff. Returns the
+     note-clef the drill uses and the clefs the staff should draw. */
+  function clefInfo(midis) {
+    var min = Math.min.apply(null, midis), max = Math.max.apply(null, midis);
+    if (min >= 60) return { note: "treble", staff: "treble" };
+    if (max < 60) return { note: "bass", staff: "bass" };
+    return { note: "auto", staff: "both" };
+  }
+
   // Build a self-contained play-along block: staff + keyboard + drill, wired up.
   function block(parent, opts) {
-    var staff = makeStaff(opts.id + "-staff", opts.clefs);
+    var staff = makeStaff(opts.id + "-staff", opts.staffClefs);
     var kb = makeKeyboard(opts.id + "-kb", opts.allNotes);
     var drill = el("div");
     drill.setAttribute("data-staffdrill", "");
@@ -70,7 +80,7 @@
     if (opts.caption) drill.setAttribute("data-caption", opts.caption);
     if (opts.notes) {
       drill.setAttribute("data-notes", opts.notes.join(" "));
-      drill.setAttribute("data-clef", opts.clefs);
+      drill.setAttribute("data-clef", opts.noteClef);
     }
     if (opts.lines) drill.setAttribute("data-lines", JSON.stringify(opts.lines));
     if (opts.feedbackToggle) drill.setAttribute("data-feedback-toggle", "true");
@@ -96,36 +106,36 @@
 
     // Phrase-by-phrase build-up: one block per section.
     sections.forEach(function (sec, i) {
+      var ci = clefInfo(sec.notes);
       var wrap = el("div", "song-section");
       wrap.appendChild(el("h3", null, sec.title || ("Phrase " + (i + 1))));
       if (sec.note) wrap.appendChild(el("p", "song-note", sec.note));
       mount.appendChild(wrap);
       block(wrap, {
         id: idBase + "-s" + i,
-        clefs: sec.clef || "treble",
+        staffClefs: ci.staff,
+        noteClef: ci.note,
         notes: sec.notes,
         allNotes: sec.notes,
         title: sec.title || ("Phrase " + (i + 1)),
-        caption: sec.caption || "Play the line as the cursor reaches each note. Turn on 💡 Hints if a position won't stick."
+        caption: sec.caption || "Play the line as the cursor reaches each note. Turn on Hints if a position won't stick."
       });
     });
 
     // Full play-along: every section's line, in order, with the feedback toggle.
-    var clefs = sections.every(function (s) { return (s.clef || "treble") === "treble"; }) ? "treble"
-              : sections.every(function (s) { return s.clef === "bass"; }) ? "bass" : "both";
     var all = [];
     sections.forEach(function (s) { all = all.concat(s.notes); });
     var wrap2 = el("div", "song-section song-full");
     wrap2.appendChild(el("h3", null, "The whole thing"));
     wrap2.appendChild(el("p", "song-note",
       "Every phrase, back to back. Leave feedback on while you're still learning it; " +
-      "switch to <strong>🙈 Feedback off</strong> for a real run-through — no marks as you play, " +
+      "switch to <strong>Feedback off</strong> for a real run-through — no marks as you play, " +
       "just your score at the end."));
     mount.appendChild(wrap2);
     block(wrap2, {
       id: idBase + "-full",
-      clefs: clefs,
-      lines: sections.map(function (s) { return { clef: s.clef || "treble", notes: s.notes }; }),
+      staffClefs: clefInfo(all).staff,
+      lines: sections.map(function (s) { return { clef: clefInfo(s.notes).note, notes: s.notes }; }),
       allNotes: all,
       feedbackToggle: true,
       title: "Full play-along",

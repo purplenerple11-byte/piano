@@ -69,6 +69,20 @@
     '<path d="M9.2 18.2h5.6"/><path d="M10.4 21.2h3.2"/>' +
     '<path d="M12 2.8a6.1 6.1 0 0 0-3.5 11.1c.6.42.9 1.05.9 1.7v.6h5.2v-.6c0-.65.3-1.28.9-1.7A6.1 6.1 0 0 0 12 2.8Z"/>' +
     "</svg>";
+  var EYE_BASE = '<svg class="drill-btn-ico" viewBox="0 0 24 24" width="14" height="14" ' +
+    'fill="none" stroke="currentColor" stroke-width="1.9" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  var EYE_ICON = EYE_BASE +
+    '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/>' +
+    '<circle cx="12" cy="12" r="2.6"/></svg>';
+  var EYE_OFF_ICON = EYE_BASE +
+    '<path d="M4 4l16 16"/>' +
+    '<path d="M9.6 5.4A9.7 9.7 0 0 1 12 5.5c6.4 0 10 6.5 10 6.5a15.6 15.6 0 0 1-2.9 3.5"/>' +
+    '<path d="M6.3 7.1A15.4 15.4 0 0 0 2 12s3.6 6.5 10 6.5a9.6 9.6 0 0 0 3.1-.5"/></svg>';
+  function feedbackFace(on) {
+    return (on ? EYE_ICON : EYE_OFF_ICON) +
+      '<span class="drill-btn-txt">Feedback ' + (on ? "on" : "off") + "</span>";
+  }
 
   var WHITE_PC = [0, 2, 4, 5, 7, 9, 11];   // diatonic degree -> pitch class
   function stepToMidi(s) {
@@ -186,17 +200,22 @@
   function parseNotes(str) {
     return str.trim().split(/[\s,]+/).filter(Boolean).map(Number);
   }
+  // clef "auto" places each note by pitch — middle C and up in the treble, below
+  // it in the bass — so a melody that crosses the middle reads on a grand staff
+  // instead of drowning in ledger lines.
+  function clefFor(clef, midi) {
+    return clef === "auto" ? (midi >= 60 ? "treble" : "bass") : (clef || "treble");
+  }
   function readSongLines(mount) {
     var notesAttr = mount.getAttribute("data-notes");
     var linesAttr = mount.getAttribute("data-lines");
     if (notesAttr) {
       var clef = mount.getAttribute("data-clef") || "treble";
-      return [parseNotes(notesAttr).map(function (m) { return { midi: m, clef: clef }; })];
+      return [parseNotes(notesAttr).map(function (m) { return { midi: m, clef: clefFor(clef, m) }; })];
     }
     if (linesAttr) {
       return JSON.parse(linesAttr).map(function (ln) {
-        var c = ln.clef || "treble";
-        return ln.notes.map(function (m) { return { midi: m, clef: c }; });
+        return ln.notes.map(function (m) { return { midi: m, clef: clefFor(ln.clef, m) }; });
       });
     }
     return null;
@@ -432,13 +451,13 @@
     var feedbackOn = true;
     if (mount.getAttribute("data-feedback-toggle") === "true") {
       ui.feedbackBtn.style.display = "";
-      ui.feedbackBtn.textContent = "👁 Feedback on";
+      ui.feedbackBtn.innerHTML = feedbackFace(true);
       ui.feedbackBtn.classList.add("drill-btn-on");
       ui.feedbackBtn.onclick = function () {
         if (running) return;
         feedbackOn = !feedbackOn;
         ui.feedbackBtn.classList.toggle("drill-btn-on", feedbackOn);
-        ui.feedbackBtn.textContent = feedbackOn ? "👁 Feedback on" : "🙈 Feedback off";
+        ui.feedbackBtn.innerHTML = feedbackFace(feedbackOn);
         resetState(); renderStats();
         sub.className = "drill-sub";
         sub.textContent = feedbackOn
