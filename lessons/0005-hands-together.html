@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 5 · Hands Together</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/duetdrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 05 · Coordination</div>
+<h1>Two hands, one moment</h1>
+<p class="subtitle">The wall everyone hits. It's smaller than it looks, because
+it isn't a reading problem.</p>
+
+<h2>Why this feels impossible at first</h2>
+
+<p>You can read a treble line. You can read a bass line. Put them on the page
+together and it falls apart — and the natural conclusion is that you need to get
+better at reading. You don't. Your reading is fine.</p>
+
+<p>The trap is thinking of it as <em>two things at once</em>. Your attention
+can't split, so it flips between hands, and whichever hand isn't being watched
+drifts. The fix is to stop trying to split:</p>
+
+<div class="callout">
+  <span class="callout-label">The one idea</span>
+  Hands together is <strong>not two parts played simultaneously</strong>. It is
+  <strong>one part with two notes in it</strong>. When both hands land on the
+  same beat, that is a single event — one gesture, one decision, two fingers
+  arriving. Stop counting two things and start feeling one.
+</div>
+
+<p>That's why the drill below doesn't just check whether you played the right
+notes. It measures <strong>how far apart your hands landed</strong>, in
+milliseconds. You can play every note correctly and still sound like two people
+— and accuracy alone would never show it.</p>
+
+<div class="callout">
+  <span class="callout-label">The number to watch</span>
+  Under <strong>50ms</strong> and a listener hears one sound. Past
+  <strong>120ms</strong> it's an audible <em>flam</em> — that slightly drunk,
+  rolled quality where the hands don't agree. If you're flamming, the answer is
+  never "try harder". It's slow down until they arrive together, then speed up.
+</div>
+
+<h2>Start with the easy shape: taking turns</h2>
+
+<p>Before both hands land at once, do the shape where they hand off to each
+other — right hand plays a few notes, then the left, then back. Only one hand is
+ever busy, so there's nothing to synchronise. What's new is that your eye has to
+notice <em>which staff</em> the next note is on and switch clefs mid-line.</p>
+
+<p>This is not a warm-up exercise, by the way. It's the actual texture of the
+opening of <em>Für Elise</em>: the right hand plays its little
+E–D♯–E–D♯ figure, the left answers with a broken chord, and they barely overlap.
+Get comfortable here and that piece stops being theoretical.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="alt-staff" data-staff data-clefs="both"></div>
+
+<div data-duetdrill
+     data-staff="alt-staff"
+     data-mode="alternate"
+     data-events="8"
+     data-title="Hands take turns"
+     data-caption="One note per column, but it could be on either staff. Right hand lives around Middle C to Treble G, left hand around Bass F — the landmarks you already know, so nothing here is a new position to hunt for. <strong>Hand spread</strong> stays blank in this mode; nothing is simultaneous yet."></div>
+
+<h2>Now both at once</h2>
+
+<p>Every column now wants a note from each hand. Play them in either order — the
+drill doesn't care which finger moves first, only how close together they
+arrive. It will tell you after each column.</p>
+
+<p>Do this slowly. There is no clock and no score for speed here, deliberately.
+The only thing that matters is that the two notes become one event.</p>
+
+<div id="tog-staff" data-staff data-clefs="both"></div>
+
+<div id="tog-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-duetdrill
+     data-staff="tog-staff"
+     data-mode="together"
+     data-events="6"
+     data-title="Both hands, same moment"
+     data-caption="Six columns, two notes each. If the spread is above 120ms, stop reading ahead and play a single column over and over until the two notes fuse — then move on. Fusing one column teaches more than stumbling through ten."></div>
+
+<h2>Three things that actually help</h2>
+
+<ol>
+  <li><strong>Look at the gap, not the notes.</strong> Once you know the two
+  notes, stop reading them and watch the distance between your hands. Coordination
+  is a physical shape, not a pair of facts.</li>
+  <li><strong>Play it wrong on purpose.</strong> Deliberately land the left hand
+  first, then deliberately the right. Being able to choose the error is how you
+  stop making it by accident — you've moved it from something that happens to you
+  to something you control.</li>
+  <li><strong>Say "down" out loud</strong> as they land. One word, one event. It
+  is much harder to say a single word for two separate things, which is exactly
+  the point.</li>
+</ol>
+
+<div class="callout">
+  <span class="callout-label">Your timing is an advantage here</span>
+  You came out of lesson 4 at 20–28ms off the click, dead even. That's a strong
+  internal pulse, and it's the thing hands-together is built on — you already
+  know where "now" is, and you just need both hands to agree on it. This should
+  come faster to you than it does to most people.
+</div>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="ht-quiz"></div>
+
+<script type="application/json" id="ht-quiz">
+[
+  { "q": "When both hands land on the same beat, you should think of it as:",
+    "a": "One event, two fingers", "choices": ["One event, two fingers", "Two events at once", "Two separate beats", "One hand then other"] },
+  { "q": "A 'flam' means the two hands:",
+    "a": "Landed slightly apart", "choices": ["Landed slightly apart", "Played the wrong notes", "Played far too loudly", "Landed on one beat"] },
+  { "q": "Your hands are landing 200ms apart. The correct response is to:",
+    "a": "Slow the passage down", "choices": ["Slow the passage down", "Speed the passage up", "Play it much louder", "Skip to the next line"] },
+  { "q": "In the opening of Für Elise, the two hands mostly:",
+    "a": "Take turns, barely overlapping", "choices": ["Take turns, barely overlapping", "Play every note together", "Play the same melody", "Stay completely silent"] },
+  { "q": "Hands-together difficulty is mainly a problem of:",
+    "a": "Coordination, not reading", "choices": ["Coordination, not reading", "Reading, not coordination", "Finger strength alone", "Knowing more theory"] },
+  { "q": "Which practice actually builds control over a mistimed pair?",
+    "a": "Making the error deliberately", "choices": ["Making the error deliberately", "Repeating it much faster", "Avoiding that passage", "Playing one hand only"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes: three on the alternating drill, five on both-hands-together, and
+two of <a href="0003-single-hand-reading.html">lesson 3</a> with the
+<strong>left hand</strong> — still your slower one, and it will quietly limit
+everything here until it catches up.</p>
+
+<p>And take the slow-tempo problem you spotted in lesson 4 seriously: run the
+<a href="0004-rhythm.html">rests drill at 60bpm and below</a>, counting
+"1 &amp; 2 &amp;" out loud. Subdividing is what stops the rushing, and slow is
+the tempo hands-together is learned at.</p>
+
+<div class="callout">
+  <span class="callout-label">Where this is going</span>
+  Once both hands agree on a moment, the next thing is worth playing rather than
+  drilling: <strong>triads and the I–IV–V–vi progression</strong>, which is the
+  fastest route to sounding like actual music — and the key that opens
+  <em>Say You Will</em>, <em>I Wonder</em> and <em>See Me Again</em>.
+</div>
+
+<div class="ask-agent">
+  <strong>Ask me things.</strong> Good ones here: why the left hand feels slower
+  than the right even when it knows the notes, what to do when one hand knows a
+  passage and the other doesn't, or how to practise a passage hands-separately
+  without wasting the time. And tell me your <strong>hand spread</strong> — that
+  number decides whether we go to chords next or spend one more session here.
+</div>
+
+<div class="nav">
+  <span><a href="0004-rhythm.html">← Lesson 4: Rhythm</a></span>
+  <span><a href="../index.html">Course index →</a></span>
+</div>
+
+</body>
+</html>

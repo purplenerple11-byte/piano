@@ -16,6 +16,7 @@
   --good-soft: #e5f1e6;
   --bad: #a1332a;
   --bad-soft: #f7e6e4;
+  --warn: #b8860b;
   --key-white: #fbfaf6;
   --key-white-edge: #b9b4a7;
   --key-black: #23211d;
@@ -35,6 +36,7 @@
     --good-soft: #22331f;
     --bad: #e08278;
     --bad-soft: #3a201d;
+  --warn: #d9a441;
     --key-white: #dedbd2;
     --key-white-edge: #6f6b61;
     --key-black: #171613;
@@ -53,6 +55,7 @@
   --good-soft: #22331f;
   --bad: #e08278;
   --bad-soft: #3a201d;
+  --warn: #d9a441;
   --key-white: #dedbd2;
   --key-white-edge: #6f6b61;
   --key-black: #171613;
@@ -70,6 +73,7 @@
   --good-soft: #e5f1e6;
   --bad: #a1332a;
   --bad-soft: #f7e6e4;
+  --warn: #b8860b;
   --key-white: #fbfaf6;
   --key-white-edge: #b9b4a7;
   --key-black: #23211d;
@@ -513,11 +517,22 @@ th {
    the current note's position without hiding it. */
 .staff-cursor { fill: var(--accent); opacity: 0.14; }
 
-/* Hint echo: the note you just played, popped onto the staff and animated. Blue
-   so it never reads as a graded (green/red) or target (black) note — it's a hint,
-   not a verdict. Bounces up and in, settles, then fades. transform-box:fill-box
-   pins the scale to the group's own centre; WebKit (the iPad) needs it. */
+/* Hint echo: the note you just played, popped onto the staff at the column you
+   are actually reading, and animated. Bounces up and in, settles, then fades.
+   transform-box:fill-box pins the scale to the group's own centre; WebKit (the
+   iPad) needs it.
+
+   Colour carries the verdict: green when the key was the one due, red when it
+   wasn't, and neutral blue only when there is nothing to compare against (a
+   stray press before Start). An always-blue hint made a wrong note look the same
+   as a right one, which is the one thing a feedback loop must never do.
+
+   The letter label has to travel with the notehead — a green note with a blue
+   letter reads as two separate marks. */
 .staff-note-hint { fill: var(--accent); }
+.staff-flash-good .staff-note, .staff-flash-good .staff-notelabel { fill: var(--good); }
+.staff-flash-bad  .staff-note, .staff-flash-bad  .staff-notelabel { fill: var(--bad); }
+.staff-flash-good .staff-line, .staff-flash-bad .staff-line { stroke: currentColor; }
 .staff-flash {
   transform-box: fill-box;
   transform-origin: center;
@@ -537,6 +552,12 @@ th {
 
 /* A toggle button (sprint, hints, feedback) showing its "on" state. */
 .drill-btn-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* Inline icon inside a drill button. Stroked with currentColor rather than set
+   as an emoji, so it stays monochrome and follows the button's own colour
+   through light/dark and the on/off state. */
+.drill-btn-ico { vertical-align: -2px; margin-right: 0.35em; }
+.drill-btn-txt { vertical-align: baseline; }
 
 /* ── Guided song ─────────────────────────────────────────── */
 
@@ -564,3 +585,58 @@ th {
 }
 
 .staff-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Rhythm ──────────────────────────────────────────────── */
+
+.rhythm-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.rhythm-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.rhythm-svg { width: 100%; height: auto; display: block; }
+.rhythm-line { stroke: var(--text); stroke-width: 1.3; }
+
+.rhythm-note { fill: var(--text); stroke: none; }
+.rhythm-note-open { fill: none; stroke: var(--text); stroke-width: 2.2; }
+.rhythm-stem, .rhythm-beam, .rhythm-flag {
+  stroke: var(--text);
+  fill: none;
+  stroke-linecap: round;
+}
+.rhythm-stem { stroke-width: 1.8; }
+.rhythm-beam { stroke-width: 5; }
+.rhythm-flag { stroke-width: 2; }
+.rhythm-rest { fill: var(--muted); stroke: none; }
+.rhythm-rest-stroke { stroke: var(--muted); stroke-width: 2.4; fill: none; stroke-linecap: round; }
+
+/* Verdict colours match the reading drills: green on the beat, amber close,
+   red out of place. Applied to the whole note group so stem and beam follow the
+   notehead — a green head on a black stem reads as two marks. */
+.rhythm-hit-good  .rhythm-note { fill: var(--good); }
+.rhythm-hit-good  .rhythm-note-open { fill: none; stroke: var(--good); }
+.rhythm-hit-good  .rhythm-stem, .rhythm-hit-good .rhythm-beam, .rhythm-hit-good .rhythm-flag { stroke: var(--good); }
+.rhythm-hit-near  .rhythm-note { fill: var(--warn); }
+.rhythm-hit-near  .rhythm-note-open { fill: none; stroke: var(--warn); }
+.rhythm-hit-near  .rhythm-stem, .rhythm-hit-near .rhythm-beam, .rhythm-hit-near .rhythm-flag { stroke: var(--warn); }
+.rhythm-hit-bad   .rhythm-note { fill: var(--bad); }
+.rhythm-hit-bad   .rhythm-note-open { fill: none; stroke: var(--bad); }
+.rhythm-hit-bad   .rhythm-stem, .rhythm-hit-bad .rhythm-beam, .rhythm-hit-bad .rhythm-flag { stroke: var(--bad); }
+
+.rhythm-cursor { fill: var(--accent); opacity: 0.14; }
+
+.rhythm-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* Count-in / tempo readout sits in the controls row. */
+.drill-clock { font-variant-numeric: tabular-nums; }

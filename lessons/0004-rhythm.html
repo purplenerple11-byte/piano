@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 4 · Rhythm</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/rhythm.js"></script>
+<script src="../assets/rhythmdrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 04 · Rhythm</div>
+<h1>One note is enough to make music</h1>
+<p class="subtitle">Every drill so far graded <em>which</em> key. This one grades
+<em>when</em> — and to do that properly, it only needs a single note.</p>
+
+<h2>Why one note</h2>
+
+<p>Your line reading sits at 84% right hand, 81% left. That is good progress and
+it is also the reason this lesson uses one note: if you were reading pitches
+<em>and</em> keeping time, a miss could be either, and you'd have no way to tell
+which to fix. Strip the pitch out and a bad score can only mean one thing.</p>
+
+<p>This isn't a workaround. It's how the most recognisable piano hook of the last
+twenty years is built — the intro to Kanye West's <em>Runaway</em> is a
+<strong>single repeated note</strong> with enormous space around it. No chord, no
+melody. Everything that makes it work is timing and restraint. By the end of this
+page you'll have the skill that hook is made of.</p>
+
+<h2>How long a note lasts</h2>
+
+<p>A notehead's shape tells you its length. That's all notation is doing here:
+hollow lasts longer than filled, a stem halves it, a flag or beam halves it
+again.</p>
+
+<table>
+  <tr><th>Note</th><th>Beats</th><th>Count it</th></tr>
+  <tr><td>Whole — hollow, no stem</td><td>4</td><td>1 – 2 – 3 – 4</td></tr>
+  <tr><td>Half — hollow, with stem</td><td>2</td><td>1 – 2</td></tr>
+  <tr><td>Quarter — filled, with stem</td><td>1</td><td>1</td></tr>
+  <tr><td>Eighth — filled, flag or beam</td><td>½</td><td>1 &amp;</td></tr>
+</table>
+
+<p>Four beats to a bar is what <strong>4/4</strong> means, and it's what almost
+everything you want to play is in — including all four of your target pieces.
+Count out loud: <strong>"1 &amp; 2 &amp; 3 &amp; 4 &amp;"</strong>. The numbers
+are the beats; the "&amp;"s are the halves between them. Saying it aloud is not
+a beginner's crutch — it externalises the pulse so you can hear yourself drift.</p>
+
+<div class="callout">
+  <span class="callout-label">The thing nobody says out loud</span>
+  A <em>rest</em> is not a pause in the music. It is a note you play silence on,
+  and it lasts an exact length. Beginners rush rests because nothing is
+  happening; the count keeps going anyway. In <em>Runaway</em> the rests are
+  doing more work than the notes.
+</div>
+
+<h2>Hear the pulse first</h2>
+
+<p>Connect the piano, then play <strong>any key</strong> on every click. Not a
+tune — just the pulse. The drill grades how close you are in milliseconds, and
+tells you whether you're consistently <em>early</em> or <em>late</em>, which are
+different problems with different fixes.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="r-pulse" data-rhythm data-pattern="q q q q"
+     data-title="Four quarter notes — one per click"
+     data-caption="Four filled noteheads with stems: one beat each. The louder click is beat 1."></div>
+
+<div data-rhythmdrill
+     data-rhythm="r-pulse"
+     data-bpm="80"
+     data-loops="2"
+     data-title="Play the pulse"
+     data-caption="Any key. Four clicks count you in, then play along. <strong>Avg off</strong> is how tight you are; <strong>Tendency</strong> tells you if you're rushing or dragging. Under 60ms counts as on the beat — that is roughly the limit of what anyone hears as 'together'."></div>
+
+<h2>Now a rhythm, not just a pulse</h2>
+
+<p>Same single note. Now the lengths change: two quarters, then two eighths
+(beamed together — that beam is what makes "3 &amp;" visible at a glance), then
+a quarter. Count <strong>"1, 2, 3 &amp;, 4"</strong> out loud before you play
+it.</p>
+
+<div id="r-mix" data-rhythm data-pattern="q q e e q"
+     data-title="1, 2, 3 &amp; 4"
+     data-caption="The two beamed noteheads share a single beat between them — that's why they're joined. Two eighths fit in the time of one quarter."></div>
+
+<div data-rhythmdrill
+     data-rhythm="r-mix"
+     data-bpm="76"
+     data-loops="2"
+     data-title="Play the rhythm"
+     data-caption="Slower on purpose. If you're below 70% in time, take it down another 10bpm — rhythm is learned slow and sped up, never the reverse. Speeding up a rhythm you can't play in time just rehearses the error faster."></div>
+
+<h2>Rests: the Runaway lesson</h2>
+
+<p>Here is the shape that hook is built from — a note, then a long silence, then
+the note again. Playing this well is entirely about <em>not</em> playing during
+the rest, and coming back in exactly on time.</p>
+
+<div id="r-space" data-rhythm data-pattern="q rq rh q rq rh"
+     data-title="Note, then space"
+     data-caption="The blocks are rests: a quarter rest, then a half rest. Two full beats of silence, counted, not guessed. Keep counting through them — the count never stops just because your hands do."></div>
+
+<div data-rhythmdrill
+     data-rhythm="r-space"
+     data-bpm="72"
+     data-loops="2"
+     data-title="Play the space"
+     data-caption="Only two notes per bar, and they are the hardest two in this lesson. Coming back in after silence is where nearly everyone rushes — count the rests out loud and you'll see the tendency swing back to even."></div>
+
+<h2>Go and play the actual thing</h2>
+
+<p>Put the recording of <em>Runaway</em> on. The intro is one note, high up, with
+a lot of air around it. Find that note by ear — start anywhere in the top octave
+and hunt until it matches — then play along with the record.</p>
+
+<p>Two skills at once, and both are on your mission: the timing you just drilled,
+and <em>finding a pitch by ear</em>, which is the half of your goal we haven't
+started yet. You don't need me to tell you the note. Hunting for it is the
+exercise.</p>
+
+<div class="callout">
+  <span class="callout-label">If it sounds wrong</span>
+  Too low or too high is normal — move an octave and try again. When it's right
+  it will stop sounding like "a note" and start sounding like the song. That
+  click of recognition is the thing ear training is training.
+</div>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="rhythm-quiz"></div>
+
+<script type="application/json" id="rhythm-quiz">
+[
+  { "q": "In 4/4, how many beats does a half note last?",
+    "a": "Two", "choices": ["Two", "Four", "One", "Half"] },
+  { "q": "Two eighth notes together last the same as one:",
+    "a": "Quarter note", "choices": ["Quarter note", "Whole note", "Half note", "Eighth rest"] },
+  { "q": "What does the beam joining two noteheads tell you?",
+    "a": "They are eighths", "choices": ["They are eighths", "They are louder", "They are the same", "They are a chord"] },
+  { "q": "During a rest, the counting should:",
+    "a": "Carry on as normal", "choices": ["Carry on as normal", "Stop until the note", "Speed up slightly", "Slow down slightly"] },
+  { "q": "Your notes land consistently 90ms before the click. You are:",
+    "a": "Rushing the beat", "choices": ["Rushing the beat", "Dragging the beat", "Perfectly in time", "Playing too loudly"] },
+  { "q": "You can't play a rhythm in time. The correct fix is to:",
+    "a": "Slow the tempo down", "choices": ["Slow the tempo down", "Speed the tempo up", "Play it more loudly", "Skip to the next one"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes: two of the pulse drill, three on the rhythm with rests, and five
+playing along to <em>Runaway</em>. Keep the reading going too — a line or two of
+<a href="0003-single-hand-reading.html">lesson 3</a> each day, weighted to the
+<strong>left hand</strong>, which is running 37% slower than your right and just
+needs volume.</p>
+
+<div class="callout">
+  <span class="callout-label">Where this is going</span>
+  You can now read pitches and you can keep time. Next is putting <strong>both
+  hands down together</strong> — the real wall, and the last thing standing
+  between you and the opening of <em>Für Elise</em>.
+</div>
+
+<div class="ask-agent">
+  <strong>Ask me things.</strong> Good ones after this: why 4/4 is written the way
+  it is, what a dotted note does, or how to count triplets. And tell me your
+  <strong>Avg off</strong> and <strong>Tendency</strong> on the rests drill —
+  rushing versus dragging changes what I'd give you next.
+</div>
+
+<div class="nav">
+  <span><a href="0003-single-hand-reading.html">← Lesson 3: Reading a line</a></span>
+  <span><a href="../index.html">Course index →</a></span>
+</div>
+
+</body>
+</html>

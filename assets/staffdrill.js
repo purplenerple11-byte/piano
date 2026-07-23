@@ -57,6 +57,19 @@
     "bass-skips":   { clef: "bass",   moves: [-2, -1, 1, 2], lo: 21, hi: 28, starts: [24, 28], len: 5 }
   };
 
+  /* Monochrome lightbulb, drawn rather than set as an emoji. 💡 renders in full
+     colour on every platform and there is no way to desaturate it, which fought
+     the rest of the interface. An inline SVG stroked with currentColor inherits
+     the button's text colour, so it tracks light/dark and the on/off state for
+     free — and it is the same weight as the label beside it. */
+  var HINT_ICON =
+    '<svg class="drill-btn-ico" viewBox="0 0 24 24" width="14" height="14" ' +
+    'fill="none" stroke="currentColor" stroke-width="1.9" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M9.2 18.2h5.6"/><path d="M10.4 21.2h3.2"/>' +
+    '<path d="M12 2.8a6.1 6.1 0 0 0-3.5 11.1c.6.42.9 1.05.9 1.7v.6h5.2v-.6c0-.65.3-1.28.9-1.7A6.1 6.1 0 0 0 12 2.8Z"/>' +
+    "</svg>";
+
   var WHITE_PC = [0, 2, 4, 5, 7, 9, 11];   // diatonic degree -> pitch class
   function stepToMidi(s) {
     var oct = Math.floor(s / 7);
@@ -139,7 +152,7 @@
     controls.appendChild(sprintBtn);
     var hintsBtn = document.createElement("button");
     hintsBtn.className = "drill-btn drill-btn-ghost";
-    hintsBtn.textContent = "💡 Hints";
+    hintsBtn.innerHTML = HINT_ICON + '<span class="drill-btn-txt">Hints</span>';
     controls.appendChild(hintsBtn);
     var feedbackBtn = document.createElement("button");
     feedbackBtn.className = "drill-btn drill-btn-ghost";
@@ -197,7 +210,9 @@
     ui.hintsBtn.onclick = function () {
       on = !on;
       ui.hintsBtn.classList.toggle("drill-btn-on", on);
-      ui.hintsBtn.textContent = on ? "💡 Hints on" : "💡 Hints";
+      // Swap only the label; the icon is an SVG child and must survive the toggle.
+      var txt = ui.hintsBtn.querySelector(".drill-btn-txt");
+      if (txt) txt.textContent = on ? "Hints on" : "Hints";
     };
     return { on: function () { return on; } };
   }
@@ -304,7 +319,15 @@
 
     mount._unsub = window.PianoMIDI.subscribe(function (e) {
       if (!e.on) return;
-      if (hints.on()) staff.flash(e.note);   // echo every key, running or not
+      // Echo every key, running or not — but say whether it was right whenever
+      // there is a target to compare against. Verdict computed BEFORE grading
+      // mutates `locked`/`target`.
+      if (hints.on()) {
+        var live = running && !locked && target;
+        staff.flash(e.note, null, {
+          verdict: live ? (e.note === target[0] ? "good" : "bad") : null
+        });
+      }
       if (!running || locked) return;
       locked = true;
       var ms = performance.now() - askedAt;
@@ -479,7 +502,20 @@
 
     mount._unsub = window.PianoMIDI.subscribe(function (e) {
       if (!e.on) return;
-      if (hints.on()) staff.flash(e.note);   // echo every key, running or not
+      /* Echo every key, running or not. Two things the fixed-point version got
+         wrong: the hint belongs in the COLUMN the reader is on (otherwise it
+         pops up somewhere they aren't looking), and it should say whether the
+         key was right. Both are read before the handler advances `pos`. */
+      if (hints.on()) {
+        var live = running && !locked && phrase;
+        var due = live ? phrase.midiAt(pos) : null;
+        staff.flash(e.note, null, {
+          x: live ? phrase.xAt(pos) : undefined,
+          // Performance mode withholds right/wrong; the hint still shows the note
+          // and its letter, just without the verdict colour that would give it away.
+          verdict: (due == null || !feedbackOn) ? null : (e.note === due ? "good" : "bad")
+        });
+      }
       if (!running || locked) return;
       var want = phrase.midiAt(pos);
 

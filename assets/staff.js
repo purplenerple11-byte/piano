@@ -287,7 +287,73 @@
             if (i == null || !groups[i]) { band.style.display = "none"; return; }
             band.setAttribute("x", groups[i].x - 13);
             band.style.display = "";
-          }
+          },
+          /* Where note i sits horizontally, so a hint can be flashed in the
+             column the reader is actually on rather than at a fixed point. */
+          xAt: function (i) { return groups[i] ? groups[i].x : NOTE_X; }
+        };
+      },
+      /* Two hands at once. Each event is { treble, bass } — either may be null,
+         which is how a passage where the hands ALTERNATE is written: the silent
+         hand simply has nothing in that column.
+
+         Deliberately not built on phrase(): phrase indexes one note per column,
+         and everything here has to address a column *and* a hand — mark the left
+         hand red while the right stays black, ask which notes a column still
+         wants. Bolting a second voice onto phrase() would have made every one of
+         its callers carry a hand argument it does not have. */
+      duet: function (events) {
+        noteLayer.innerHTML = "";
+        cursorLayer.innerHTML = "";
+        var n = events.length;
+        var x0 = 120, x1 = WIDTH - 45;
+        var cols = events.map(function (ev, i) {
+          var x = n === 1 ? NOTE_X : x0 + (x1 - x0) * (i / (n - 1));
+          var col = { x: x, treble: ev.treble, bass: ev.bass, g: {} };
+          ["treble", "bass"].forEach(function (hand) {
+            if (ev[hand] == null) return;
+            var g = el("g", {});
+            noteLayer.appendChild(g);
+            drawNote(g, ev[hand], hand, x, "");
+            col.g[hand] = g;
+          });
+          return col;
+        });
+        var top = (showTreble ? TREBLE_TOP : BASS_TOP) - 22;
+        var bot = (showBass ? BASS_BOTTOM : TREBLE_BOTTOM) + 22;
+        var band = el("rect", {
+          class: "staff-cursor", x: 0, y: top, width: 26, height: bot - top, rx: 6
+        });
+        band.style.display = "none";
+        cursorLayer.appendChild(band);
+        return {
+          length: n,
+          /* Which notes column i still expects, as [{hand, midi}] — the drill
+             works from this rather than reaching into the events array. */
+          notesAt: function (i) {
+            var c = cols[i];
+            if (!c) return [];
+            var out = [];
+            if (c.treble != null) out.push({ hand: "treble", midi: c.treble });
+            if (c.bass != null) out.push({ hand: "bass", midi: c.bass });
+            return out;
+          },
+          mark: function (i, hand, cls) {
+            var c = cols[i];
+            if (!c || !c.g[hand]) return;
+            c.g[hand].innerHTML = "";
+            drawNote(c.g[hand], c[hand], hand, c.x, cls);
+          },
+          markAll: function (i, cls) {
+            var self = this;
+            ["treble", "bass"].forEach(function (h) { self.mark(i, h, cls); });
+          },
+          cursor: function (i) {
+            if (i == null || !cols[i]) { band.style.display = "none"; return; }
+            band.setAttribute("x", cols[i].x - 13);
+            band.style.display = "";
+          },
+          xAt: function (i) { return cols[i] ? cols[i].x : NOTE_X; }
         };
       },
       /* A transient "here's what you just played" hint: the note you pressed,
@@ -296,14 +362,27 @@
          note/cursor layers, so it can fire mid-drill without disturbing grading —
          the point is to weld key → position → letter together every time a finger
          lands. On a grand staff the clef is chosen by pitch; on a single-clef
-         staff it follows that clef. */
-      flash: function (midi, clef) {
+         staff it follows that clef.
+
+         opts.x       where to draw it. Defaults to the single-note column, but a
+                      phrase drill passes the column the reader is currently on,
+                      so the hint appears under the eye instead of jumping to the
+                      middle of the line.
+         opts.verdict "good" | "bad" | null. When the drill knows whether the key
+                      was right, the hint says so in colour; when it doesn't (a
+                      stray press before Start), it stays neutral. */
+      flash: function (midi, clef, opts) {
+        opts = opts || {};
         var useClef = clef || (!showBass ? "treble"
                              : !showTreble ? "bass"
                              : midi >= 60 ? "treble" : "bass");
-        var g = el("g", { class: "staff-flash" });
+        var verdict = opts.verdict === "good" || opts.verdict === "bad" ? opts.verdict : null;
+        var g = el("g", { class: "staff-flash" + (verdict ? " staff-flash-" + verdict : "") });
         flashLayer.appendChild(g);
-        drawNote(g, midi, useClef, NOTE_X, "staff-note-hint", stepOf(midi).letter);
+        drawNote(g, midi, useClef,
+                 typeof opts.x === "number" ? opts.x : NOTE_X,
+                 verdict ? "staff-note-" + verdict : "staff-note-hint",
+                 stepOf(midi).letter);
         var gone = function () { if (g.parentNode) g.parentNode.removeChild(g); };
         g.addEventListener("animationend", gone);
         setTimeout(gone, 1500);   // belt-and-braces if animationend never fires
