@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Guided song · Never See Me Again</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/songplayer.js"></script>
+</head>
+<body>
+
+<div class="kicker">Guided song</div>
+<h1>Never See Me Again</h1>
+<p class="subtitle">Learn it the way you'd actually learn a song: one phrase at a
+time, then the whole thing top to bottom.</p>
+
+<div class="callout">
+  <span class="callout-label">Placeholder melody</span>
+  The notes below are <strong>"Mary Had a Little Lamb"</strong>, standing in so the
+  whole flow works end to end. Paste me the real melody for <em>Never See Me
+  Again</em> — note letters, a lead sheet, or a MIDI file — and I'll drop it
+  straight in; nothing else on this page changes.
+</div>
+
+<h2>Connect first</h2>
+
+<p>Same as the lessons: plug in and connect so it grades what you actually play.
+No keyboard to hand? Tap the on-screen keys. On iPad, see
+<a href="../index.html#ipad">the setup notes</a>.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<h2>How this works</h2>
+
+<p>Each phrase below is a short line. Press <strong>Start</strong> and play it as
+the cursor reaches each note — right notes turn green, wrong ones red, and if a
+position won't stick, turn on <strong>💡 Hints</strong> and every key you play
+shows up on the staff with its letter. Get a phrase comfortable, then move to the
+next.</p>
+
+<p>When the phrases are all landing, drop to <strong>The whole thing</strong> at
+the bottom and play them back to back. Keep feedback on while you're still
+learning it; when you want a real run, hit <strong>🙈 Feedback off</strong> —
+it stops marking you as you go and just shows your score at the end, the way a
+performance actually feels.</p>
+
+<div id="song" data-song data-song-src="song-data"></div>
+
+<script type="application/json" id="song-data">
+{
+  "sections": [
+    { "title": "Phrase 1", "clef": "treble", "notes": [64, 62, 60, 62, 64, 64, 64],
+      "note": "The opening — E D C D E E E. All steps, all in one hand." },
+    { "title": "Phrase 2", "clef": "treble", "notes": [62, 62, 62, 64, 67, 67],
+      "note": "D D D, then a skip up to E G G." },
+    { "title": "Phrase 3", "clef": "treble", "notes": [64, 62, 60, 62, 64, 64, 64, 64, 62, 62, 64, 62, 60],
+      "note": "The opening again, then home: E D D E D C." }
+  ]
+}
+</script>
+
+<div class="ask-agent">
+  <strong>Paste the real song and tell me how you want it broken up.</strong>
+  Two hands or just the melody, how long each phrase should be, fingering — say
+  the word and I'll rebuild this from your notes.
+</div>
+
+<div class="nav">
+  <span><a href="../index.html">← Course index</a></span>
+</div>
+
+</body>
+</html>

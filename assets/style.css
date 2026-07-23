@@ -535,8 +535,19 @@ th {
   @keyframes staff-flash-fade { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
 }
 
-/* A toggle button (sprint, hints) showing its "on" state. */
+/* A toggle button (sprint, hints, feedback) showing its "on" state. */
 .drill-btn-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* ── Guided song ─────────────────────────────────────────── */
+
+.song-section { margin: 2.2rem 0; }
+.song-section h3 { margin-bottom: 0.3rem; }
+.song-note { font-size: 0.9rem; color: var(--muted); margin: 0.2rem 0 0.6rem; }
+.song-full {
+  margin-top: 2.8rem;
+  padding-top: 1.4rem;
+  border-top: 2px solid var(--rule);
+}
 
 .staff-acc {
   fill: var(--text);

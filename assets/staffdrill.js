@@ -141,6 +141,10 @@
     hintsBtn.className = "drill-btn drill-btn-ghost";
     hintsBtn.textContent = "💡 Hints";
     controls.appendChild(hintsBtn);
+    var feedbackBtn = document.createElement("button");
+    feedbackBtn.className = "drill-btn drill-btn-ghost";
+    feedbackBtn.style.display = "none";   // only songs with a full play-along show it
+    controls.appendChild(feedbackBtn);
     var clock = document.createElement("span");
     clock.className = "drill-clock";
     clock.style.display = "none";
@@ -158,7 +162,31 @@
       cap.innerHTML = captionText;
       mount.appendChild(cap);
     }
-    return { sub: sub, startBtn: startBtn, sprintBtn: sprintBtn, hintsBtn: hintsBtn, clock: clock, stats: stats };
+    return { sub: sub, startBtn: startBtn, sprintBtn: sprintBtn, hintsBtn: hintsBtn,
+             feedbackBtn: feedbackBtn, clock: clock, stats: stats };
+  }
+
+  /* A "song" is the phrase drill with the lines pinned instead of generated:
+     data-notes="64 62 60" is a single fixed line (a phrase to learn); data-lines
+     is a JSON array of {clef, notes} played in order once (the full play-along).
+     Same grading, cursor and hints — only the source of each line changes. */
+  function parseNotes(str) {
+    return str.trim().split(/[\s,]+/).filter(Boolean).map(Number);
+  }
+  function readSongLines(mount) {
+    var notesAttr = mount.getAttribute("data-notes");
+    var linesAttr = mount.getAttribute("data-lines");
+    if (notesAttr) {
+      var clef = mount.getAttribute("data-clef") || "treble";
+      return [parseNotes(notesAttr).map(function (m) { return { midi: m, clef: clef }; })];
+    }
+    if (linesAttr) {
+      return JSON.parse(linesAttr).map(function (ln) {
+        var c = ln.clef || "treble";
+        return ln.notes.map(function (m) { return { midi: m, clef: c }; });
+      });
+    }
+    return null;
   }
 
   /* Wire the Hints toggle: when on, every note the player lands flashes onto the
@@ -347,16 +375,22 @@
     for (var k in base) cfg[k] = base[k];
     var lenAttr = parseInt(mount.getAttribute("data-length") || "", 10);
     if (lenAttr) cfg.len = lenAttr;
-    var rounds = parseInt(mount.getAttribute("data-rounds") || "8", 10);
     var secs = seconds(mount);
+
+    // Song mode: lines come pinned from the mount, not from genPhrase.
+    var songLines = readSongLines(mount);
+    var isSong = !!songLines;
+    var rounds = isSong ? songLines.length
+                        : parseInt(mount.getAttribute("data-rounds") || "8", 10);
 
     var ui = scaffold(mount);
     var sub = ui.sub, stats = ui.stats;
+    if (isSong) ui.sprintBtn.style.display = "none";  // a song isn't a sprint
 
     var running = false, locked = true, round = 0;
     var phrase = null, pos = 0, missesHere = 0, phraseHadError = false, phraseStart = 0;
     var times = [], cleanPhrases = 0, streak = 0, best = 0;
-    var totalNotes = 0, cleanNotes = 0;
+    var totalNotes = 0, cleanNotes = 0, revealed = false;
 
     var sc = sprintFor(ui, secs, function () { return running; },
       function (sprint) {
@@ -369,18 +403,42 @@
       function () { if (running) finish(); });
     var hints = hintsToggle(ui, staff);
 
+    // Feedback toggle (full play-along only): off = "performance mode", where notes
+    // advance on whatever you play with no green/red and no live score, and the
+    // result is revealed at the end instead.
+    var feedbackOn = true;
+    if (mount.getAttribute("data-feedback-toggle") === "true") {
+      ui.feedbackBtn.style.display = "";
+      ui.feedbackBtn.textContent = "👁 Feedback on";
+      ui.feedbackBtn.classList.add("drill-btn-on");
+      ui.feedbackBtn.onclick = function () {
+        if (running) return;
+        feedbackOn = !feedbackOn;
+        ui.feedbackBtn.classList.toggle("drill-btn-on", feedbackOn);
+        ui.feedbackBtn.textContent = feedbackOn ? "👁 Feedback on" : "🙈 Feedback off";
+        resetState(); renderStats();
+        sub.className = "drill-sub";
+        sub.textContent = feedbackOn
+          ? "Feedback on — right notes turn green, wrong ones red as you play."
+          : "Performance mode — play it straight through; your score shows at the end.";
+      };
+    }
+
     function resetState() {
       round = 0; times = []; cleanPhrases = 0; streak = 0; best = 0;
-      totalNotes = 0; cleanNotes = 0; phraseHadError = false;
+      totalNotes = 0; cleanNotes = 0; phraseHadError = false; revealed = false;
     }
 
     function renderStats() {
-      var acc = totalNotes ? Math.round(cleanNotes / totalNotes * 100) + "%" : "—";
+      // Performance mode hides correctness until the end; position and timing don't
+      // give the answer away, so those stay live.
+      var hide = !feedbackOn && !revealed;
+      var acc = hide ? "—" : (totalNotes ? Math.round(cleanNotes / totalNotes * 100) + "%" : "—");
       renderStatPairs(stats, [
         sc.isSprint() ? ["Lines", times.length + ""] : ["Line", round + " / " + rounds],
         ["Notes right", acc],
         ["Median / line", times.length ? (median(times) / 1000).toFixed(2) + "s" : "—"],
-        ["Clean streak", best + ""]
+        ["Clean streak", hide ? "—" : best + ""]
       ]);
     }
 
@@ -389,11 +447,11 @@
       if (kb) kb.clear();
       if (!sc.isSprint() && round >= rounds) return finish();
       round++;
-      phrase = staff.phrase(genPhrase(cfg));
+      phrase = staff.phrase(isSong ? songLines[round - 1] : genPhrase(cfg));
       pos = 0; missesHere = 0; phraseHadError = false;
       phrase.cursor(0);
       sub.className = "drill-sub";
-      sub.textContent = "Play the line, left to right.";
+      sub.textContent = feedbackOn ? "Play the line, left to right." : "Keep going — score at the end.";
       renderStats();
       locked = false;
       phraseStart = performance.now();
@@ -406,12 +464,17 @@
       times.push(ms);
       if (!phraseHadError) { cleanPhrases++; streak++; if (streak > best) best = streak; }
       else streak = 0;
-      sub.className = phraseHadError ? "drill-sub" : "drill-sub drill-sub-good";
-      sub.textContent = phraseHadError
-        ? "Line done — " + (ms / 1000).toFixed(2) + "s, with slips."
-        : "Clean — " + (ms / 1000).toFixed(2) + "s.";
+      if (feedbackOn) {
+        sub.className = phraseHadError ? "drill-sub" : "drill-sub drill-sub-good";
+        sub.textContent = phraseHadError
+          ? "Line done — " + (ms / 1000).toFixed(2) + "s, with slips."
+          : "Clean — " + (ms / 1000).toFixed(2) + "s.";
+      } else {
+        sub.className = "drill-sub";
+        sub.textContent = "Keep going — score at the end.";
+      }
       renderStats();
-      setTimeout(ask, 950);
+      setTimeout(ask, feedbackOn ? 950 : 350);   // no pause to read feedback in performance
     }
 
     mount._unsub = window.PianoMIDI.subscribe(function (e) {
@@ -419,6 +482,18 @@
       if (hints.on()) staff.flash(e.note);   // echo every key, running or not
       if (!running || locked) return;
       var want = phrase.midiAt(pos);
+
+      // Performance mode: whatever you play, the song moves on — no colour, no
+      // hint about right/wrong. It's scored silently and shown at the finish.
+      if (!feedbackOn) {
+        totalNotes++;
+        if (e.note === want) cleanNotes++; else phraseHadError = true;
+        pos++; missesHere = 0;
+        if (pos >= phrase.length) { finishPhrase(); return; }
+        phrase.cursor(pos);
+        return;
+      }
+
       if (e.note === want) {
         phrase.mark(pos, "staff-note-good");
         if (kb) { kb.clear("kbd-bad"); kb.clear("kbd-good"); kb.mark(want, "kbd-good"); }
@@ -452,21 +527,35 @@
 
     function finish() {
       if (!running) return;
-      running = false; locked = true;
+      running = false; locked = true; revealed = true;
       sc.stopClock();
       staff.clear();
       if (kb) kb.clear();
       var med = median(times);
       var acc = totalNotes ? cleanNotes / totalNotes : 0;
+      var pct = Math.round(acc * 100);
       sub.className = "drill-sub";
       if (sc.isSprint()) {
         sub.innerHTML = "<strong>" + times.length + " lines</strong> in " + secs + "s — " +
-          Math.round(times.length * 60 / secs) + "/min, " + Math.round(acc * 100) +
+          Math.round(times.length * 60 / secs) + "/min, " + pct +
           "% of notes right first time" + (cleanPhrases ? ", " + cleanPhrases + " clean" : "") + ". " +
           (times.length === 0 ? "Accuracy first; the pace comes after." : "Next run, beat that.");
+      } else if (isSong) {
+        var tag = feedbackOn ? "" : " (performance)";
+        if (rounds === 1) {
+          sub.innerHTML = "<strong>" + pct + "%</strong> right" + tag + ". " +
+            (acc >= 0.9 ? "Got it — on to the next phrase." :
+             acc >= 0.7 ? "Almost — run it once more." : "Slow it down and loop it.");
+        } else {
+          sub.innerHTML = "<strong>" + pct + "%</strong> of notes right" + tag + ", " +
+            cleanPhrases + " of " + rounds + " lines clean. " +
+            (acc >= 0.9 ? "That's the song. Play it again for the feel." :
+             acc >= 0.7 ? "Close — loop the lines that tripped you." :
+             "Break it back down: drill the phrases above, then come back.");
+        }
       } else {
         sub.innerHTML = "<strong>" + cleanPhrases + " of " + rounds + "</strong> lines clean, " +
-          Math.round(acc * 100) + "% of notes right first time, median " +
+          pct + "% of notes right first time, median " +
           (times.length ? (med / 1000).toFixed(2) + "s" : "—") + " a line. " +
           (acc < 0.8
             ? "Slow down. Land on a landmark, then read each note as a step or a skip from the last."
@@ -487,13 +576,19 @@
     };
 
     renderStats();
-    sub.textContent = "Press Start. A line of notes appears — play it left to right.";
+    sub.textContent = isSong
+      ? "Press Start and play the notes as they appear."
+      : "Press Start. A line of notes appears — play it left to right.";
   }
 
   function build(mount) {
     if (mount._unsub) { mount._unsub(); mount._unsub = null; }
     if (mount._timer) { mount._timer.stop(); mount._timer = null; }
     var poolName = mount.getAttribute("data-pool") || "landmarks";
+    // A song mount (fixed notes/lines) grades exactly like a phrase drill.
+    if (mount.getAttribute("data-notes") || mount.getAttribute("data-lines")) {
+      return buildPhrase(mount, poolName);
+    }
     if (PHRASE_POOLS[poolName]) return buildPhrase(mount, poolName);
     return buildSingle(mount, POOLS[poolName] || POOLS.landmarks);
   }
