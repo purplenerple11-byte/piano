@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 7 · More Anchors</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 07 · Reading</div>
+<h1>Five anchors, two stories, one mirror</h1>
+<p class="subtitle">You told me exactly which notes stuck and why. That diagnosis
+is the whole lesson.</p>
+
+<h2>You found a real flaw, so let's fix it</h2>
+
+<p>Your words: you remember <strong>G</strong> because of the hook,
+<strong>C</strong> because it's the bottom, and <strong>Bass F</strong> because
+of the dots. Every note that came with a <em>picture</em> stuck. Every note that
+didn't, didn't.</p>
+
+<p>That isn't a memory problem. It's a design problem in Lesson 2, and it's mine.
+I gave you three anchors and said everything else is a distance from one of them.
+But measure it: with only Bass F, Middle C and Treble G, the notes at the edges of
+your playing range sit <strong>three steps</strong> from the nearest anchor — and
+three steps is far enough that you stop stepping and start counting, which is the
+exact habit anchors exist to kill.</p>
+
+<p>The two worst-served notes were <strong>C3 and C5</strong>. Which is convenient,
+because those are the two I'm about to add.</p>
+
+<div class="callout">
+  <span class="callout-label">The fix</span>
+  <strong>Five anchors instead of three</strong>, so nothing in your playing range
+  is more than <strong>two steps</strong> from one. And all five come from just
+  <strong>two stories</strong> — not five things to memorise.
+</div>
+
+<h2>Story 1 · The three Cs are a ladder</h2>
+
+<p>C shows up three times on the grand staff, evenly spaced an octave apart, one
+per staff plus the one in the middle:</p>
+
+<ul>
+  <li><strong>C5</strong> — treble staff, third space.</li>
+  <li><strong>C4, middle C</strong> — on its own short line between the staves.</li>
+  <li><strong>C3</strong> — bass staff, second space.</li>
+</ul>
+
+<p>Middle C is the only note in this whole system with its <em>own private line</em>
+— that little stroke belongs to neither staff. That's your picture for it, and
+it's a better one than "it's the bottom", because it stays true when the note
+appears above the bass staff instead of below the treble.</p>
+
+<h2>Story 2 · Each clef points at its own note</h2>
+
+<p>You already have this one for the bass clef. It generalises:</p>
+
+<table>
+  <tr><th>Clef</th><th>Its real name</th><th>What it's pointing at</th></tr>
+  <tr><td>Treble</td><td>The <strong>G clef</strong></td><td>The hook curls around the line that <em>is</em> G</td></tr>
+  <tr><td>Bass</td><td>The <strong>F clef</strong></td><td>The two dots straddle the line that <em>is</em> F</td></tr>
+</table>
+
+<p>So the "hook" you already use isn't a coincidence you happened to notice — it's
+the clef's entire job. It's an arrow, drawn on every page of music, pointing at
+one note. Two anchors, permanently free.</p>
+
+<div id="anchor-map"
+     data-staff
+     data-clefs="both"
+     data-title="All five, low to high"
+     data-caption="Two stories, five anchors. The set climbs the page like a ladder because that is exactly what the three Cs are."></div>
+
+<h2>The mirror — learn half, get half free</h2>
+
+<p>Here's the trick that does the most work, and it's the one nobody told you:
+<strong>the grand staff is symmetric around middle C.</strong></p>
+
+<p>Every anchor above middle C has a partner exactly the same number of staff
+positions below it:</p>
+
+<table>
+  <tr><th>Above</th><th>Steps out</th><th>Below</th></tr>
+  <tr><td>Treble G — the hook</td><td>4 ↔ 4</td><td>Bass F — the dots</td></tr>
+  <tr><td>C5 — treble 3rd space</td><td>7 ↔ 7</td><td>C3 — bass 2nd space</td></tr>
+  <tr><td>E4 — treble bottom line</td><td>2 ↔ 2</td><td>A3 — bass top line</td></tr>
+  <tr><td>F5 — treble top line</td><td>10 ↔ 10</td><td>G2 — bass bottom line</td></tr>
+</table>
+
+<p>The two clefs are not two unrelated alphabets you have to learn twice. They are
+<strong>the same picture, reflected</strong>. Anything you can find above middle C,
+you can find the same distance below by looking at the mirrored spot — which is
+worth a great deal to you specifically, because your left hand reads about 37%
+slower than your right.</p>
+
+<h2>Shapes, not letters</h2>
+
+<p>The other half of "make it automatic" is to stop reading notes one at a time.
+Steps and skips each have a <em>look</em>, and the look is faster than the letter:</p>
+
+<table>
+  <tr><th>Move</th><th>What you see</th><th>What your hand does</th></tr>
+  <tr><td><strong>Step</strong></td><td>Line → space, or space → line. A <strong>zigzag</strong>.</td><td>Next white key, neighbouring finger.</td></tr>
+  <tr><td><strong>Skip</strong></td><td>Line → line, or space → space. A <strong>stack</strong>.</td><td>Miss a key, leave a finger gap.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="callout-label">The snowman</span>
+  A triad in root position — the chords you built in
+  <a href="0006-chords.html">Lesson 6</a> — is three noteheads
+  <em>all on lines</em> or <em>all on spaces</em>. Three circles stacked straight
+  up: a <strong>snowman</strong>. Once you see snowmen, you stop reading chords
+  note by note and start reading them as one object, which is the same jump
+  you already made from letters to intervals.
+</div>
+
+<h2>Drill the five</h2>
+
+<p>Same drill as Lesson 2, wider net. Turn on <strong>Hints</strong> for the first
+run — it echoes each key you play onto the staff with its name, which is precisely
+the "welding" that makes a note automatic. Then turn it off, because reading is
+what happens when nothing echoes back.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="anchor-drill-staff" data-staff data-clefs="both"></div>
+
+<div id="anchor-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-staffdrill
+     data-staff="anchor-drill-staff"
+     data-kb="anchor-kb"
+     data-pool="anchors"
+     data-rounds="10"
+     data-title="The five anchors"
+     data-caption="Say the story out loud as you play: <em>&ldquo;ladder C&rdquo;, &ldquo;hook G&rdquo;, &ldquo;dots F&rdquo;</em>. Naming the picture is what moves it from something you work out to something you know."></div>
+
+<p>When those are instant,
+<a href="#" onclick="widenAnchors(event)">add the notes one step either side</a> —
+fourteen notes, and every one of them is reached by <em>stepping off an anchor</em>,
+never by counting from the bottom of the staff.</p>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="anchor-quiz"></div>
+
+<script type="application/json" id="anchor-quiz">
+[
+  { "q": "Middle C is easy to spot because it is the only note with:",
+    "a": "Its own short line", "choices": ["Its own short line", "A darker notehead", "Two stems on it", "No letter name"] },
+  { "q": "The treble clef's curl wraps around the line belonging to:",
+    "a": "G above middle C", "choices": ["G above middle C", "C above middle C", "E on the bottom line", "F below middle C"] },
+  { "q": "How far below middle C is Bass F, in staff positions?",
+    "a": "Four — mirroring Treble G", "choices": ["Four — mirroring Treble G", "Two — mirroring the E line", "Seven — mirroring the C", "Five — mirroring nothing"] },
+  { "q": "Where does C sit on the bass staff?",
+    "a": "The second space up", "choices": ["The second space up", "The second line up", "The top line of it", "The first space up"] },
+  { "q": "Three noteheads all sitting on lines is the look of a:",
+    "a": "Triad — the snowman", "choices": ["Triad — the snowman", "Scale run upwards", "Pair of steps", "Single long note"] },
+  { "q": "A note moving line → space → line → space is a run of:",
+    "a": "Steps — the zigzag", "choices": ["Steps — the zigzag", "Skips — the stack", "Octaves — the jump", "Rests — the gap"] },
+  { "q": "Why does knowing the mirror help your left hand most?",
+    "a": "Bass mirrors treble you know", "choices": ["Bass mirrors treble you know", "Bass notes are much lower", "Left hands are naturally weak", "Bass clef has fewer notes"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes, and this one is mostly away from the screen:</p>
+
+<ol>
+  <li><strong>Three minutes on the anchor drill</strong>, Hints on for the first
+  run and off for the rest.</li>
+  <li><strong>Two minutes naming the stories out loud</strong> — point at each
+  anchor on the <a href="../reference/staff-map.html">staff map</a> and say what
+  it is and why. Saying it is what turns a picture into recall.</li>
+  <li><strong>Five minutes reading</strong> — <a href="0003-single-hand-reading.html">Lesson
+  3</a>, left hand, now using the mirror: when a bass note stalls you, find the
+  matching spot above middle C and reflect it.</li>
+</ol>
+
+<div class="callout">
+  <span class="callout-label">Keep this one</span>
+  The <a href="../reference/staff-map.html">staff map reference sheet</a> is the
+  compressed version of everything above — all five anchors, the mirror table and
+  the shape table on one printable page. Lessons get read once; reference sheets
+  get used. Put it on the music stand.
+</div>
+
+<div class="ask-agent">
+  <strong>This lesson exists because you told me what wasn't working.</strong>
+  Keep doing that. If one of the five anchors refuses to stick, say which — an
+  anchor without a picture is worth swapping for one that has one. And if you want
+  more tricks like the mirror, ask; there are good ones for key signatures and for
+  finding any note on the keyboard by feel.
+</div>
+
+<div class="nav">
+  <span><a href="0006-chords.html">← Lesson 6: Chords</a></span>
+  <span><a href="../reference/staff-map.html">Reference: The staff map →</a></span>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var m = document.getElementById("anchor-map");
+  if (m && m.staff) m.staff.anchors(true);
+});
+
+function widenAnchors(e) {
+  e.preventDefault();
+  var d = document.querySelector('[data-staffdrill]');
+  d.setAttribute("data-pool", "anchors-near");
+  d.setAttribute("data-rounds", "14");
+  d.setAttribute("data-title", "Anchors, plus one step either side");
+  d.setAttribute("data-caption", "Fourteen notes. Do not name them cold — land on the nearest anchor, then step. If you catch yourself reciting up from a line, that is the habit this whole lesson replaces.");
+  StaffDrill.build(d);
+  d.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+
+</body>
+</html>

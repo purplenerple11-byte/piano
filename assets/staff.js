@@ -412,6 +412,50 @@
           drawNote(markLayer, 53, "bass", 150, "staff-note-mark", "Bass F");
           if (!showTreble) drawNote(markLayer, 60, "bass", 250, "staff-note-mark", "Middle C");
         }
+      },
+
+      /* The FIVE-anchor set, which is the three-landmark set grown up.
+
+         Three anchors leaves some notes four steps from the nearest one, and
+         four steps is too far to read at speed — you end up counting again,
+         which is the exact habit the landmark method exists to kill. Five
+         anchors puts every note in the playing range within two steps of one.
+
+         They come from two stories rather than five facts:
+           · The three Cs make a ladder — bass 2nd space, middle C on its own
+             short line, treble 3rd space. Evenly spaced, an octave apart.
+           · Each clef names its own note — the G clef curls around G4, the
+             F clef's two dots straddle F3.
+
+         Drawn low-to-high left-to-right so the set literally reads as a ladder
+         climbing the page. Every anchor is mirror-symmetric with its partner
+         about middle C in STAFF POSITION (not semitones) — see mirrorPairs. */
+      anchors: function (on) {
+        markLayer.innerHTML = "";
+        if (!on) return;
+        var set = [
+          { midi: 48, clef: "bass",   label: "C" },
+          { midi: 53, clef: "bass",   label: "Bass F" },
+          { midi: 60, clef: "treble", label: "Middle C" },
+          { midi: 67, clef: "treble", label: "Treble G" },
+          { midi: 72, clef: "treble", label: "C" }
+        ].filter(function (a) {
+          return a.clef === "treble" ? showTreble || a.midi === 60 : showBass;
+        });
+        var x0 = 130, gap = 78;
+        set.forEach(function (a, i) {
+          drawNote(markLayer, a.midi, a.clef, x0 + i * gap, "staff-note-mark", a.label);
+        });
+      },
+
+      /* Pairs that sit the same number of staff positions either side of middle
+         C. Exposed so a lesson can draw the mirror rather than assert it. */
+      mirrorPairs: function () {
+        return [[67, 53], [72, 48], [64, 57], [77, 43]].map(function (p) {
+          return { above: p[0], below: p[1],
+                   steps: stepOf(p[0]).step - stepOf(60).step,
+                   stepsBelow: stepOf(60).step - stepOf(p[1]).step };
+        });
       }
     };
     mount.staff = api;

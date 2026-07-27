@@ -38,6 +38,15 @@
   var POOLS = {
     // [midi, clef] — the three guide notes every method starts from.
     landmarks: [[67, "treble"], [60, "treble"], [53, "bass"]],
+    /* The five-anchor set. Three anchors leaves some notes four steps from the
+       nearest one, which is far enough that you go back to counting. Five puts
+       everything in the playing range within two steps. */
+    anchors: [[48, "bass"], [53, "bass"], [60, "treble"], [67, "treble"], [72, "treble"]],
+    /* Anchors plus one step either side — the notes you reach by stepping off an
+       anchor, which is how the in-between notes are supposed to be found. */
+    "anchors-near": [[48, "bass"], [53, "bass"], [60, "treble"], [67, "treble"], [72, "treble"],
+                     [50, "bass"], [52, "bass"], [55, "bass"], [59, "treble"],
+                     [62, "treble"], [65, "treble"], [69, "treble"], [71, "treble"], [74, "treble"]],
     // …plus one diatonic step either side, which is where interval reading starts.
     steps: [[67, "treble"], [60, "treble"], [53, "bass"],
             [65, "treble"], [69, "treble"], [62, "treble"],

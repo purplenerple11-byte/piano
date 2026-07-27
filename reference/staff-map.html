@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Reference · The Staff Map</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+</head>
+<body>
+
+<div class="kicker">Reference</div>
+<h1>The staff map</h1>
+<p class="subtitle">Five anchors, two stories, one mirror. Print it and keep it
+on the music stand.</p>
+
+<div id="anchor-staff"
+     data-staff
+     data-clefs="both"
+     data-anchors="true"
+     data-title="The five anchors"
+     data-caption="Left to right, low to high — the set climbs the page like a ladder, because that is what it is."></div>
+
+<h2>Story 1 · The three Cs are a ladder</h2>
+
+<table>
+  <tr><th>C</th><th>Where it sits</th><th>Distance from middle C</th></tr>
+  <tr><td><strong>C5</strong></td><td>Treble staff, 3rd space</td><td>An octave above</td></tr>
+  <tr><td><strong>C4</strong> (middle)</td><td>Its own short line, between the staves</td><td>—</td></tr>
+  <tr><td><strong>C3</strong></td><td>Bass staff, 2nd space</td><td>An octave below</td></tr>
+</table>
+
+<p>Three Cs, evenly spaced, one per staff plus the one in the middle. Middle C is
+the only note with its <em>own private line</em> — that short stroke belongs to no
+staff, which is exactly why it's easy to spot.</p>
+
+<h2>Story 2 · Each clef names its own note</h2>
+
+<table>
+  <tr><th>Clef</th><th>Also called</th><th>What it marks</th></tr>
+  <tr><td>Treble &#119070;</td><td>The <strong>G</strong> clef</td><td>Its curl wraps the line that is <strong>G4</strong></td></tr>
+  <tr><td>Bass &#119074;</td><td>The <strong>F</strong> clef</td><td>Its two dots straddle the line that is <strong>F3</strong></td></tr>
+</table>
+
+<p>The clef is not decoration and it is not a label for the staff — it is an arrow
+pointing at one specific note. Two anchors, free, drawn on every page of music you
+will ever open.</p>
+
+<h2>The mirror</h2>
+
+<p>The grand staff is <strong>symmetric around middle C</strong>. Every anchor
+above has a partner the same number of staff positions below:</p>
+
+<table>
+  <tr><th>Above middle C</th><th>Steps</th><th>Below middle C</th></tr>
+  <tr><td>Treble G — clef curl</td><td>4 ↔ 4</td><td>Bass F — clef dots</td></tr>
+  <tr><td>C5 — treble 3rd space</td><td>7 ↔ 7</td><td>C3 — bass 2nd space</td></tr>
+  <tr><td>E4 — treble bottom line</td><td>2 ↔ 2</td><td>A3 — bass top line</td></tr>
+  <tr><td>F5 — treble top line</td><td>10 ↔ 10</td><td>G2 — bass bottom line</td></tr>
+</table>
+
+<div class="callout">
+  <span class="callout-label">Why this is worth knowing</span>
+  <strong>Learn the top half and the bottom half comes free.</strong> Anything you
+  can find above middle C, you can find the same distance below it by looking at
+  the mirrored position. It also explains why the two clefs feel different: they
+  are the same picture, reflected — not two unrelated alphabets to memorise.
+</div>
+
+<h2>Shapes, not letters</h2>
+
+<p>Once you're on an anchor, the page only moves two ways, and each one has a
+look:</p>
+
+<table>
+  <tr><th>Move</th><th>Looks like</th><th>On the keys</th></tr>
+  <tr><td><strong>Step</strong></td><td>Line → space, or space → line. A <em>zigzag</em>.</td><td>Next white key. Neighbouring finger.</td></tr>
+  <tr><td><strong>Skip</strong></td><td>Line → line, or space → space. A <em>stack</em>.</td><td>Miss one white key. Finger gap.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="callout-label">The snowman</span>
+  A <strong>triad in root position</strong> is three notes all on lines, or all on
+  spaces — three circles stacked straight up. It looks like a
+  <strong>snowman</strong>, and once you see snowmen you stop reading chords note
+  by note. Cross-reference:
+  <a href="../lessons/0006-chords.html">Lesson 6</a> built these under your hands;
+  this is what they look like on the page.
+</div>
+
+<h2>Numbers worth knowing</h2>
+
+<table>
+  <tr><th>Quantity</th><th>Value</th></tr>
+  <tr><td>Anchors to memorise</td><td>5 (from 2 stories)</td></tr>
+  <tr><td>Furthest any note sits from an anchor</td><td>2 steps, in the playing range</td></tr>
+  <tr><td>Staff positions from middle C to Treble G</td><td>4 (and 4 down to Bass F)</td></tr>
+  <tr><td>Lines + spaces on one staff</td><td>5 + 4 = 9 positions</td></tr>
+</table>
+
+<div class="ask-agent">
+  This sheet is the compressed version of
+  <a href="../lessons/0007-anchors.html">Lesson 7</a>. If a note keeps catching
+  you out, tell me which one — an anchor that isn't working for you is worth
+  replacing with one that does.
+</div>
+
+<div class="nav">
+  <span><a href="../index.html">← Course index</a></span>
+  <span><a href="keyboard-map.html">Reference: Keyboard map →</a></span>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var m = document.getElementById("anchor-staff");
+  if (m && m.staff) m.staff.anchors(true);
+});
+</script>
+
+</body>
+</html>
