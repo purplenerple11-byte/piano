@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#3f4c86">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 6 · Chords</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/chords.js"></script>
+<script src="../assets/chorddrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 06 · Chords</div>
+<h1>Four chords, and most of pop music</h1>
+<p class="subtitle">You started this course knowing C chords. Here is what that
+was the first quarter of.</p>
+
+<h2>A triad is a stack of thirds</h2>
+
+<p>Every chord you'll play for a long while is a <strong>triad</strong>: three
+notes, built by taking a note and stacking every <em>other</em> letter on top of
+it. Start on C, skip D, take E, skip F, take G. C–E–G. That's it — that's the C
+chord you already know, and now you know why it's those three notes
+(<a href="https://en.wikipedia.org/wiki/Triad_(music)">Triad, Wikipedia</a>).</p>
+
+<p>The three notes have names worth knowing, because the middle one does all the
+work:</p>
+
+<div class="callout">
+  <span class="callout-label">Root, third, fifth</span>
+  <strong>Root</strong> — the note the chord is named after.<br>
+  <strong>Third</strong> — the middle note. <em>This is the one that decides
+  major or minor.</em><br>
+  <strong>Fifth</strong> — the top note. Same in both; it just holds the chord up.
+  <br><br>
+  Major is <strong>4 semitones then 3</strong>. Minor is <strong>3 then 4</strong>.
+  Move that middle note down one key and a major chord becomes minor — that is
+  the entire difference between happy and sad in Western music, and it's one key.
+</div>
+
+<div data-chord="C" data-from="60"
+     data-title="C major — 4 semitones, then 3"
+     data-caption="Count the keys: C to E is four keys (counting black ones), E to G is three. The shape under your hand is thumb, middle finger, little finger."></div>
+
+<div data-chord="Am" data-from="57"
+     data-title="A minor — 3 semitones, then 4"
+     data-caption="Same shape in your hand, different spacing: A to C is three keys, C to E is four. Notice A minor uses <strong>the same three white keys as C major</strong> — A, C, E versus C, E, G share C and E. That is why they sound related."></div>
+
+<h2>Build them from the symbol</h2>
+
+<p>A chord symbol is an instruction, not a name to memorise. <strong>C</strong>
+means "major triad on C". <strong>Am</strong> means "minor triad on A". Once you
+can turn the symbol into three notes, you can read a lead sheet — which is how
+most non-classical music is actually written down.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="chord-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-chorddrill="name"
+     data-kb="chord-kb"
+     data-chords="C G Am F"
+     data-rounds="8"
+     data-title="Symbol → chord"
+     data-caption="Any octave, any order, all three notes. <strong>Spread</strong> is back from last lesson: three notes 40ms apart are a chord; 300ms apart is an arpeggio you didn't mean to play. Play the shape, don't assemble it note by note."></div>
+
+<h2>The four chords</h2>
+
+<p>Those four — <strong>C, G, Am, F</strong> — are not a random set. They are the
+I, V, vi and IV of C major: the first, fifth, sixth and fourth notes of the scale,
+each with a triad built on top. In that particular order (I–V–vi–IV) they are the
+most documented progression in popular music — Wikipedia lists
+<a href="https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression">over
+300 songs</a> built on it, and a comedy band got 100 million views stringing
+dozens of them into one medley to make the point.</p>
+
+<div class="callout">
+  <span class="callout-label">A note on the order</span>
+  You wrote this down as I–IV–V–vi. Same four chords — the <em>order</em> is what
+  changes between songs, and every rotation of these four is used somewhere.
+  I–V–vi–IV is the one with the enormous song list attached. Learn the four
+  shapes and you can play any rotation.
+</div>
+
+<h2>The change is the skill</h2>
+
+<p>Here's the thing nobody tells beginners: <strong>you will not be stuck because
+you can't find F.</strong> You'll be stuck because getting from C to F takes a
+second and a half, and the song doesn't wait.</p>
+
+<p>So this drill measures <strong>change time</strong> — how long from finishing
+one chord to finishing the next. That number, not accuracy, is what decides
+whether you can play a song.</p>
+
+<div id="prog-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-chorddrill="progression"
+     data-kb="prog-kb"
+     data-chords="C G Am F"
+     data-rounds="12"
+     data-title="C → G → Am → F, round and round"
+     data-caption="The next chord is shown small and dim under the current one. <strong>Read ahead</strong> — start moving toward the next shape while the current chord is still ringing. That is the whole trick, and it's why the next chord is shown at all. Under 2 seconds and you can play under a song."></div>
+
+<h2>What the left hand does</h2>
+
+<p>Playing block chords in both hands sounds like a hymn. What makes a piano part
+sound like a <em>record</em> is the left hand breaking the chord up while the right
+hand holds the tune. Three patterns, in the order they should be learned:</p>
+
+<table>
+  <tr><th>Pattern</th><th>Order</th><th>Sounds like</th></tr>
+  <tr><td><strong>Block</strong></td><td>All three together</td><td>Hymn, ballad, Kanye</td></tr>
+  <tr><td><strong>Broken</strong></td><td>Root, third, fifth</td><td>Gentle, folky</td></tr>
+  <tr><td><strong>Alberti</strong></td><td>Low, high, middle, high</td><td>Classical — it's the engine under Mozart</td></tr>
+</table>
+
+<p>Alberti bass is the odd one: <strong>lowest, highest, middle, highest</strong>,
+over and over
+(<a href="https://en.wikipedia.org/wiki/Alberti_bass">Alberti bass, Wikipedia</a>).
+On a C chord that's C–G–E–G. It sounds far more elaborate than it is, which is
+exactly why it was so popular.</p>
+
+<div id="pat-kb"
+     data-keyboard
+     data-from="48"
+     data-octaves="2"
+     data-labels="none"
+     data-groups="true"
+     data-interactive="true"></div>
+
+<div data-chorddrill="pattern"
+     data-kb="pat-kb"
+     data-chords="C G Am F"
+     data-pattern="alberti"
+     data-rounds="6"
+     data-title="Alberti bass — order matters here"
+     data-caption="The only drill in this course where the <em>order</em> is graded, because that's what defines the pattern. The next key you need lights up as you go. Get this into your left hand and you have a Classical accompaniment for any chord you know."></div>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="chord-quiz"></div>
+
+<script type="application/json" id="chord-quiz">
+[
+  { "q": "A triad is built by stacking which interval?",
+    "a": "Thirds — every other letter", "choices": ["Thirds — every other letter", "Steps — every next letter", "Fifths — every fourth letter", "Octaves — the same letter"] },
+  { "q": "Which note of a triad decides whether it is major or minor?",
+    "a": "The third, in the middle", "choices": ["The third, in the middle", "The root, at the bottom", "The fifth, at the top", "The one you play first"] },
+  { "q": "A major triad is spaced, in semitones:",
+    "a": "Four, then three", "choices": ["Four, then three", "Three, then four", "Two, then five", "Five, then two"] },
+  { "q": "Which three notes make up an A minor triad?",
+    "a": "A, C and E", "choices": ["A, C and E", "A, C and F", "A, D and E", "A, B and E"] },
+  { "q": "The four chords of the famous pop progression, in C, are:",
+    "a": "C, G, A minor, F", "choices": ["C, G, A minor, F", "C, D, E minor, F", "C, F, B minor, G", "C, E, G minor, A"] },
+  { "q": "Alberti bass plays the chord in which order?",
+    "a": "Low, high, middle, high", "choices": ["Low, high, middle, high", "Low, middle, high, middle", "High, middle, low, middle", "Low, middle, high, low"] },
+  { "q": "What actually stops beginners playing a chord song?",
+    "a": "The speed of the change", "choices": ["The speed of the change", "The names of the notes", "The number of chords", "The key of the song"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes: three on the progression drill until the change time drops under
+two seconds, three on Alberti with your left hand, and four just
+<strong>playing</strong> — C, G, Am, F round and round, left hand block chords,
+right hand doing whatever it likes on the white keys. It will sound like music,
+because it is.</p>
+
+<p>Then try it on a song. <em>Say You Will</em> and <em>See Me Again</em> are both
+slow and sparse — put the recording on, find the chord changes by ear, and see how
+often they're one of these four shapes moved somewhere else.</p>
+
+<div class="callout">
+  <span class="callout-label">Where this is going</span>
+  Next is <strong>key signatures and the circle of fifths</strong> — why some
+  songs live on black keys, and how the same four shapes move to any key. That's
+  what <em>Arctic Nights</em> needs: it lives in E minor, leaning on F♯ and D♯.
+</div>
+
+<div class="ask-agent">
+  <strong>Ask me things.</strong> Good ones here: what the little numbers
+  (I, IV, V, vi) actually mean, why A minor and C major share notes, what an
+  inversion is and when to bother, or how to work out the chords of a song by ear.
+  And tell me your <strong>change time</strong> on the progression drill — that
+  number decides whether we move on or spend another session here.
+</div>
+
+<div class="nav">
+  <span><a href="0005-hands-together.html">← Lesson 5: Hands together</a></span>
+  <span><a href="../index.html">Course index →</a></span>
+</div>
+
+</body>
+</html>

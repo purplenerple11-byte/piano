@@ -640,3 +640,68 @@ th {
 
 /* Count-in / tempo readout sits in the controls row. */
 .drill-clock { font-variant-numeric: tabular-nums; }
+
+/* ── Chord shape display ─────────────────────────────────── */
+
+.chord-box {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.chord-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.chord-row {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+
+.chord-sigil {
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--accent);
+  min-width: 2.6rem;
+}
+
+.chord-spell { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.chord-tone { display: inline-flex; flex-direction: column; align-items: center; }
+.chord-tone-name {
+  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+.chord-tone-role {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.chord-plus { color: var(--muted); font-size: 1rem; }
+
+.chord-caption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* The chord coming next in a progression — deliberately small and dim. Looking
+   ahead is the skill; shouting it would do the looking for you. */
+.chord-next {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-height: 1rem;
+  margin-top: 0.25rem;
+}
