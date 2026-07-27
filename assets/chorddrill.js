@@ -99,7 +99,7 @@
       mount.appendChild(cap);
     }
 
-    var running = false, round = 0, correct = 0, queue = [];
+    var running = false, round = 0, done = 0, correct = 0, queue = [];
     var target = null, pending = [], spreads = [], changes = [], lastDoneAt = 0;
     var strikes = [], strikeIdx = 0, hadError = false;
 
@@ -107,16 +107,16 @@
       var rows;
       if (mode === "progression") {
         rows = [["Chord", round + " / " + rounds],
-                ["Clean", round ? Math.round(correct * 100 / round) + "%" : "—"],
+                ["Clean", done ? Math.round(correct * 100 / done) + "%" : "—"],
                 ["Change", changes.length ? (median(changes) / 1000).toFixed(2) + "s" : "—"],
                 ["Spread", spreads.length ? Math.round(median(spreads)) + "ms" : "—"]];
       } else if (mode === "pattern") {
         rows = [["Round", round + " / " + rounds],
-                ["Clean", round ? Math.round(correct * 100 / round) + "%" : "—"],
+                ["Clean", done ? Math.round(correct * 100 / done) + "%" : "—"],
                 ["Pattern", (window.Chords.PATTERNS[patName] || {}).label || patName]];
       } else {
         rows = [["Round", round + " / " + rounds],
-                ["Clean", round ? Math.round(correct * 100 / round) + "%" : "—"],
+                ["Clean", done ? Math.round(correct * 100 / done) + "%" : "—"],
                 ["Spread", spreads.length ? Math.round(median(spreads)) + "ms" : "—"]];
       }
       stats.innerHTML = "";
@@ -179,6 +179,7 @@
       var now = performance.now();
       if (mode === "progression" && lastDoneAt) changes.push(now - lastDoneAt);
       lastDoneAt = now;
+      done++;
       if (!hadError) correct++;
       renderStats();
       setTimeout(function () { if (running) ask(); }, hadError ? 1200 : 550);
@@ -257,7 +258,7 @@
       if (kb) kb.clear();
       cue.className = "drill-cue drill-cue-small";
       nextCue.textContent = "";
-      var pct = round ? Math.round(correct * 100 / round) : 0;
+      var pct = done ? Math.round(correct * 100 / done) : 0;
       if (mode === "progression") {
         var ch = median(changes) / 1000;
         cue.textContent = pct >= 80 && ch <= 2
@@ -279,7 +280,7 @@
       if (running) { finish(); return; }
       running = true;
       startBtn.textContent = "Stop";
-      round = 0; correct = 0; spreads = []; changes = []; queue = [];
+      round = 0; done = 0; correct = 0; spreads = []; changes = []; queue = [];
       target = null; lastDoneAt = 0;
       ask();
     };
