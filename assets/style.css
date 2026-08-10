@@ -1,240 +1,484 @@
-/* Shared stylesheet for the Piano workspace — lessons and reference sheets.
-   Tufte-inspired: serif body, generous whitespace, minimal chrome.
-   Structure deliberately mirrors the clep-precalculus workspace stylesheet so
-   both courses feel like they came from the same hand; the accent differs so a
-   glance tells you which course you're in. */
+/* Shared stylesheet for the Piano workspace — lessons, songs and reference sheets.
+   Apple-native: SF type scale, system semantic colours, and liquid-glass surfaces
+   floating over an ambient wash. Tuned for reading and drilling on an iPad, in
+   Safari on the home screen or in Web MIDI Browser.
+
+   Every selector the JS touches is preserved — the widgets (keyboard, staff,
+   rhythm, chord, drill) mount by class name, so the names are contract. */
+
+/* ── Colour: iOS/iPadOS semantic palette ─────────────────────
+   Named after the UIKit colours they stand in for, so the intent survives a
+   retune: label / secondaryLabel / separator / systemBackground, and the accent
+   is systemIndigo — the course's own signature, but a system colour. */
 
 :root {
-  --bg: #fdfcf9;
-  --text: #1a1a1a;
-  --muted: #5c5c5c;
-  --rule: #d9d5ca;
-  --accent: #3f4c86;
-  --accent-soft: #e7e9f4;
-  --code-bg: #f1efe8;
-  --good: #2e6b3e;
-  --good-soft: #e5f1e6;
-  --bad: #a1332a;
-  --bad-soft: #f7e6e4;
-  --warn: #b8860b;
-  --key-white: #fbfaf6;
-  --key-white-edge: #b9b4a7;
-  --key-black: #23211d;
+  color-scheme: light dark;
+
+  --bg: #f2f1f6;              /* systemGroupedBackground */
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-solid: #ffffff;   /* secondarySystemGroupedBackground */
+  --text: #000000;            /* label */
+  --muted: #6c6c70;           /* secondaryLabel */
+  --rule: rgba(60, 60, 67, 0.22);   /* separator */
+  --accent: #5856d6;          /* systemIndigo */
+  --accent-soft: rgba(88, 86, 214, 0.12);
+  --code-bg: rgba(118, 118, 128, 0.12);  /* tertiarySystemFill */
+  --good: #248a3d;            /* systemGreen, accessible variant */
+  --good-soft: rgba(52, 199, 89, 0.16);
+  --bad: #d70015;             /* systemRed, accessible variant */
+  --bad-soft: rgba(255, 59, 48, 0.14);
+  --warn: #c93400;            /* systemOrange, accessible variant */
+  --key-white: #ffffff;
+  --key-white-edge: rgba(60, 60, 67, 0.34);
+  --key-black: #2c2c2e;
   --max-width: 720px;
+
+  /* Liquid glass. The tint is what the panel adds on top of whatever it is
+     over; the stroke and the inset highlight are the lit edge that makes it
+     read as a pane of glass rather than a flat translucent box. */
+  --glass-blur: saturate(180%) blur(22px);
+  --glass-stroke: rgba(255, 255, 255, 0.55);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 26px rgba(0, 0, 0, 0.07);
+  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 58%);
+
+  /* The ambient wash the glass has something to refract. */
+  --wash-1: rgba(88, 86, 214, 0.22);
+  --wash-2: rgba(255, 45, 85, 0.11);
+  --wash-3: rgba(10, 132, 255, 0.16);
+
+  --radius-card: 18px;
+  --radius-inner: 12px;
+  --spring: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1b1a18;
-    --text: #ecebe6;
-    --muted: #a8a49a;
-    --rule: #393730;
-    --accent: #9aa8e6;
-    --accent-soft: #262a41;
-    --code-bg: #282621;
-    --good: #7fbf8f;
-    --good-soft: #22331f;
-    --bad: #e08278;
-    --bad-soft: #3a201d;
-  --warn: #d9a441;
-    --key-white: #dedbd2;
-    --key-white-edge: #6f6b61;
-    --key-black: #171613;
+    --bg: #000000;
+    --surface: rgba(28, 28, 30, 0.58);
+    --surface-solid: #1c1c1e;
+    --text: #ffffff;
+    --muted: #98989f;
+    --rule: rgba(84, 84, 88, 0.6);
+    --accent: #7d7aff;
+    --accent-soft: rgba(94, 92, 230, 0.24);
+    --code-bg: rgba(118, 118, 128, 0.24);
+    --good: #30d158;
+    --good-soft: rgba(48, 209, 88, 0.18);
+    --bad: #ff453a;
+    --bad-soft: rgba(255, 69, 58, 0.2);
+    --warn: #ff9f0a;
+    --key-white: #e5e5ea;
+    --key-white-edge: rgba(235, 235, 245, 0.3);
+    --key-black: #0a0a0c;
+
+    --glass-stroke: rgba(255, 255, 255, 0.14);
+    --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
+    --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 58%);
+
+    --wash-1: rgba(94, 92, 230, 0.3);
+    --wash-2: rgba(255, 55, 95, 0.14);
+    --wash-3: rgba(10, 132, 255, 0.2);
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #1b1a18;
-  --text: #ecebe6;
-  --muted: #a8a49a;
-  --rule: #393730;
-  --accent: #9aa8e6;
-  --accent-soft: #262a41;
-  --code-bg: #282621;
-  --good: #7fbf8f;
-  --good-soft: #22331f;
-  --bad: #e08278;
-  --bad-soft: #3a201d;
-  --warn: #d9a441;
-  --key-white: #dedbd2;
-  --key-white-edge: #6f6b61;
-  --key-black: #171613;
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: rgba(28, 28, 30, 0.58);
+  --surface-solid: #1c1c1e;
+  --text: #ffffff;
+  --muted: #98989f;
+  --rule: rgba(84, 84, 88, 0.6);
+  --accent: #7d7aff;
+  --accent-soft: rgba(94, 92, 230, 0.24);
+  --code-bg: rgba(118, 118, 128, 0.24);
+  --good: #30d158;
+  --good-soft: rgba(48, 209, 88, 0.18);
+  --bad: #ff453a;
+  --bad-soft: rgba(255, 69, 58, 0.2);
+  --warn: #ff9f0a;
+  --key-white: #e5e5ea;
+  --key-white-edge: rgba(235, 235, 245, 0.3);
+  --key-black: #0a0a0c;
+  --glass-stroke: rgba(255, 255, 255, 0.14);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
+  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 58%);
+  --wash-1: rgba(94, 92, 230, 0.3);
+  --wash-2: rgba(255, 55, 95, 0.14);
+  --wash-3: rgba(10, 132, 255, 0.2);
 }
 
 :root[data-theme="light"] {
-  --bg: #fdfcf9;
-  --text: #1a1a1a;
-  --muted: #5c5c5c;
-  --rule: #d9d5ca;
-  --accent: #3f4c86;
-  --accent-soft: #e7e9f4;
-  --code-bg: #f1efe8;
-  --good: #2e6b3e;
-  --good-soft: #e5f1e6;
-  --bad: #a1332a;
-  --bad-soft: #f7e6e4;
-  --warn: #b8860b;
-  --key-white: #fbfaf6;
-  --key-white-edge: #b9b4a7;
-  --key-black: #23211d;
+  color-scheme: light;
+  --bg: #f2f1f6;
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-solid: #ffffff;
+  --text: #000000;
+  --muted: #6c6c70;
+  --rule: rgba(60, 60, 67, 0.22);
+  --accent: #5856d6;
+  --accent-soft: rgba(88, 86, 214, 0.12);
+  --code-bg: rgba(118, 118, 128, 0.12);
+  --good: #248a3d;
+  --good-soft: rgba(52, 199, 89, 0.16);
+  --bad: #d70015;
+  --bad-soft: rgba(255, 59, 48, 0.14);
+  --warn: #c93400;
+  --key-white: #ffffff;
+  --key-white-edge: rgba(60, 60, 67, 0.34);
+  --key-black: #2c2c2e;
+  --glass-stroke: rgba(255, 255, 255, 0.55);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 26px rgba(0, 0, 0, 0.07);
+  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 58%);
+  --wash-1: rgba(88, 86, 214, 0.22);
+  --wash-2: rgba(255, 45, 85, 0.11);
+  --wash-3: rgba(10, 132, 255, 0.16);
+}
+
+/* ── Type: SF, at Apple's scale ──────────────────────────────
+   -apple-system resolves to SF Pro on every Apple device; ui-rounded gives
+   SF Pro Rounded, which is what the big single-glyph cues are set in. */
+
+:root {
+  --sf: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --sf-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --sf-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
 
-body {
+html {
   background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* The ambient wash. Fixed behind everything so the glass panels always have
+   colour to bend, and so it doesn't drift as the page scrolls. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58rem 46rem at 8% -10%, var(--wash-1), transparent 62%),
+    radial-gradient(48rem 42rem at 96% 4%, var(--wash-2), transparent 62%),
+    radial-gradient(52rem 44rem at 76% 100%, var(--wash-3), transparent 62%);
+}
+
+body {
+  background: transparent;
   color: var(--text);
-  font-family: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
-  font-size: 19px;
-  line-height: 1.55;
+  font-family: var(--sf);
+  font-size: 17px;              /* Body, iOS */
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
   max-width: var(--max-width);
-  margin: 3.5rem auto;
-  padding: 0 1.5rem 4rem;
+  margin: 0 auto;
+  padding:
+    calc(env(safe-area-inset-top) + 3rem)
+    calc(env(safe-area-inset-right) + 1.25rem)
+    calc(env(safe-area-inset-bottom) + 5rem)
+    calc(env(safe-area-inset-left) + 1.25rem);
+  text-wrap: pretty;
 }
 
-h1, h2, h3 { font-weight: 600; line-height: 1.25; }
-h1 { font-size: 1.9rem; margin-bottom: 0.2rem; }
+/* An iPad has the room for News-sized body copy; a phone does not. */
+@media (min-width: 768px) {
+  body { font-size: 19px; padding-top: calc(env(safe-area-inset-top) + 4rem); }
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+h1 { font-size: 2.05rem; margin-bottom: 0.25rem; }   /* Large Title */
 h2 {
-  font-size: 1.35rem;
-  margin-top: 2.5rem;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.3rem;
+  font-size: 1.4rem;                                  /* Title 2 */
+  margin-top: 2.6rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0;
+  border-bottom: none;
 }
-h3 { font-size: 1.1rem; margin-top: 1.8rem; }
+h3 { font-size: 1.12rem; margin-top: 1.9rem; }        /* Title 3 */
 
+/* Section headers in a grouped list are uppercase and quiet; the rule that used
+   to sit under h2 is replaced by that weight difference. */
 .kicker {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-family: var(--sf);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
-.subtitle { color: var(--muted); font-size: 1.05rem; margin-top: 0; }
+.subtitle {
+  color: var(--muted);
+  font-size: 1.03rem;
+  line-height: 1.45;
+  margin-top: 0;
+}
 
-a, a:visited { color: var(--accent); }
+a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 
 .rule { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 
+/* ── Liquid glass ────────────────────────────────────────────
+   One material, applied to every floating surface. The panel is a translucent
+   tint over a blurred, saturated backdrop; ::before lays the specular sheen
+   along the top edge, which is the part that sells it as glass. */
+
+.callout,
+.card,
+.ask-agent,
+.quiz-box,
+.midi-bar,
+.kbd-box,
+.drill-box,
+.staff-box,
+.rhythm-box,
+.chord-box,
+.nav {
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 0.5px solid var(--glass-stroke);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-edge), var(--glass-shadow);
+  overflow: hidden;
+}
+
+.callout::before,
+.card::before,
+.ask-agent::before,
+.quiz-box::before,
+.midi-bar::before,
+.kbd-box::before,
+.drill-box::before,
+.staff-box::before,
+.rhythm-box::before,
+.chord-box::before,
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--glass-sheen);
+}
+
+/* Transparency is a preference, not a given. When it's off, the panels go
+   opaque and the wash goes away — same layout, no blur. */
+@media (prefers-reduced-transparency: reduce) {
+  body::before { display: none; }
+  .callout, .card, .ask-agent, .quiz-box, .midi-bar,
+  .kbd-box, .drill-box, .staff-box, .rhythm-box, .chord-box, .nav {
+    background: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: var(--rule);
+  }
+}
+
 .callout {
-  background: var(--accent-soft);
-  border-left: 3px solid var(--accent);
-  padding: 0.9rem 1.1rem;
+  background:
+    linear-gradient(var(--accent-soft), var(--accent-soft)),
+    var(--surface);
+  padding: 1rem 1.15rem;
   margin: 1.5rem 0;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
+  line-height: 1.5;
 }
 
 .callout-label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 700;
-  font-size: 0.75rem;
+  font-family: var(--sf);
+  font-weight: 600;
+  font-size: 0.74rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
 }
 
 code {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family: var(--sf-mono);
   font-size: 0.86em;
   background: var(--code-bg);
-  padding: 0.05em 0.3em;
-  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
 }
 
-table { border-collapse: collapse; width: 100%; margin: 1.2rem 0; font-size: 0.95rem; }
-th, td { border: 1px solid var(--rule); padding: 0.45rem 0.7rem; text-align: center; }
-th {
-  background: var(--code-bg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+/* ── Tables ──────────────────────────────────────────────────
+   Styled as an inset grouped list: hairline row separators, no outer box, no
+   vertical rules. */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.3rem 0;
+  font-size: 0.95rem;
+  background: var(--surface);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--glass-edge), var(--glass-shadow);
 }
+th, td {
+  border: none;
+  border-bottom: 0.5px solid var(--rule);
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+tr:last-child td { border-bottom: none; }
+th {
+  background: transparent;
+  font-family: var(--sf);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Bottom toolbar ──────────────────────────────────────────
+   The prev/next pair, floated as a capsule the way an iPadOS toolbar sits over
+   its content rather than ruled off from it. */
 
 .nav {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.85rem;
+  font-family: var(--sf);
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--muted);
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+  z-index: 20;
   margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
 }
+.nav a { text-decoration: none; font-weight: 500; }
+@media (hover: hover) {
+  .nav a:hover { text-decoration: underline; }
+}
 
 .ask-agent {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.85rem;
+  font-family: var(--sf);
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: var(--muted);
-  background: var(--code-bg);
-  border-radius: 6px;
-  padding: 0.8rem 1rem;
+  padding: 0.95rem 1.1rem;
   margin-top: 2rem;
 }
 
-/* ── Quiz (shared with clep-precalculus) ─────────────────── */
+/* ── Controls ────────────────────────────────────────────────
+   Every tappable thing clears the 44pt minimum, kills the grey tap flash, and
+   answers a touch with a press-in rather than a hover. */
+
+button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.24s var(--spring), background-color 0.2s ease,
+              border-color 0.2s ease, opacity 0.2s ease;
+}
+button:active:not(:disabled),
+.drill-ans:active:not(:disabled),
+.midi-btn:active:not(:disabled) { transform: scale(0.96); }
+
+/* ── Quiz ────────────────────────────────────────────────────── */
 
 .quiz-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--code-bg);
-  border-radius: 8px;
+  font-family: var(--sf);
   padding: 1.3rem 1.4rem;
-  margin: 1.2rem 0;
+  margin: 1.3rem 0;
 }
-.quiz-progress { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+.quiz-progress {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
 .quiz-q {
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 1.1rem;
+  font-family: var(--sf);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
   margin-bottom: 1rem;
 }
 .quiz-choices { display: flex; flex-direction: column; gap: 0.5rem; }
 .quiz-choice-btn, .quiz-btn {
   font-family: inherit;
-  font-size: 0.95rem;
-  padding: 0.55rem 0.9rem;
-  border-radius: 5px;
-  border: 1px solid var(--rule);
-  background: var(--bg);
+  font-size: 1rem;
+  min-height: 44px;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-inner);
+  border: 0.5px solid var(--rule);
+  background: var(--surface-solid);
   color: var(--text);
   cursor: pointer;
   text-align: left;
 }
-.quiz-choice-btn:hover, .quiz-btn:hover { border-color: var(--accent); }
-.quiz-choice-btn:disabled { opacity: 0.6; cursor: default; }
+@media (hover: hover) {
+  .quiz-choice-btn:hover, .quiz-btn:hover { border-color: var(--accent); }
+}
+.quiz-choice-btn:active:not(:disabled), .quiz-btn:active { transform: scale(0.985); }
+.quiz-choice-btn:disabled { opacity: 0.5; cursor: default; }
 .quiz-form { display: flex; gap: 0.6rem; }
 .quiz-input {
   flex: 1;
   font-family: inherit;
-  font-size: 0.95rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 5px;
-  border: 1px solid var(--rule);
-  background: var(--bg);
+  font-size: 1rem;          /* 16px+ or iOS zooms the page on focus */
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-inner);
+  border: 0.5px solid var(--rule);
+  background: var(--surface-solid);
   color: var(--text);
 }
-.quiz-feedback { display: none; margin-top: 0.9rem; padding: 0.6rem 0.8rem; border-radius: 5px; font-size: 0.9rem; }
+.quiz-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.quiz-feedback {
+  display: none;
+  margin-top: 0.9rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-inner);
+  font-size: 0.92rem;
+}
 .quiz-good { background: var(--good-soft); color: var(--good); display: block; }
 .quiz-bad { background: var(--bad-soft); color: var(--bad); display: block; }
 .quiz-next { margin-top: 0.8rem; }
-.quiz-done { font-size: 1.2rem; margin-bottom: 0.8rem; }
+.quiz-done { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; }
 
-/* ── MIDI connection banner ──────────────────────────────── */
+/* ── MIDI connection banner ──────────────────────────────────── */
 
 .midi-bar {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.85rem;
+  font-family: var(--sf);
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 0.7rem 0.9rem;
+  padding: 0.8rem 1rem;
   margin: 1.5rem 0;
 }
 
@@ -244,45 +488,53 @@ th {
   border-radius: 50%;
   background: var(--muted);
   flex: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 12%, transparent);
 }
-.midi-dot-on { background: var(--good); }
-.midi-dot-off { background: var(--bad); }
+.midi-dot-on { background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
+.midi-dot-off { background: var(--bad); box-shadow: 0 0 0 3px var(--bad-soft); }
 
 .midi-msg { color: var(--muted); flex: 1; min-width: 12rem; line-height: 1.4; }
 .midi-msg strong { color: var(--text); font-weight: 600; }
 
+/* Capsule, tinted-glass fill — the iOS bordered-prominent button. */
 .midi-btn {
   font-family: inherit;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 0.4rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid var(--accent);
+  border: 0.5px solid transparent;
   background: var(--accent-soft);
   color: var(--accent);
   cursor: pointer;
   font-weight: 600;
   flex: none;
+  box-shadow: var(--glass-edge);
 }
-.midi-btn:hover { filter: brightness(0.96); }
-.midi-btn:disabled { opacity: 0.5; cursor: default; }
+@media (hover: hover) {
+  .midi-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+}
+.midi-btn:disabled { opacity: 0.4; cursor: default; }
 
-/* ── Keyboard widget ─────────────────────────────────────── */
+/* ── Keyboard widget ─────────────────────────────────────────── */
 
 .kbd-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 1.1rem 1.2rem;
+  font-family: var(--sf);
+  padding: 1.15rem 1.2rem;
   margin: 1.5rem 0;
 }
 
-.kbd-label {
+.kbd-label,
+.drill-label,
+.staff-label,
+.rhythm-label,
+.chord-label {
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.75rem;
 }
 
 .kbd-svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
@@ -299,7 +551,7 @@ th {
 .kbd-bad { fill: var(--bad) !important; stroke: var(--bad) !important; }
 
 .kbd-name {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--sf);
   font-size: 11px;
   font-weight: 600;
   text-anchor: middle;
@@ -311,7 +563,7 @@ th {
 /* The two-black / three-black grouping brackets drawn above the keys. */
 .kbd-group { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.55; }
 .kbd-group-txt {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--sf);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -319,65 +571,90 @@ th {
   fill: var(--accent);
 }
 
-.kbd-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.kbd-caption,
+.drill-caption,
+.staff-caption,
+.chord-caption {
+  margin-top: 0.85rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
 
-/* ── Key drill ───────────────────────────────────────────── */
+/* ── Drills ──────────────────────────────────────────────────── */
 
 .drill-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 1.2rem 1.3rem;
+  font-family: var(--sf);
+  padding: 1.25rem 1.3rem;
   margin: 1.5rem 0;
 }
 
-.drill-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
-}
-
+/* The stage sits inside the glass, so it is a plain fill — nesting a second
+   backdrop-filter costs a whole extra blur pass per frame on an iPad and the
+   two layers cancel each other out anyway. Kept at quaternary-fill weight: it
+   is a well for the cue, not a second card. */
 .drill-stage {
   text-align: center;
-  padding: 1.1rem 0.5rem 0.9rem;
-  border-radius: 6px;
-  background: var(--code-bg);
+  padding: 1.2rem 0.5rem 1rem;
+  border-radius: var(--radius-inner);
+  background: rgba(118, 118, 128, 0.07);
+  box-shadow: inset 0 0 0 0.5px var(--rule);
   margin-bottom: 0.9rem;
 }
+@media (prefers-color-scheme: dark) {
+  .drill-stage { background: rgba(118, 118, 128, 0.16); }
+}
+:root[data-theme="dark"] .drill-stage { background: rgba(118, 118, 128, 0.16); }
+:root[data-theme="light"] .drill-stage { background: rgba(118, 118, 128, 0.07); }
 
+/* SF Pro Rounded: the single big glyph is closer to a watch complication than
+   to body copy, and rounded is what Apple sets those in. */
 .drill-cue {
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 3.4rem;
+  font-family: var(--sf-rounded);
+  font-size: 3.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1;
   color: var(--text);
   display: block;
-  min-height: 3.4rem;
+  min-height: 3.6rem;
 }
-.drill-cue-small { font-size: 1.15rem; line-height: 1.4; color: var(--muted); }
+.drill-cue-small {
+  font-family: var(--sf);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: var(--muted);
+}
 
-.drill-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; min-height: 1.2rem; }
+.drill-sub { font-size: 0.87rem; color: var(--muted); margin-top: 0.5rem; min-height: 1.2rem; }
 .drill-sub-good { color: var(--good); font-weight: 600; }
 .drill-sub-bad { color: var(--bad); font-weight: 600; }
 
 .drill-stats {
   display: flex;
-  gap: 1.4rem;
+  gap: 1.5rem;
   justify-content: center;
-  border-top: 1px solid var(--rule);
-  padding-top: 0.8rem;
+  border-top: 0.5px solid var(--rule);
+  padding-top: 0.9rem;
   margin-top: 0.9rem;
   flex-wrap: wrap;
 }
 .drill-stat { text-align: center; }
-.drill-stat-val { display: block; font-size: 1.3rem; color: var(--accent); }
+.drill-stat-val {
+  display: block;
+  font-family: var(--sf-rounded);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
 .drill-stat-key {
   display: block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -385,24 +662,36 @@ th {
 .drill-controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
 .drill-btn {
   font-family: inherit;
-  font-size: 0.9rem;
-  padding: 0.45rem 1.1rem;
+  font-size: 0.95rem;
+  min-height: 44px;
+  padding: 0.45rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid var(--accent);
+  border: 0.5px solid transparent;
   background: var(--accent-soft);
   color: var(--accent);
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--glass-edge);
 }
-.drill-btn:hover { filter: brightness(0.96); }
-.drill-btn-ghost { background: var(--bg); border-color: var(--rule); color: var(--muted); font-weight: 400; }
+@media (hover: hover) {
+  .drill-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+}
+.drill-btn-ghost {
+  background: var(--code-bg);
+  border-color: transparent;
+  color: var(--muted);
+  font-weight: 500;
+}
+@media (hover: hover) {
+  .drill-btn-ghost:hover { background: color-mix(in srgb, var(--muted) 18%, transparent); }
+}
 
 /* Sprint countdown. Monospaced so the digits don't jitter as they tick; turns to
    the warning colour in the last ten seconds. */
 .drill-clock {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family: var(--sf-mono);
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent);
   align-self: center;
   min-width: 3.2ch;
@@ -411,85 +700,89 @@ th {
 }
 .drill-clock-low { color: var(--bad); }
 
-.drill-answers { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.drill-answers { display: flex; gap: 0.45rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.9rem; }
 .drill-ans {
   font-family: inherit;
-  font-size: 0.95rem;
-  min-width: 3.4rem;
-  padding: 0.5rem 0.6rem;
-  border-radius: 5px;
-  border: 1px solid var(--rule);
-  background: var(--bg);
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 3.6rem;
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius-inner);
+  border: 0.5px solid var(--rule);
+  background: var(--surface-solid);
   color: var(--text);
   cursor: pointer;
 }
-.drill-ans:hover:not(:disabled) { border-color: var(--accent); }
-.drill-ans:disabled { opacity: 0.45; cursor: default; }
+@media (hover: hover) {
+  .drill-ans:hover:not(:disabled) { border-color: var(--accent); }
+}
+.drill-ans:disabled { opacity: 0.4; cursor: default; }
 .drill-ans-good { opacity: 1 !important; border-color: var(--good); background: var(--good-soft); color: var(--good); }
 .drill-ans-bad { opacity: 1 !important; border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
 
-.drill-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
-
-/* ── Index card list ─────────────────────────────────────── */
+/* ── Index card list ─────────────────────────────────────────
+   An inset grouped list: glass row, chevron on the trailing edge, and a press
+   state instead of a hover-only affordance — there is no cursor on an iPad. */
 
 .card-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.2rem 0 2rem; }
 .card {
   display: block;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 0.9rem 1.1rem;
+  padding: 0.95rem 2.4rem 1rem 1.15rem;
   text-decoration: none;
   color: var(--text);
 }
-.card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.card::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1.1rem;
+  width: 9px;
+  height: 9px;
+  margin-top: -5px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  border-radius: 1px;
+  transform: rotate(-45deg);
+  opacity: 0.55;
+}
+.card:active { transform: scale(0.985); }
+@media (hover: hover) {
+  .card:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+  .card:hover::after { opacity: 0.9; }
+}
 .card-num {
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sf);
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
 }
 .card-title {
   display: block;
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 1.15rem;
-  margin-bottom: 0.2rem;
+  font-family: var(--sf);
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
 }
 .card-note {
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.85rem;
+  font-family: var(--sf);
+  font-size: 0.87rem;
   color: var(--muted);
   line-height: 1.45;
 }
 
-@media print {
-  body { max-width: 100%; font-size: 12pt; margin: 0; padding: 0.5in; }
-  .ask-agent, .nav, .midi-bar, .drill-controls, .drill-answers { display: none; }
-  a { color: var(--text); text-decoration: none; }
-  .kbd-w { fill: #fff; stroke: #000; }
-  .kbd-b { fill: #000; stroke: #000; }
-}
-
-/* ── Grand staff ─────────────────────────────────────────── */
+/* ── Grand staff ─────────────────────────────────────────────── */
 
 .staff-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 1.1rem 1.2rem;
+  font-family: var(--sf);
+  padding: 1.15rem 1.2rem;
   margin: 1.5rem 0;
-}
-
-.staff-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
 }
 
 .staff-svg { width: 100%; height: auto; display: block; }
@@ -501,7 +794,7 @@ th {
 .staff-clef { fill: var(--text); }
 .staff-clef-fallback {
   fill: var(--text);
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Bravura", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 34px;
   font-style: italic;
   font-weight: 700;
@@ -548,10 +841,16 @@ th {
 @media (prefers-reduced-motion: reduce) {
   .staff-flash { animation: staff-flash-fade 1.1s ease-out forwards; }
   @keyframes staff-flash-fade { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
+  * { transition-duration: 0.01ms !important; }
 }
 
 /* A toggle button (sprint, hints, feedback) showing its "on" state. */
-.drill-btn-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.drill-btn-on {
+  background: var(--accent);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+}
 
 /* Inline icon inside a drill button. Stroked with currentColor rather than set
    as an emoji, so it stays monochrome and follows the button's own colour
@@ -559,7 +858,7 @@ th {
 .drill-btn-ico { vertical-align: -2px; margin-right: 0.35em; }
 .drill-btn-txt { vertical-align: baseline; }
 
-/* ── Guided song ─────────────────────────────────────────── */
+/* ── Guided song ─────────────────────────────────────────────── */
 
 .song-section { margin: 2.2rem 0; }
 .song-section h3 { margin-bottom: 0.3rem; }
@@ -567,7 +866,7 @@ th {
 .song-full {
   margin-top: 2.8rem;
   padding-top: 1.4rem;
-  border-top: 2px solid var(--rule);
+  border-top: 0.5px solid var(--rule);
 }
 
 .staff-acc {
@@ -578,31 +877,18 @@ th {
 
 .staff-notelabel {
   fill: var(--accent);
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--sf);
   font-size: 11px;
   font-weight: 700;
   text-anchor: middle;
 }
 
-.staff-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
-
-/* ── Rhythm ──────────────────────────────────────────────── */
+/* ── Rhythm ──────────────────────────────────────────────────── */
 
 .rhythm-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 1.1rem 1.2rem;
+  font-family: var(--sf);
+  padding: 1.15rem 1.2rem;
   margin: 1.5rem 0;
-}
-
-.rhythm-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
 }
 
 .rhythm-svg { width: 100%; height: auto; display: block; }
@@ -636,28 +922,14 @@ th {
 
 .rhythm-cursor { fill: var(--accent); opacity: 0.14; }
 
-.rhythm-caption { margin-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.rhythm-caption { margin-top: 0.85rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
 
-/* Count-in / tempo readout sits in the controls row. */
-.drill-clock { font-variant-numeric: tabular-nums; }
-
-/* ── Chord shape display ─────────────────────────────────── */
+/* ── Chord shape display ─────────────────────────────────────── */
 
 .chord-box {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 1.1rem 1.2rem;
+  font-family: var(--sf);
+  padding: 1.15rem 1.2rem;
   margin: 1.5rem 0;
-}
-
-.chord-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.7rem;
 }
 
 .chord-row {
@@ -669,39 +941,68 @@ th {
 }
 
 .chord-sigil {
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 2.6rem;
+  font-family: var(--sf-rounded);
+  font-size: 2.7rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1;
   color: var(--accent);
-  min-width: 2.6rem;
+  min-width: 2.7rem;
 }
 
 .chord-spell { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
 .chord-tone { display: inline-flex; flex-direction: column; align-items: center; }
 .chord-tone-name {
-  font-family: "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 1.25rem;
+  font-family: var(--sf-rounded);
+  font-size: 1.3rem;
+  font-weight: 500;
   color: var(--text);
 }
 .chord-tone-role {
   font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--muted);
 }
 .chord-plus { color: var(--muted); font-size: 1rem; }
 
-.chord-caption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
-
 /* The chord coming next in a progression — deliberately small and dim. Looking
    ahead is the skill; shouting it would do the looking for you. */
 .chord-next {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sf);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
   min-height: 1rem;
   margin-top: 0.25rem;
+}
+
+/* ── Print ───────────────────────────────────────────────────
+   The reference sheets live on a music stand as often as on a screen. Glass,
+   wash and toolbar all come off; ink goes on white. */
+
+@media print {
+  html { background: #fff; }
+  body::before { display: none; }
+  body { max-width: 100%; font-size: 11pt; margin: 0; padding: 0.5in; color: #000; }
+  .ask-agent, .nav, .midi-bar, .drill-controls, .drill-answers { display: none; }
+  a { color: #000; text-decoration: none; }
+  .callout, .card, .quiz-box, .kbd-box, .drill-box,
+  .staff-box, .rhythm-box, .chord-box, table {
+    background: #fff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid #999;
+    box-shadow: none;
+  }
+  .callout::before, .card::before, .quiz-box::before, .kbd-box::before,
+  .drill-box::before, .staff-box::before, .rhythm-box::before,
+  .chord-box::before { display: none; }
+  .kbd-w { fill: #fff; stroke: #000; }
+  .kbd-b { fill: #000; stroke: #000; }
+  .staff-line, .staff-brace, .rhythm-line { stroke: #000; }
+  .staff-note, .staff-clef, .staff-clef-fallback, .rhythm-note { fill: #000; }
 }
