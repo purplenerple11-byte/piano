@@ -1,147 +1,156 @@
 /* Shared stylesheet for the Piano workspace — lessons, songs and reference sheets.
-   Apple-native: SF type scale, system semantic colours, and liquid-glass surfaces
-   floating over an ambient wash. Tuned for reading and drilling on an iPad, in
-   Safari on the home screen or in Web MIDI Browser.
+   White paper, black ink, and panes of glass laid on top. Tuned for reading and
+   drilling on an iPad, in Safari on the home screen or in Web MIDI Browser.
 
    Every selector the JS touches is preserved — the widgets (keyboard, staff,
    rhythm, chord, drill) mount by class name, so the names are contract. */
 
-/* ── Colour: iOS/iPadOS semantic palette ─────────────────────
-   Named after the UIKit colours they stand in for, so the intent survives a
-   retune: label / secondaryLabel / separator / systemBackground, and the accent
-   is systemIndigo — the course's own signature, but a system colour. */
+/* ── Colour ──────────────────────────────────────────────────
+   Monochrome by default: near-black ink on white, one grey for everything
+   secondary. Colour is reserved for things that mean something — a link, a
+   live control, a right or wrong note — so when it appears it reads as signal
+   rather than decoration. */
 
 :root {
   color-scheme: light dark;
 
-  --bg: #f2f1f6;              /* systemGroupedBackground */
-  --surface: rgba(255, 255, 255, 0.62);
-  --surface-solid: #ffffff;   /* secondarySystemGroupedBackground */
-  --text: #000000;            /* label */
-  --muted: #6c6c70;           /* secondaryLabel */
-  --rule: rgba(60, 60, 67, 0.22);   /* separator */
-  --accent: #5856d6;          /* systemIndigo */
-  --accent-soft: rgba(88, 86, 214, 0.12);
-  --code-bg: rgba(118, 118, 128, 0.12);  /* tertiarySystemFill */
-  --good: #248a3d;            /* systemGreen, accessible variant */
-  --good-soft: rgba(52, 199, 89, 0.16);
-  --bad: #d70015;             /* systemRed, accessible variant */
-  --bad-soft: rgba(255, 59, 48, 0.14);
-  --warn: #c93400;            /* systemOrange, accessible variant */
+  --bg: #ffffff;
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-solid: #ffffff;
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --rule: rgba(0, 0, 0, 0.11);
+  --accent: #0071e3;
+  --accent-soft: rgba(0, 113, 227, 0.1);
+  --code-bg: #f5f5f7;
+  --good: #1d7f38;
+  --good-soft: rgba(29, 127, 56, 0.1);
+  --bad: #d70015;
+  --bad-soft: rgba(215, 0, 21, 0.09);
+  --warn: #b25000;
   --key-white: #ffffff;
-  --key-white-edge: rgba(60, 60, 67, 0.34);
-  --key-black: #2c2c2e;
+  --key-white-edge: rgba(0, 0, 0, 0.28);
+  --key-black: #1d1d1f;
   --max-width: 720px;
 
-  /* Liquid glass. The tint is what the panel adds on top of whatever it is
-     over; the stroke and the inset highlight are the lit edge that makes it
-     read as a pane of glass rather than a flat translucent box. */
-  --glass-blur: saturate(180%) blur(22px);
-  --glass-stroke: rgba(255, 255, 255, 0.55);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 26px rgba(0, 0, 0, 0.07);
-  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 58%);
+  /* Glass. On a white page there is nothing behind a panel to blur, so the
+     blur is not what sells it — the edge is. `rim` is the refraction line
+     around the pane, `spec` is the gradient that runs through that line so it
+     catches light at opposite corners the way a real bevel does, and `depth`
+     is the darkening just inside the edge where the glass is thickest. */
+  --glass-blur: saturate(180%) blur(20px);
+  --glass-rim: rgba(0, 0, 0, 0.1);
+  --glass-spec: linear-gradient(140deg,
+      rgba(0, 0, 0, 0.28) 0%,
+      rgba(0, 0, 0, 0.03) 20%,
+      rgba(0, 0, 0, 0.13) 47%,
+      rgba(0, 0, 0, 0.02) 71%,
+      rgba(0, 0, 0, 0.3) 100%);
+  --glass-depth: inset 0 0 18px -12px rgba(0, 0, 0, 0.55);
+  --glass-lift: 0 2px 5px -2px rgba(0, 0, 0, 0.07), 0 14px 34px -14px rgba(0, 0, 0, 0.18);
 
-  /* The ambient wash the glass has something to refract. */
-  --wash-1: rgba(88, 86, 214, 0.22);
-  --wash-2: rgba(255, 45, 85, 0.11);
-  --wash-3: rgba(10, 132, 255, 0.16);
-
-  --radius-card: 18px;
-  --radius-inner: 12px;
+  --radius-card: 20px;
+  --radius-inner: 13px;
   --spring: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #000000;
-    --surface: rgba(28, 28, 30, 0.58);
-    --surface-solid: #1c1c1e;
-    --text: #ffffff;
-    --muted: #98989f;
-    --rule: rgba(84, 84, 88, 0.6);
-    --accent: #7d7aff;
-    --accent-soft: rgba(94, 92, 230, 0.24);
-    --code-bg: rgba(118, 118, 128, 0.24);
-    --good: #30d158;
-    --good-soft: rgba(48, 209, 88, 0.18);
+    --surface: rgba(255, 255, 255, 0.055);
+    --surface-solid: #1d1d1f;
+    --text: #f5f5f7;
+    --muted: #86868b;
+    --rule: rgba(255, 255, 255, 0.14);
+    --accent: #2997ff;
+    --accent-soft: rgba(41, 151, 255, 0.16);
+    --code-bg: #1d1d1f;
+    --good: #32d74b;
+    --good-soft: rgba(50, 215, 75, 0.15);
     --bad: #ff453a;
-    --bad-soft: rgba(255, 69, 58, 0.2);
+    --bad-soft: rgba(255, 69, 58, 0.15);
     --warn: #ff9f0a;
-    --key-white: #e5e5ea;
-    --key-white-edge: rgba(235, 235, 245, 0.3);
-    --key-black: #0a0a0c;
+    --key-white: #f5f5f7;
+    --key-white-edge: rgba(255, 255, 255, 0.24);
+    --key-black: #000000;
 
-    --glass-stroke: rgba(255, 255, 255, 0.14);
-    --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
-    --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 58%);
-
-    --wash-1: rgba(94, 92, 230, 0.3);
-    --wash-2: rgba(255, 55, 95, 0.14);
-    --wash-3: rgba(10, 132, 255, 0.2);
+    /* Inverted: on black, glass reads as a lit rim rather than a dark one. */
+    --glass-rim: rgba(255, 255, 255, 0.12);
+    --glass-spec: linear-gradient(140deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.08) 20%,
+        rgba(255, 255, 255, 0.4) 47%,
+        rgba(255, 255, 255, 0.06) 71%,
+        rgba(255, 255, 255, 0.9) 100%);
+    --glass-depth: inset 0 0 20px -12px rgba(255, 255, 255, 0.5);
+    --glass-lift: 0 2px 6px -2px rgba(0, 0, 0, 0.6), 0 16px 40px -16px rgba(0, 0, 0, 0.8);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #000000;
-  --surface: rgba(28, 28, 30, 0.58);
-  --surface-solid: #1c1c1e;
-  --text: #ffffff;
-  --muted: #98989f;
-  --rule: rgba(84, 84, 88, 0.6);
-  --accent: #7d7aff;
-  --accent-soft: rgba(94, 92, 230, 0.24);
-  --code-bg: rgba(118, 118, 128, 0.24);
-  --good: #30d158;
-  --good-soft: rgba(48, 209, 88, 0.18);
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-solid: #1d1d1f;
+  --text: #f5f5f7;
+  --muted: #86868b;
+  --rule: rgba(255, 255, 255, 0.14);
+  --accent: #2997ff;
+  --accent-soft: rgba(41, 151, 255, 0.16);
+  --code-bg: #1d1d1f;
+  --good: #32d74b;
+  --good-soft: rgba(50, 215, 75, 0.15);
   --bad: #ff453a;
-  --bad-soft: rgba(255, 69, 58, 0.2);
+  --bad-soft: rgba(255, 69, 58, 0.15);
   --warn: #ff9f0a;
-  --key-white: #e5e5ea;
-  --key-white-edge: rgba(235, 235, 245, 0.3);
-  --key-black: #0a0a0c;
-  --glass-stroke: rgba(255, 255, 255, 0.14);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
-  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 58%);
-  --wash-1: rgba(94, 92, 230, 0.3);
-  --wash-2: rgba(255, 55, 95, 0.14);
-  --wash-3: rgba(10, 132, 255, 0.2);
+  --key-white: #f5f5f7;
+  --key-white-edge: rgba(255, 255, 255, 0.24);
+  --key-black: #000000;
+  --glass-rim: rgba(255, 255, 255, 0.12);
+  --glass-spec: linear-gradient(140deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.4) 47%,
+      rgba(255, 255, 255, 0.06) 71%,
+      rgba(255, 255, 255, 0.9) 100%);
+  --glass-depth: inset 0 0 20px -12px rgba(255, 255, 255, 0.5);
+  --glass-lift: 0 2px 6px -2px rgba(0, 0, 0, 0.6), 0 16px 40px -16px rgba(0, 0, 0, 0.8);
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f2f1f6;
-  --surface: rgba(255, 255, 255, 0.62);
+  --bg: #ffffff;
+  --surface: rgba(255, 255, 255, 0.7);
   --surface-solid: #ffffff;
-  --text: #000000;
-  --muted: #6c6c70;
-  --rule: rgba(60, 60, 67, 0.22);
-  --accent: #5856d6;
-  --accent-soft: rgba(88, 86, 214, 0.12);
-  --code-bg: rgba(118, 118, 128, 0.12);
-  --good: #248a3d;
-  --good-soft: rgba(52, 199, 89, 0.16);
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --rule: rgba(0, 0, 0, 0.11);
+  --accent: #0071e3;
+  --accent-soft: rgba(0, 113, 227, 0.1);
+  --code-bg: #f5f5f7;
+  --good: #1d7f38;
+  --good-soft: rgba(29, 127, 56, 0.1);
   --bad: #d70015;
-  --bad-soft: rgba(255, 59, 48, 0.14);
-  --warn: #c93400;
+  --bad-soft: rgba(215, 0, 21, 0.09);
+  --warn: #b25000;
   --key-white: #ffffff;
-  --key-white-edge: rgba(60, 60, 67, 0.34);
-  --key-black: #2c2c2e;
-  --glass-stroke: rgba(255, 255, 255, 0.55);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 26px rgba(0, 0, 0, 0.07);
-  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 58%);
-  --wash-1: rgba(88, 86, 214, 0.22);
-  --wash-2: rgba(255, 45, 85, 0.11);
-  --wash-3: rgba(10, 132, 255, 0.16);
+  --key-white-edge: rgba(0, 0, 0, 0.28);
+  --key-black: #1d1d1f;
+  --glass-rim: rgba(0, 0, 0, 0.1);
+  --glass-spec: linear-gradient(140deg,
+      rgba(0, 0, 0, 0.28) 0%,
+      rgba(0, 0, 0, 0.03) 20%,
+      rgba(0, 0, 0, 0.13) 47%,
+      rgba(0, 0, 0, 0.02) 71%,
+      rgba(0, 0, 0, 0.3) 100%);
+  --glass-depth: inset 0 0 18px -12px rgba(0, 0, 0, 0.55);
+  --glass-lift: 0 2px 5px -2px rgba(0, 0, 0, 0.07), 0 14px 34px -14px rgba(0, 0, 0, 0.18);
 }
 
-/* ── Type: SF, at Apple's scale ──────────────────────────────
-   -apple-system resolves to SF Pro on every Apple device; ui-rounded gives
-   SF Pro Rounded, which is what the big single-glyph cues are set in. */
+/* ── Type ────────────────────────────────────────────────────
+   SF, at Apple's scale. -apple-system swaps between SF Pro Text and SF Pro
+   Display by size on its own; ui-rounded gives SF Pro Rounded, which is what
+   the big single-glyph cues are set in. */
 
 :root {
   --sf: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
@@ -157,27 +166,13 @@ html {
   text-size-adjust: 100%;
 }
 
-/* The ambient wash. Fixed behind everything so the glass panels always have
-   colour to bend, and so it doesn't drift as the page scrolls. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(58rem 46rem at 8% -10%, var(--wash-1), transparent 62%),
-    radial-gradient(48rem 42rem at 96% 4%, var(--wash-2), transparent 62%),
-    radial-gradient(52rem 44rem at 76% 100%, var(--wash-3), transparent 62%);
-}
-
 body {
-  background: transparent;
+  background: var(--bg);
   color: var(--text);
   font-family: var(--sf);
-  font-size: 17px;              /* Body, iOS */
+  font-size: 17px;
   line-height: 1.5;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
   -webkit-font-smoothing: antialiased;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -196,36 +191,36 @@ body {
 
 h1, h2, h3 {
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.022em;
+  line-height: 1.12;
   text-wrap: balance;
 }
-h1 { font-size: 2.05rem; margin-bottom: 0.25rem; }   /* Large Title */
+h1 { font-size: 2.35rem; letter-spacing: -0.032em; margin-bottom: 0.3rem; }
 h2 {
-  font-size: 1.4rem;                                  /* Title 2 */
-  margin-top: 2.6rem;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.026em;
+  margin-top: 2.8rem;
+  margin-bottom: 0.7rem;
   border-bottom: none;
+  padding-bottom: 0;
 }
-h3 { font-size: 1.12rem; margin-top: 1.9rem; }        /* Title 3 */
+h3 { font-size: 1.15rem; letter-spacing: -0.02em; margin-top: 2rem; }
 
-/* Section headers in a grouped list are uppercase and quiet; the rule that used
-   to sit under h2 is replaced by that weight difference. */
+/* Eyebrow labels are grey, not coloured — colour is for controls and verdicts. */
 .kicker {
   font-family: var(--sf);
   font-size: 0.76rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.4rem;
+  color: var(--muted);
+  margin-bottom: 0.45rem;
 }
 
 .subtitle {
   color: var(--muted);
-  font-size: 1.03rem;
+  font-size: 1.05rem;
   line-height: 1.45;
+  letter-spacing: -0.015em;
   margin-top: 0;
 }
 
@@ -233,10 +228,17 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
 
 .rule { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 
-/* ── Liquid glass ────────────────────────────────────────────
-   One material, applied to every floating surface. The panel is a translucent
-   tint over a blurred, saturated backdrop; ::before lays the specular sheen
-   along the top edge, which is the part that sells it as glass. */
+/* ── Glass ───────────────────────────────────────────────────
+   A pane of glass on white paper does not look like a haze — it looks like
+   almost nothing, plus an edge. So the fill is barely there and the work is
+   done by three things: a lift shadow that puts the pane above the page, a
+   darkening just inside the rim where the glass is thickest, and a specular
+   ring (::before) that runs a gradient through the 1px edge so opposite
+   corners catch the light and the sides go nearly clear.
+
+   The backdrop blur still earns its keep on the pieces that genuinely float
+   over content — the toolbar and the buttons — where you see text bend
+   underneath them. */
 
 .callout,
 .card,
@@ -250,67 +252,77 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
 .chord-box,
 .nav {
   position: relative;
-  isolation: isolate;
   background: var(--surface);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
-  border: 0.5px solid var(--glass-stroke);
+  border: none;
   border-radius: var(--radius-card);
-  box-shadow: var(--glass-edge), var(--glass-shadow);
-  overflow: hidden;
+  box-shadow:
+    0 0 0 0.5px var(--glass-rim),
+    var(--glass-lift),
+    var(--glass-depth);
 }
 
-.callout::before,
-.card::before,
-.ask-agent::before,
-.quiz-box::before,
-.midi-bar::before,
-.kbd-box::before,
-.drill-box::before,
-.staff-box::before,
-.rhythm-box::before,
-.chord-box::before,
-.nav::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--glass-sheen);
+/* The specular ring. Painted as a gradient clipped to the border box minus the
+   padding box, which leaves a 1px band of gradient tracing the rounded edge.
+   Guarded: without mask-composite this would flood the whole panel. */
+@supports ((-webkit-mask-composite: xor) or (mask-composite: exclude)) {
+  .callout::before,
+  .card::before,
+  .ask-agent::before,
+  .quiz-box::before,
+  .midi-bar::before,
+  .kbd-box::before,
+  .drill-box::before,
+  .staff-box::before,
+  .rhythm-box::before,
+  .chord-box::before,
+  .nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--glass-spec);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+    pointer-events: none;
+  }
 }
 
-/* Transparency is a preference, not a given. When it's off, the panels go
-   opaque and the wash goes away — same layout, no blur. */
+/* Transparency is a preference, not a given. Off means opaque panels and a
+   plain hairline instead of a lit edge. */
 @media (prefers-reduced-transparency: reduce) {
-  body::before { display: none; }
   .callout, .card, .ask-agent, .quiz-box, .midi-bar,
   .kbd-box, .drill-box, .staff-box, .rhythm-box, .chord-box, .nav {
     background: var(--surface-solid);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border-color: var(--rule);
+    box-shadow: 0 0 0 1px var(--rule);
   }
+  .callout::before, .card::before, .ask-agent::before, .quiz-box::before,
+  .midi-bar::before, .kbd-box::before, .drill-box::before, .staff-box::before,
+  .rhythm-box::before, .chord-box::before, .nav::before { display: none; }
 }
 
 .callout {
-  background:
-    linear-gradient(var(--accent-soft), var(--accent-soft)),
-    var(--surface);
-  padding: 1rem 1.15rem;
-  margin: 1.5rem 0;
-  font-size: 0.96rem;
+  padding: 1.1rem 1.25rem;
+  margin: 1.6rem 0;
+  font-size: 0.97rem;
   line-height: 1.5;
 }
 
 .callout-label {
   font-family: var(--sf);
   font-weight: 600;
-  font-size: 0.74rem;
-  letter-spacing: 0.06em;
+  font-size: 0.73rem;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
   display: block;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 }
 
 code {
@@ -322,32 +334,33 @@ code {
 }
 
 /* ── Tables ──────────────────────────────────────────────────
-   Styled as an inset grouped list: hairline row separators, no outer box, no
-   vertical rules. */
+   An inset grouped list: hairline row separators, no vertical rules, no
+   outer box beyond the pane itself. */
 
 table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
-  margin: 1.3rem 0;
+  margin: 1.4rem 0;
   font-size: 0.95rem;
   background: var(--surface);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--glass-edge), var(--glass-shadow);
+  box-shadow: 0 0 0 0.5px var(--glass-rim), var(--glass-lift);
 }
 th, td {
   border: none;
   border-bottom: 0.5px solid var(--rule);
-  padding: 0.6rem 0.8rem;
+  padding: 0.65rem 0.85rem;
   text-align: center;
 }
 tr:last-child td { border-bottom: none; }
 th {
   background: transparent;
   font-family: var(--sf);
-  font-size: 0.72rem;
+  font-size: 0.71rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -355,8 +368,8 @@ th {
 }
 
 /* ── Bottom toolbar ──────────────────────────────────────────
-   The prev/next pair, floated as a capsule the way an iPadOS toolbar sits over
-   its content rather than ruled off from it. */
+   The prev/next pair, floated as a capsule. This one is real glass: page text
+   scrolls underneath it and you can see it blur through. */
 
 .nav {
   font-family: var(--sf);
@@ -367,7 +380,7 @@ th {
   bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
   z-index: 20;
   margin-top: 3rem;
-  padding: 0.7rem 1rem;
+  padding: 0.75rem 1.1rem;
   border-radius: 999px;
   display: flex;
   justify-content: space-between;
@@ -385,7 +398,7 @@ th {
   font-size: 0.88rem;
   line-height: 1.5;
   color: var(--muted);
-  padding: 0.95rem 1.1rem;
+  padding: 1rem 1.15rem;
   margin-top: 2rem;
 }
 
@@ -397,7 +410,7 @@ button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: transform 0.24s var(--spring), background-color 0.2s ease,
-              border-color 0.2s ease, opacity 0.2s ease;
+              box-shadow 0.2s ease, opacity 0.2s ease;
 }
 button:active:not(:disabled),
 .drill-ans:active:not(:disabled),
@@ -407,11 +420,11 @@ button:active:not(:disabled),
 
 .quiz-box {
   font-family: var(--sf);
-  padding: 1.3rem 1.4rem;
-  margin: 1.3rem 0;
+  padding: 1.35rem 1.45rem;
+  margin: 1.4rem 0;
 }
 .quiz-progress {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -420,9 +433,9 @@ button:active:not(:disabled),
 }
 .quiz-q {
   font-family: var(--sf);
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
   line-height: 1.3;
   margin-bottom: 1rem;
 }
@@ -433,17 +446,18 @@ button:active:not(:disabled),
   min-height: 44px;
   padding: 0.6rem 1rem;
   border-radius: var(--radius-inner);
-  border: 0.5px solid var(--rule);
-  background: var(--surface-solid);
+  border: none;
+  background: var(--code-bg);
   color: var(--text);
   cursor: pointer;
   text-align: left;
+  box-shadow: 0 0 0 0.5px var(--rule);
 }
 @media (hover: hover) {
-  .quiz-choice-btn:hover, .quiz-btn:hover { border-color: var(--accent); }
+  .quiz-choice-btn:hover, .quiz-btn:hover { box-shadow: 0 0 0 1px var(--accent); }
 }
 .quiz-choice-btn:active:not(:disabled), .quiz-btn:active { transform: scale(0.985); }
-.quiz-choice-btn:disabled { opacity: 0.5; cursor: default; }
+.quiz-choice-btn:disabled { opacity: 0.45; cursor: default; }
 .quiz-form { display: flex; gap: 0.6rem; }
 .quiz-input {
   flex: 1;
@@ -452,11 +466,12 @@ button:active:not(:disabled),
   min-height: 44px;
   padding: 0.5rem 0.8rem;
   border-radius: var(--radius-inner);
-  border: 0.5px solid var(--rule);
-  background: var(--surface-solid);
+  border: none;
+  background: var(--code-bg);
   color: var(--text);
+  box-shadow: 0 0 0 0.5px var(--rule);
 }
-.quiz-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.quiz-input:focus { outline: none; box-shadow: 0 0 0 2px var(--accent); }
 .quiz-feedback {
   display: none;
   margin-top: 0.9rem;
@@ -467,7 +482,7 @@ button:active:not(:disabled),
 .quiz-good { background: var(--good-soft); color: var(--good); display: block; }
 .quiz-bad { background: var(--bad-soft); color: var(--bad); display: block; }
 .quiz-next { margin-top: 0.8rem; }
-.quiz-done { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; }
+.quiz-done { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.022em; margin-bottom: 0.8rem; }
 
 /* ── MIDI connection banner ──────────────────────────────────── */
 
@@ -478,17 +493,16 @@ button:active:not(:disabled),
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  padding: 0.8rem 1rem;
-  margin: 1.5rem 0;
+  padding: 0.85rem 1.05rem;
+  margin: 1.6rem 0;
 }
 
 .midi-dot {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.55rem;
+  height: 0.55rem;
   border-radius: 50%;
   background: var(--muted);
   flex: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 12%, transparent);
 }
 .midi-dot-on { background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
 .midi-dot-off { background: var(--bad); box-shadow: 0 0 0 3px var(--bad-soft); }
@@ -496,32 +510,32 @@ button:active:not(:disabled),
 .midi-msg { color: var(--muted); flex: 1; min-width: 12rem; line-height: 1.4; }
 .midi-msg strong { color: var(--text); font-weight: 600; }
 
-/* Capsule, tinted-glass fill — the iOS bordered-prominent button. */
+/* Filled capsule — the one prominent control in the banner, so it gets the
+   colour. */
 .midi-btn {
   font-family: inherit;
   font-size: 0.9rem;
   min-height: 44px;
-  padding: 0.4rem 1.1rem;
+  padding: 0.4rem 1.15rem;
   border-radius: 999px;
-  border: 0.5px solid transparent;
-  background: var(--accent-soft);
-  color: var(--accent);
+  border: none;
+  background: var(--accent);
+  color: #fff;
   cursor: pointer;
   font-weight: 600;
   flex: none;
-  box-shadow: var(--glass-edge);
 }
 @media (hover: hover) {
-  .midi-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .midi-btn:hover { filter: brightness(1.08); }
 }
-.midi-btn:disabled { opacity: 0.4; cursor: default; }
+.midi-btn:disabled { opacity: 0.35; cursor: default; }
 
 /* ── Keyboard widget ─────────────────────────────────────────── */
 
 .kbd-box {
   font-family: var(--sf);
-  padding: 1.15rem 1.2rem;
-  margin: 1.5rem 0;
+  padding: 1.2rem 1.25rem;
+  margin: 1.6rem 0;
 }
 
 .kbd-label,
@@ -529,12 +543,12 @@ button:active:not(:disabled),
 .staff-label,
 .rhythm-label,
 .chord-label {
-  font-size: 0.72rem;
+  font-size: 0.71rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.8rem;
 }
 
 .kbd-svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
@@ -561,21 +575,21 @@ button:active:not(:disabled),
 .kbd-name-b { fill: var(--key-white); }
 
 /* The two-black / three-black grouping brackets drawn above the keys. */
-.kbd-group { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.55; }
+.kbd-group { fill: none; stroke: var(--muted); stroke-width: 2; opacity: 0.6; }
 .kbd-group-txt {
   font-family: var(--sf);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-anchor: middle;
-  fill: var(--accent);
+  fill: var(--muted);
 }
 
 .kbd-caption,
 .drill-caption,
 .staff-caption,
 .chord-caption {
-  margin-top: 0.85rem;
+  margin-top: 0.9rem;
   font-size: 0.85rem;
   color: var(--muted);
   line-height: 1.5;
@@ -585,45 +599,38 @@ button:active:not(:disabled),
 
 .drill-box {
   font-family: var(--sf);
-  padding: 1.25rem 1.3rem;
-  margin: 1.5rem 0;
+  padding: 1.3rem 1.35rem;
+  margin: 1.6rem 0;
 }
 
-/* The stage sits inside the glass, so it is a plain fill — nesting a second
-   backdrop-filter costs a whole extra blur pass per frame on an iPad and the
-   two layers cancel each other out anyway. Kept at quaternary-fill weight: it
-   is a well for the cue, not a second card. */
+/* The stage is a well inside the pane, not a second pane — a flat fill, no
+   second backdrop-filter. Nesting blurs costs an extra full-surface pass per
+   frame on an iPad and the two layers cancel out anyway. */
 .drill-stage {
   text-align: center;
-  padding: 1.2rem 0.5rem 1rem;
+  padding: 1.3rem 0.5rem 1.1rem;
   border-radius: var(--radius-inner);
-  background: rgba(118, 118, 128, 0.07);
-  box-shadow: inset 0 0 0 0.5px var(--rule);
-  margin-bottom: 0.9rem;
+  background: var(--code-bg);
+  margin-bottom: 1rem;
 }
-@media (prefers-color-scheme: dark) {
-  .drill-stage { background: rgba(118, 118, 128, 0.16); }
-}
-:root[data-theme="dark"] .drill-stage { background: rgba(118, 118, 128, 0.16); }
-:root[data-theme="light"] .drill-stage { background: rgba(118, 118, 128, 0.07); }
 
 /* SF Pro Rounded: the single big glyph is closer to a watch complication than
    to body copy, and rounded is what Apple sets those in. */
 .drill-cue {
   font-family: var(--sf-rounded);
-  font-size: 3.6rem;
+  font-size: 3.8rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   line-height: 1;
   color: var(--text);
   display: block;
-  min-height: 3.6rem;
+  min-height: 3.8rem;
 }
 .drill-cue-small {
   font-family: var(--sf);
   font-size: 1.1rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   line-height: 1.4;
   color: var(--muted);
 }
@@ -634,25 +641,26 @@ button:active:not(:disabled),
 
 .drill-stats {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.6rem;
   justify-content: center;
   border-top: 0.5px solid var(--rule);
-  padding-top: 0.9rem;
-  margin-top: 0.9rem;
+  padding-top: 0.95rem;
+  margin-top: 0.95rem;
   flex-wrap: wrap;
 }
 .drill-stat { text-align: center; }
 .drill-stat-val {
   display: block;
   font-family: var(--sf-rounded);
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   font-weight: 600;
-  color: var(--accent);
+  letter-spacing: -0.02em;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 .drill-stat-key {
   display: block;
-  font-size: 0.64rem;
+  font-size: 0.63rem;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -660,31 +668,26 @@ button:active:not(:disabled),
 }
 
 .drill-controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+
+/* Plain glass capsule, sitting on the same pane as everything else. The
+   primary action is the filled one; the rest stay quiet. */
 .drill-btn {
   font-family: inherit;
   font-size: 0.95rem;
   min-height: 44px;
-  padding: 0.45rem 1.2rem;
+  padding: 0.45rem 1.25rem;
   border-radius: 999px;
-  border: 0.5px solid transparent;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: var(--glass-edge);
-}
-@media (hover: hover) {
-  .drill-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
-}
-.drill-btn-ghost {
+  border: none;
   background: var(--code-bg);
-  border-color: transparent;
-  color: var(--muted);
+  color: var(--text);
   font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 0 0 0.5px var(--rule);
 }
 @media (hover: hover) {
-  .drill-btn-ghost:hover { background: color-mix(in srgb, var(--muted) 18%, transparent); }
+  .drill-btn:hover { box-shadow: 0 0 0 1px var(--rule), var(--glass-lift); }
 }
+.drill-btn-ghost { color: var(--muted); }
 
 /* Sprint countdown. Monospaced so the digits don't jitter as they tick; turns to
    the warning colour in the last ten seconds. */
@@ -692,7 +695,7 @@ button:active:not(:disabled),
   font-family: var(--sf-mono);
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text);
   align-self: center;
   min-width: 3.2ch;
   text-align: center;
@@ -700,7 +703,7 @@ button:active:not(:disabled),
 }
 .drill-clock-low { color: var(--bad); }
 
-.drill-answers { display: flex; gap: 0.45rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.drill-answers { display: flex; gap: 0.45rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
 .drill-ans {
   font-family: inherit;
   font-size: 1rem;
@@ -709,26 +712,27 @@ button:active:not(:disabled),
   min-height: 44px;
   padding: 0.5rem 0.7rem;
   border-radius: var(--radius-inner);
-  border: 0.5px solid var(--rule);
-  background: var(--surface-solid);
+  border: none;
+  background: var(--code-bg);
   color: var(--text);
   cursor: pointer;
+  box-shadow: 0 0 0 0.5px var(--rule);
 }
 @media (hover: hover) {
-  .drill-ans:hover:not(:disabled) { border-color: var(--accent); }
+  .drill-ans:hover:not(:disabled) { box-shadow: 0 0 0 1px var(--accent); }
 }
-.drill-ans:disabled { opacity: 0.4; cursor: default; }
-.drill-ans-good { opacity: 1 !important; border-color: var(--good); background: var(--good-soft); color: var(--good); }
-.drill-ans-bad { opacity: 1 !important; border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.drill-ans:disabled { opacity: 0.35; cursor: default; }
+.drill-ans-good { opacity: 1 !important; background: var(--good-soft); color: var(--good); box-shadow: 0 0 0 1px var(--good); }
+.drill-ans-bad { opacity: 1 !important; background: var(--bad-soft); color: var(--bad); box-shadow: 0 0 0 1px var(--bad); }
 
 /* ── Index card list ─────────────────────────────────────────
    An inset grouped list: glass row, chevron on the trailing edge, and a press
    state instead of a hover-only affordance — there is no cursor on an iPad. */
 
-.card-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.2rem 0 2rem; }
+.card-list { display: flex; flex-direction: column; gap: 0.7rem; margin: 1.3rem 0 2.2rem; }
 .card {
   display: block;
-  padding: 0.95rem 2.4rem 1rem 1.15rem;
+  padding: 1rem 2.5rem 1.05rem 1.2rem;
   text-decoration: none;
   color: var(--text);
 }
@@ -736,7 +740,7 @@ button:active:not(:disabled),
   content: "";
   position: absolute;
   top: 50%;
-  right: 1.1rem;
+  right: 1.15rem;
   width: 9px;
   height: 9px;
   margin-top: -5px;
@@ -744,30 +748,29 @@ button:active:not(:disabled),
   border-bottom: 2px solid var(--muted);
   border-radius: 1px;
   transform: rotate(-45deg);
-  opacity: 0.55;
+  opacity: 0.6;
 }
 .card:active { transform: scale(0.985); }
 @media (hover: hover) {
-  .card:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
-  .card:hover::after { opacity: 0.9; }
+  .card:hover::after { opacity: 1; }
 }
 .card-num {
   display: block;
   font-family: var(--sf);
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.2rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
 }
 .card-title {
   display: block;
   font-family: var(--sf);
-  font-size: 1.12rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  letter-spacing: -0.024em;
+  margin-bottom: 0.28rem;
 }
 .card-note {
   display: block;
@@ -781,8 +784,8 @@ button:active:not(:disabled),
 
 .staff-box {
   font-family: var(--sf);
-  padding: 1.15rem 1.2rem;
-  margin: 1.5rem 0;
+  padding: 1.2rem 1.25rem;
+  margin: 1.6rem 0;
 }
 
 .staff-svg { width: 100%; height: auto; display: block; }
@@ -844,12 +847,13 @@ button:active:not(:disabled),
   * { transition-duration: 0.01ms !important; }
 }
 
-/* A toggle button (sprint, hints, feedback) showing its "on" state. */
+/* A toggle button (sprint, hints, feedback) showing its "on" state — the one
+   place a drill button takes colour, because "armed" has to be unmistakable. */
 .drill-btn-on {
   background: var(--accent);
-  border-color: transparent;
   color: #fff;
   font-weight: 600;
+  box-shadow: none;
 }
 
 /* Inline icon inside a drill button. Stroked with currentColor rather than set
@@ -887,8 +891,8 @@ button:active:not(:disabled),
 
 .rhythm-box {
   font-family: var(--sf);
-  padding: 1.15rem 1.2rem;
-  margin: 1.5rem 0;
+  padding: 1.2rem 1.25rem;
+  margin: 1.6rem 0;
 }
 
 .rhythm-svg { width: 100%; height: auto; display: block; }
@@ -922,14 +926,14 @@ button:active:not(:disabled),
 
 .rhythm-cursor { fill: var(--accent); opacity: 0.14; }
 
-.rhythm-caption { margin-top: 0.85rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.rhythm-caption { margin-top: 0.9rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
 
 /* ── Chord shape display ─────────────────────────────────────── */
 
 .chord-box {
   font-family: var(--sf);
-  padding: 1.15rem 1.2rem;
-  margin: 1.5rem 0;
+  padding: 1.2rem 1.25rem;
+  margin: 1.6rem 0;
 }
 
 .chord-row {
@@ -942,12 +946,12 @@ button:active:not(:disabled),
 
 .chord-sigil {
   font-family: var(--sf-rounded);
-  font-size: 2.7rem;
+  font-size: 2.8rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   line-height: 1;
-  color: var(--accent);
-  min-width: 2.7rem;
+  color: var(--text);
+  min-width: 2.8rem;
 }
 
 .chord-spell { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
@@ -981,12 +985,11 @@ button:active:not(:disabled),
 }
 
 /* ── Print ───────────────────────────────────────────────────
-   The reference sheets live on a music stand as often as on a screen. Glass,
-   wash and toolbar all come off; ink goes on white. */
+   The reference sheets live on a music stand as often as on a screen. Glass
+   and toolbar come off; ink goes on white. */
 
 @media print {
-  html { background: #fff; }
-  body::before { display: none; }
+  html, body { background: #fff; }
   body { max-width: 100%; font-size: 11pt; margin: 0; padding: 0.5in; color: #000; }
   .ask-agent, .nav, .midi-bar, .drill-controls, .drill-answers { display: none; }
   a { color: #000; text-decoration: none; }
@@ -995,8 +998,8 @@ button:active:not(:disabled),
     background: #fff;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border: 1px solid #999;
     box-shadow: none;
+    border: 1px solid #999;
   }
   .callout::before, .card::before, .quiz-box::before, .kbd-box::before,
   .drill-box::before, .staff-box::before, .rhythm-box::before,
