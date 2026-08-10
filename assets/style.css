@@ -34,18 +34,26 @@
   --max-width: 720px;
 
   /* Glass. On a white page there is nothing behind a panel to blur, so the
-     blur is not what sells it — the edge is. `rim` is the refraction line
-     around the pane, `spec` is the gradient that runs through that line so it
-     catches light at opposite corners the way a real bevel does, and `depth`
-     is the darkening just inside the edge where the glass is thickest. */
+     blur is not what sells it — the edge is. `rim` is the base refraction line
+     around the pane, `depth` is the darkening just inside it where the glass
+     is thickest, and `spec` is the specular: a travelling highlight over a
+     fixed bevel.
+
+     The highlight is positioned by --gx/--gy and lit by --gflare, all three
+     driven from glass.js. Standing still it is only a gradient; it becomes
+     glass when those move. */
   --glass-blur: saturate(180%) blur(20px);
   --glass-rim: rgba(0, 0, 0, 0.1);
-  --glass-spec: linear-gradient(140deg,
-      rgba(0, 0, 0, 0.28) 0%,
-      rgba(0, 0, 0, 0.03) 20%,
-      rgba(0, 0, 0, 0.13) 47%,
-      rgba(0, 0, 0, 0.02) 71%,
-      rgba(0, 0, 0, 0.3) 100%);
+  --glass-spec:
+    radial-gradient(42% 42% at var(--gx) var(--gy),
+      rgb(255 255 255 / calc(1.15 * var(--gflare))) 0%,
+      rgb(255 255 255 / 0) 40%,
+      rgb(0 0 0 / calc(0.32 * var(--gflare))) 62%,
+      rgb(0 0 0 / 0) 100%),
+    linear-gradient(160deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.12) 45%,
+      rgba(0, 0, 0, 0.26) 100%);
   --glass-depth: inset 0 0 18px -12px rgba(0, 0, 0, 0.55);
   --glass-lift: 0 2px 5px -2px rgba(0, 0, 0, 0.07), 0 14px 34px -14px rgba(0, 0, 0, 0.18);
 
@@ -76,12 +84,14 @@
 
     /* Inverted: on black, glass reads as a lit rim rather than a dark one. */
     --glass-rim: rgba(255, 255, 255, 0.12);
-    --glass-spec: linear-gradient(140deg,
-        rgba(255, 255, 255, 0.85) 0%,
-        rgba(255, 255, 255, 0.08) 20%,
-        rgba(255, 255, 255, 0.4) 47%,
-        rgba(255, 255, 255, 0.06) 71%,
-        rgba(255, 255, 255, 0.9) 100%);
+    --glass-spec:
+      radial-gradient(42% 42% at var(--gx) var(--gy),
+        rgb(255 255 255 / calc(0.95 * var(--gflare))) 0%,
+        rgb(255 255 255 / 0) 100%),
+      linear-gradient(160deg,
+        rgba(255, 255, 255, 0.34) 0%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.24) 100%);
     --glass-depth: inset 0 0 20px -12px rgba(255, 255, 255, 0.5);
     --glass-lift: 0 2px 6px -2px rgba(0, 0, 0, 0.6), 0 16px 40px -16px rgba(0, 0, 0, 0.8);
   }
@@ -107,12 +117,14 @@
   --key-white-edge: rgba(255, 255, 255, 0.24);
   --key-black: #000000;
   --glass-rim: rgba(255, 255, 255, 0.12);
-  --glass-spec: linear-gradient(140deg,
-      rgba(255, 255, 255, 0.85) 0%,
-      rgba(255, 255, 255, 0.08) 20%,
-      rgba(255, 255, 255, 0.4) 47%,
-      rgba(255, 255, 255, 0.06) 71%,
-      rgba(255, 255, 255, 0.9) 100%);
+  --glass-spec:
+    radial-gradient(42% 42% at var(--gx) var(--gy),
+      rgb(255 255 255 / calc(0.95 * var(--gflare))) 0%,
+      rgb(255 255 255 / 0) 100%),
+    linear-gradient(160deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.08) 45%,
+      rgba(255, 255, 255, 0.24) 100%);
   --glass-depth: inset 0 0 20px -12px rgba(255, 255, 255, 0.5);
   --glass-lift: 0 2px 6px -2px rgba(0, 0, 0, 0.6), 0 16px 40px -16px rgba(0, 0, 0, 0.8);
 }
@@ -137,12 +149,16 @@
   --key-white-edge: rgba(0, 0, 0, 0.28);
   --key-black: #1d1d1f;
   --glass-rim: rgba(0, 0, 0, 0.1);
-  --glass-spec: linear-gradient(140deg,
-      rgba(0, 0, 0, 0.28) 0%,
-      rgba(0, 0, 0, 0.03) 20%,
-      rgba(0, 0, 0, 0.13) 47%,
-      rgba(0, 0, 0, 0.02) 71%,
-      rgba(0, 0, 0, 0.3) 100%);
+  --glass-spec:
+    radial-gradient(42% 42% at var(--gx) var(--gy),
+      rgb(255 255 255 / calc(1.15 * var(--gflare))) 0%,
+      rgb(255 255 255 / 0) 40%,
+      rgb(0 0 0 / calc(0.32 * var(--gflare))) 62%,
+      rgb(0 0 0 / 0) 100%),
+    linear-gradient(160deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.12) 45%,
+      rgba(0, 0, 0, 0.26) 100%);
   --glass-depth: inset 0 0 18px -12px rgba(0, 0, 0, 0.55);
   --glass-lift: 0 2px 5px -2px rgba(0, 0, 0, 0.07), 0 14px 34px -14px rgba(0, 0, 0, 0.18);
 }
@@ -230,15 +246,29 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
 
 /* ── Glass ───────────────────────────────────────────────────
    A pane of glass on white paper does not look like a haze — it looks like
-   almost nothing, plus an edge. So the fill is barely there and the work is
-   done by three things: a lift shadow that puts the pane above the page, a
-   darkening just inside the rim where the glass is thickest, and a specular
-   ring (::before) that runs a gradient through the 1px edge so opposite
-   corners catch the light and the sides go nearly clear.
+   almost nothing, plus an edge that is never the same twice. The fill is
+   barely there; the work is done by a lift shadow, a darkening just inside
+   the rim where the glass is thickest, and a specular ring (::before) that
+   runs a gradient through the 1px edge.
+
+   What makes it read as glass rather than as a drawing of glass is that the
+   highlight moves. --gx/--gy say where the light is landing and --gflare says
+   how hot; glass.js keeps them current as panes scroll past a fixed light and
+   as a finger arrives. Registering them with @property is what lets --gflare
+   animate — an unregistered custom property has no type, so the browser can
+   only snap it from one value to the next.
 
    The backdrop blur still earns its keep on the pieces that genuinely float
    over content — the toolbar and the buttons — where you see text bend
    underneath them. */
+
+@property --gflare {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0.32;
+}
+@property --gx { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
+@property --gy { syntax: "<percentage>"; inherits: false; initial-value: -10%; }
 
 .callout,
 .card,
@@ -263,6 +293,17 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
     var(--glass-depth);
 }
 
+/* Fallback for engines without @property: the flare never animates, so give it
+   a fixed value rather than leaving var() unresolved. */
+.callout, .card, .ask-agent, .quiz-box, .midi-bar, .kbd-box, .drill-box,
+.staff-box, .rhythm-box, .chord-box, .nav,
+.drill-btn, .drill-ans, .midi-btn, .quiz-choice-btn, .quiz-btn {
+  --gflare: 0.32;
+  --gx: 50%;
+  --gy: -10%;
+  transition: --gflare 0.45s ease-out, transform 0.5s cubic-bezier(0.34, 1.42, 0.64, 1);
+}
+
 /* The specular ring. Painted as a gradient clipped to the border box minus the
    padding box, which leaves a 1px band of gradient tracing the rounded edge.
    Guarded: without mask-composite this would flood the whole panel. */
@@ -277,7 +318,12 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
   .staff-box::before,
   .rhythm-box::before,
   .chord-box::before,
-  .nav::before {
+  .nav::before,
+  .drill-btn::before,
+  .drill-ans::before,
+  .midi-btn::before,
+  .quiz-choice-btn::before,
+  .quiz-btn::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -292,8 +338,22 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
   }
 }
 
-/* Transparency is a preference, not a given. Off means opaque panels and a
-   plain hairline instead of a lit edge. */
+/* Press. The rim goes hot under the contact point and the pane gels — down
+   fast, back with a little overshoot, which is the difference between a
+   button that moves and one that feels like it has give. */
+.card:active,
+.drill-btn:active,
+.drill-ans:active:not(:disabled),
+.midi-btn:active:not(:disabled),
+.quiz-choice-btn:active:not(:disabled),
+.quiz-btn:active {
+  --gflare: 1.35;
+  transform: scale(0.972);
+  transition: --gflare 0.12s ease-out, transform 0.12s ease-out;
+}
+
+/* Transparency is a preference, not a given. Off means opaque panels, a plain
+   hairline instead of a lit edge, and no travelling highlight to chase. */
 @media (prefers-reduced-transparency: reduce) {
   .callout, .card, .ask-agent, .quiz-box, .midi-bar,
   .kbd-box, .drill-box, .staff-box, .rhythm-box, .chord-box, .nav {
@@ -304,7 +364,9 @@ a, a:visited { color: var(--accent); text-decoration-thickness: 1px; text-underl
   }
   .callout::before, .card::before, .ask-agent::before, .quiz-box::before,
   .midi-bar::before, .kbd-box::before, .drill-box::before, .staff-box::before,
-  .rhythm-box::before, .chord-box::before, .nav::before { display: none; }
+  .rhythm-box::before, .chord-box::before, .nav::before,
+  .drill-btn::before, .drill-ans::before, .midi-btn::before,
+  .quiz-choice-btn::before, .quiz-btn::before { display: none; }
 }
 
 .callout {
@@ -369,7 +431,12 @@ th {
 
 /* ── Bottom toolbar ──────────────────────────────────────────
    The prev/next pair, floated as a capsule. This one is real glass: page text
-   scrolls underneath it and you can see it blur through. */
+   scrolls underneath it and you can see it blur through — which is also why
+   it should stop pretending to be glass once it has nothing to look through.
+   glass.js sets data-docked when the toolbar reaches the end of the document
+   and comes to rest; docked, it drops the blur and most of the rim and sits
+   flat on the page. Frosting empty white is what made the first version read
+   as a grey bar. */
 
 .nav {
   font-family: var(--sf);
@@ -388,6 +455,19 @@ th {
   gap: 1rem;
   flex-wrap: wrap;
 }
+.nav {
+  transition: background-color 0.4s ease, box-shadow 0.4s ease,
+              -webkit-backdrop-filter 0.4s ease, backdrop-filter 0.4s ease;
+}
+.nav[data-docked="true"] {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 0 0 0.5px var(--rule);
+}
+.nav[data-docked="true"]::before { opacity: 0.35; }
+.nav::before { transition: opacity 0.4s ease; }
+
 .nav a { text-decoration: none; font-weight: 500; }
 @media (hover: hover) {
   .nav a:hover { text-decoration: underline; }
@@ -409,12 +489,14 @@ th {
 button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition: transform 0.24s var(--spring), background-color 0.2s ease,
-              box-shadow 0.2s ease, opacity 0.2s ease;
 }
-button:active:not(:disabled),
-.drill-ans:active:not(:disabled),
-.midi-btn:active:not(:disabled) { transform: scale(0.96); }
+
+/* The controls carry a lit rim of their own, so they need to be a positioning
+   context for it. Press behaviour lives with the rest of the glass, above. */
+.quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn {
+  position: relative;
+  isolation: isolate;
+}
 
 /* ── Quiz ────────────────────────────────────────────────────── */
 
@@ -456,7 +538,6 @@ button:active:not(:disabled),
 @media (hover: hover) {
   .quiz-choice-btn:hover, .quiz-btn:hover { box-shadow: 0 0 0 1px var(--accent); }
 }
-.quiz-choice-btn:active:not(:disabled), .quiz-btn:active { transform: scale(0.985); }
 .quiz-choice-btn:disabled { opacity: 0.45; cursor: default; }
 .quiz-form { display: flex; gap: 0.6rem; }
 .quiz-input {
@@ -750,7 +831,6 @@ button:active:not(:disabled),
   transform: rotate(-45deg);
   opacity: 0.6;
 }
-.card:active { transform: scale(0.985); }
 @media (hover: hover) {
   .card:hover::after { opacity: 1; }
 }
