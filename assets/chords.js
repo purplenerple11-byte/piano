@@ -9,10 +9,13 @@
 
    Mount a shape display:
      <div data-chord="Am" data-from="55" data-title="…" data-caption="…"></div>
+     data-inversion="1" draws 1st inversion (2 for 2nd); default is root position.
 
    API:
      Chords.parse("Am")            -> { root, quality, name }
      Chords.notes("Am", nearMidi)  -> [midi, midi, midi] in root position
+     Chords.notes("Am", near, 1)   -> 1st inversion, lowest first
+     Chords.roles(1)               -> ["third", "fifth", "root"]
      Chords.pcs("Am")              -> [9, 0, 4]
      Chords.pattern("alberti")     -> [[0],[2],[1],[2]]  (indices into the triad)
      Chords.PROGRESSIONS.pop       -> ["C","G","Am","F"] */
@@ -59,24 +62,41 @@
     return QUALITY[c.quality].steps.map(function (s) { return (c.root + s) % 12; });
   }
 
-  /* Root position at or above `from`. Voicing is deliberately simple: this
-     course teaches the shape under the hand first, and inversions later. */
-  function notes(sym, from) {
+  /* Root position at or above `from`, or an inversion of it. An inversion is
+     the same three notes with the bottom one moved up an octave: once gives
+     1st inversion (third on the bottom), twice gives 2nd (fifth on the bottom).
+     The result is always lowest-first. */
+  function notes(sym, from, inversion) {
     var c = typeof sym === "string" ? parse(sym) : sym;
     if (!c) return [];
     from = from == null ? 60 : from;
     var root = from + (((c.root - from) % 12) + 12) % 12;
-    return QUALITY[c.quality].steps.map(function (s) { return root + s; });
+    var ns = QUALITY[c.quality].steps.map(function (s) { return root + s; });
+    for (var i = 0; i < (inversion || 0) % 3; i++) ns.push(ns.shift() + 12);
+    return ns;
+  }
+
+  var ROLES = ["root", "third", "fifth"];
+  var INVERSIONS = ["root position", "1st inversion", "2nd inversion"];
+
+  // Chord-tone role of each note in notes(sym, from, inversion), lowest first.
+  function roles(inversion) {
+    var r = ROLES.slice();
+    for (var i = 0; i < (inversion || 0) % 3; i++) r.push(r.shift());
+    return r;
   }
 
   function nameOfPc(pc) { return SHARP[((pc % 12) + 12) % 12]; }
 
   function pattern(name) { return (PATTERNS[name] || PATTERNS.block).strikes; }
 
+  var built = 0;
   function build(mount) {
     var sym = mount.getAttribute("data-chord");
     var from = parseInt(mount.getAttribute("data-from") || "60", 10);
-    var ns = notes(sym, from);
+    var inv = parseInt(mount.getAttribute("data-inversion") || "0", 10);
+    var ns = notes(sym, from, inv);
+    var rs = roles(inv);
     if (!ns.length) { console.error("Chords: cannot parse", sym); return; }
 
     mount.classList.add("chord-box");
@@ -101,7 +121,7 @@
     spell.innerHTML = ns.map(function (n, i) {
       return '<span class="chord-tone"><span class="chord-tone-name">' + nameOfPc(n) +
              '</span><span class="chord-tone-role">' +
-             ["root", "third", "fifth"][i] + "</span></span>";
+             rs[i] + "</span></span>";
     }).join('<span class="chord-plus">+</span>');
     row.appendChild(spell);
     mount.appendChild(row);
@@ -109,7 +129,8 @@
     // The keyboard is built by KeyboardWidget so the shape is shown on the same
     // picture every other lesson uses, rather than a second kind of diagram.
     var kb = document.createElement("div");
-    var id = "chordkb-" + Math.abs(ns[0] * 31 + ns[1]) + "-" + sym.replace(/\W/g, "");
+    // A counter, because one page can draw the same chord twice.
+    var id = "chordkb-" + (++built) + "-" + sym.replace(/\W/g, "");
     kb.id = id;
     kb.setAttribute("data-keyboard", "");
     kb.setAttribute("data-from", String(Math.floor((from) / 12) * 12));
@@ -134,7 +155,8 @@
   }
 
   window.Chords = {
-    parse: parse, pcs: pcs, notes: notes, pattern: pattern, nameOfPc: nameOfPc,
+    parse: parse, pcs: pcs, notes: notes, roles: roles, INVERSIONS: INVERSIONS,
+    pattern: pattern, nameOfPc: nameOfPc,
     PATTERNS: PATTERNS, PROGRESSIONS: PROGRESSIONS, QUALITY: QUALITY, build: build
   };
   document.addEventListener("DOMContentLoaded", function () {

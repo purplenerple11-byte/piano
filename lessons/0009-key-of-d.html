@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Piano">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 9 · The key of D</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/glass.js" defer></script>
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/chords.js"></script>
+<script src="../assets/chorddrill.js"></script>
+<script src="../assets/rhythm.js"></script>
+<script src="../assets/holddrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 09 · The key of D</div>
+<h1>One scale, six chords, three ways to play each</h1>
+<p class="subtitle">The major scale as a recipe, the chords that fall out of
+it, and inversions: the same chord with a different note on the bottom.</p>
+
+<h2>The major scale is a recipe</h2>
+
+<p>A major scale isn't eight notes to memorise. It's a pattern of
+<strong>steps</strong>, and the pattern works from any key. A
+<strong>whole step</strong> skips one key: two semitones, counting black keys. A
+<strong>half step</strong> goes to the very next key: one semitone.</p>
+
+<div class="callout">
+  <span class="callout-label">The recipe</span>
+  <strong>W · W · H · W · W · W · H</strong><br><br>
+  Whole, whole, half, whole, whole, whole, half. Seven steps take you from the
+  starting note up to the same letter an octave higher. The two half steps always
+  fall between notes <strong>3–4</strong> and <strong>7–8</strong>.
+</div>
+
+<p>Start on <strong>D</strong> and follow it:</p>
+
+<table>
+  <tr><th>Step</th><th>From → to</th><th>Why</th></tr>
+  <tr><td>W</td><td>D → E</td><td>skips D♯</td></tr>
+  <tr><td>W</td><td>E → <strong>F♯</strong></td><td>E to F is only a half step, so the whole step lands on F♯</td></tr>
+  <tr><td>H</td><td>F♯ → G</td><td>the very next key</td></tr>
+  <tr><td>W</td><td>G → A</td><td>skips G♯</td></tr>
+  <tr><td>W</td><td>A → B</td><td>skips A♯</td></tr>
+  <tr><td>W</td><td>B → <strong>C♯</strong></td><td>B to C is only a half step, so the whole step lands on C♯</td></tr>
+  <tr><td>H</td><td>C♯ → D</td><td>the very next key, and home</td></tr>
+</table>
+
+<p>So D major is <strong>D E F♯ G A B C♯ D</strong>. It has two sharps, F♯ and
+C♯, and you didn't have to memorise either one. The recipe forced them.</p>
+
+<div id="scale-map" data-keyboard data-from="60" data-octaves="2"
+     data-labels="all" data-groups="true" data-interactive="false" data-live="false"
+     data-title="D major — the eight keys of the scale"
+     data-caption="Six white keys and two black ones. The black keys are F♯ (in the group of three) and C♯ (in the group of two)."></div>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<div id="scale-staff" data-staff data-clefs="treble"></div>
+<div id="scale-kb" data-keyboard data-from="60" data-octaves="2"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-staffdrill data-staff="scale-staff" data-kb="scale-kb"
+     data-lines='[{"clef":"treble","notes":[62,64,66,67,69,71,73,74]},{"clef":"treble","notes":[74,73,71,69,67,66,64,62]}]'
+     data-title="The D major scale — up, then down"
+     data-caption="Right hand. Watch for the ♯ in front of F and C: those are the two black keys. Say <em>whole, whole, half…</em> as you go. You're checking the recipe, not just pressing keys."></div>
+
+<h2>Six chords from one scale</h2>
+
+<p>Every note of the scale can be the bottom of a chord. Take a scale note, skip
+one, take the next, skip one, take the next. That's the same stacking-thirds rule
+from Lesson 6, but using only the notes of D major. The chord's
+<strong>quality</strong> then comes out by itself:</p>
+
+<div class="callout">
+  <span class="callout-label">Major or minor — the chord rule</span>
+  <strong>Major:</strong> root, up <strong>4 semitones</strong> to the third, up
+  <strong>3</strong> more to the fifth.<br>
+  <strong>Minor:</strong> root, up <strong>3</strong>, then up
+  <strong>4</strong>.<br><br>
+  Same two gaps, opposite order. Count the keys, black ones included.
+</div>
+
+<table>
+  <tr><th>Scale note</th><th>Chord</th><th>Notes (1 · 3 · 5)</th><th>Quality</th></tr>
+  <tr><td>1 · D</td><td><strong>D</strong></td><td>D · F♯ · A</td><td>major</td></tr>
+  <tr><td>2 · E</td><td><strong>Em</strong></td><td>E · G · B</td><td>minor</td></tr>
+  <tr><td>3 · F♯</td><td><strong>F♯m</strong></td><td>F♯ · A · C♯</td><td>minor</td></tr>
+  <tr><td>4 · G</td><td><strong>G</strong></td><td>G · B · D</td><td>major</td></tr>
+  <tr><td>5 · A</td><td><strong>A</strong></td><td>A · C♯ · E</td><td>major</td></tr>
+  <tr><td>6 · B</td><td><strong>Bm</strong></td><td>B · D · F♯</td><td>minor</td></tr>
+</table>
+
+<p>Look at the quality column: <strong>major, minor, minor, major, major,
+minor</strong>. That pattern is the same in <em>every</em> major key. In C it's
+C, Dm, Em, F, G, Am, and Lesson 6's four chords were numbers 1, 4, 5 and 6 of
+that list. In D, the same four are <strong>D, G, A, Bm</strong>.</p>
+
+<div data-chord="D" data-from="62" data-title="D — major (4, then 3)"
+     data-caption="D up four keys to F♯ (a black key), then three to A."></div>
+<div data-chord="Em" data-from="64" data-title="Em — minor (3, then 4)"
+     data-caption="All white keys. E up three to G, then four to B."></div>
+<div data-chord="F♯m" data-from="66" data-title="F♯m — minor (3, then 4)"
+     data-caption="Black, white, black. F♯ up three to A, then four to C♯."></div>
+<div data-chord="G" data-from="67" data-title="G — major (4, then 3)"
+     data-caption="All white keys. G up four to B, then three to D."></div>
+<div data-chord="A" data-from="69" data-title="A — major (4, then 3)"
+     data-caption="White, black, white. A up four to C♯, then three to E."></div>
+<div data-chord="Bm" data-from="71" data-title="Bm — minor (3, then 4)"
+     data-caption="White, white, black. B up three to D, then four to F♯."></div>
+
+<div id="chord-kb" data-keyboard data-from="48" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-chorddrill="name" data-kb="chord-kb"
+     data-chords="D Em F♯m G A Bm" data-rounds="12"
+     data-title="Symbol → chord, all six"
+     data-caption="Any octave, any order, all three notes. If you blank, build it from the rule: root, count 4 or 3, count 3 or 4. <strong>Spread</strong> under 60ms means the notes landed together as a chord."></div>
+
+<h2>Inversions: same chord, different note on the bottom</h2>
+
+<p>A chord is its three <em>letters</em>, not the order you stack them in. D, F♯
+and A make a D chord whichever one is lowest. Changing which note is on the
+bottom is called an <strong>inversion</strong>, and every three-note chord has
+three positions:</p>
+
+<table>
+  <tr><th>Position</th><th>On the bottom</th><th>Order, low → high</th><th>D chord</th></tr>
+  <tr><td><strong>Root position</strong></td><td>the root (1)</td><td>1 · 3 · 5</td><td>D · F♯ · A</td></tr>
+  <tr><td><strong>1st inversion</strong></td><td>the third (3)</td><td>3 · 5 · 1</td><td>F♯ · A · D</td></tr>
+  <tr><td><strong>2nd inversion</strong></td><td>the fifth (5)</td><td>5 · 1 · 3</td><td>A · D · F♯</td></tr>
+</table>
+
+<div class="callout">
+  <span class="callout-label">How to find one</span>
+  Play the chord in root position. Then <strong>take the bottom note and move it
+  up an octave</strong>, to the top. That's 1st inversion. Do it again and you have
+  2nd inversion. Do it a third time and you're back in root position, one octave
+  higher.
+</div>
+
+<div data-chord="D" data-from="62" data-inversion="0"
+     data-title="D — root position (1 · 3 · 5)"
+     data-caption="D on the bottom. A stack of two thirds: the shape your hand already knows."></div>
+<div data-chord="D" data-from="62" data-inversion="1"
+     data-title="D — 1st inversion (3 · 5 · 1)"
+     data-caption="The D moved up to the top. F♯ is on the bottom now. There's a wide gap at the top (A up to D), and that gap is how you recognise 1st inversion under your hand."></div>
+<div data-chord="D" data-from="62" data-inversion="2"
+     data-title="D — 2nd inversion (5 · 1 · 3)"
+     data-caption="F♯ moved up too. A is on the bottom. Now the wide gap is at the bottom (A up to D). Same three letters, still a D chord."></div>
+
+<p>The <strong>gap</strong> is the practical trick. In root position the three
+notes are evenly spaced. In each inversion, one gap is wider (a fourth instead of
+a third). In 1st inversion it's at the top; in 2nd inversion it's at the bottom.
+Your hand can feel that without you naming a single note.</p>
+
+<div id="walk-kb" data-keyboard data-from="48" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-chorddrill="inversion" data-kb="walk-kb"
+     data-chords="D Em F♯m G A Bm" data-order="walk" data-rounds="18"
+     data-title="Walk each chord up through its inversions"
+     data-caption="Root, 1st, 2nd for each of the six chords, in order. Each time, move the bottom note to the top. The grading checks <strong>which note ends up lowest</strong>, so press the keys in any order. If the bottom note is wrong, it tells you what you played and asks again."></div>
+
+<div id="inv-kb" data-keyboard data-from="48" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-chorddrill="inversion" data-kb="inv-kb"
+     data-chords="D Em F♯m G A Bm" data-rounds="12"
+     data-title="Any chord, any position"
+     data-caption="Now shuffled. Read the position next to the symbol, then work out which note goes lowest: <strong>root</strong> means the 1, <strong>1st inv</strong> means the 3, <strong>2nd inv</strong> means the 5. Find that note first, and build the other two above it."></div>
+
+<h2>Why bother: chords that hardly move</h2>
+
+<p>This is what inversions are <em>for</em>. Play D, G, A and Bm all in root
+position and your right hand jumps up and down the keyboard. Choose the right
+inversion of each, and the hand barely moves:</p>
+
+<table>
+  <tr><th>Chord</th><th>Right hand</th><th>Position</th><th>Left hand (held)</th></tr>
+  <tr><td><strong>D</strong></td><td>D · F♯ · A</td><td>root</td><td>D octave</td></tr>
+  <tr><td><strong>G</strong></td><td>D · G · B</td><td>2nd inversion</td><td>G octave</td></tr>
+  <tr><td><strong>A</strong></td><td>C♯ · E · A</td><td>1st inversion</td><td>A octave</td></tr>
+  <tr><td><strong>Bm</strong></td><td>D · F♯ · B</td><td>1st inversion</td><td>B octave</td></tr>
+</table>
+
+<p>Your thumb stays on D for three of the four chords. It's exactly the pattern
+from Lesson 8, moved to D: the left hand holds an octave, and the right hand plays
+the chord four times above it. The left hand plays each chord's root, so the
+right hand is free to use whichever inversion sits closest.</p>
+
+<div id="prog-staff" data-staff data-clefs="both"></div>
+<div id="prog-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="prog-staff" data-kb="prog-kb" data-bars="d-bars"
+     data-hands="both" data-hits="4"
+     data-title="D – G – A – Bm, both hands, no clock"
+     data-caption="Each column waits for you. Keep the left-hand octave down until the fourth chord of its bar. Holds are graded from a MIDI keyboard only."></div>
+
+<div id="prog-click-staff" data-staff data-clefs="both"></div>
+<div id="prog-click-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="prog-click-staff" data-kb="prog-click-kb" data-bars="d-bars"
+     data-hands="both" data-hits="4" data-loops="2"
+     data-clock="click" data-bpm="60"
+     data-title="D – G – A – Bm, against the click"
+     data-caption="Twice through at 60bpm, four clicks to count you in. <strong>In time</strong> means within 140ms of the click. If it falls apart, press −10. Steady and slow is the goal."></div>
+
+<script type="application/json" id="d-bars">
+[
+  { "name": "D",  "lh": [38, 50], "rh": [62, 66, 69] },
+  { "name": "G",  "lh": [43, 55], "rh": [62, 67, 71] },
+  { "name": "A",  "lh": [45, 57], "rh": [61, 64, 69] },
+  { "name": "Bm", "lh": [47, 59], "rh": [62, 66, 71] }
+]
+</script>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="d-quiz"></div>
+
+<script type="application/json" id="d-quiz">
+[
+  { "q": "The major scale recipe, in whole (W) and half (H) steps, is:",
+    "a": "W W H W W W H", "choices": ["W W H W W W H", "W H W W H W W", "W W W H W W H", "H W W W H W W"] },
+  { "q": "Which two notes are sharp in D major?",
+    "a": "F♯ and C♯", "choices": ["F♯ and C♯", "F♯ only", "C♯ and G♯", "F♯ and G♯"] },
+  { "q": "A major chord is spaced, in semitones:",
+    "a": "4, then 3", "choices": ["4, then 3", "3, then 4", "3, then 3", "4, then 4"] },
+  { "q": "Which three notes make an F♯ minor chord?",
+    "a": "F♯, A and C♯", "choices": ["F♯, A and C♯", "F♯, A♯ and C♯", "F♯, A and C", "F♯, B and C♯"] },
+  { "q": "Of the six chords in D, which are minor?",
+    "a": "Em, F♯m and Bm", "choices": ["Em, F♯m and Bm", "Em, Gm and Am", "F♯m and Bm only", "Dm, Em and Am"] },
+  { "q": "In 1st inversion, which note of the chord is on the bottom?",
+    "a": "The third", "choices": ["The third", "The root", "The fifth", "Any of them"] },
+  { "q": "A · D · F♯, lowest first, is a D chord in which position?",
+    "a": "2nd inversion", "choices": ["2nd inversion", "1st inversion", "Root position", "It isn't a D chord"] },
+  { "q": "How do you turn root position into 1st inversion?",
+    "a": "Move the bottom note up an octave", "choices": ["Move the bottom note up an octave", "Move the top note down an octave", "Raise the middle note a semitone", "Add the root again on top"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes. Two on the scale, saying the steps out loud. Three on
+<strong>symbol → chord</strong> until all six come without counting. Three on the
+inversion walk. Two on D – G – A – Bm, no clock. Bring the click in once the left
+hand is holding four bars out of four.</p>
+
+<p>Then try the walk on chords outside this lesson, like C, F and Am from Lesson
+6. The rule is the same for every chord: bottom note to the top.</p>
+
+<div class="ask-agent">
+  <strong>Ask me things.</strong> Good ones here: why the recipe puts the half
+  steps at 3–4 and 7–8, what the seventh chord in D is and why it was left off
+  the board, how to work out the scale of any other key (G is one sharp, A is
+  three), or how to choose an inversion by ear. If your teacher drew more chords
+  or keys on the board, send the photo and I'll add them.
+</div>
+
+<div class="nav">
+  <span><a href="0008-hold-and-pulse.html">← Lesson 8: Hold and pulse</a></span>
+  <span><a href="../index.html">Course index →</a></span>
+</div>
+
+<script>
+// Tint the eight scale keys on the static map. KeyboardWidget builds on
+// DOMContentLoaded, and this listener was registered after it, so the API exists.
+document.addEventListener("DOMContentLoaded", function () {
+  var m = document.getElementById("scale-map");
+  if (m && m.keyboard) m.keyboard.mark([62, 64, 66, 67, 69, 71, 73, 74], "kbd-hi");
+});
+</script>
+
+</body>
+</html>

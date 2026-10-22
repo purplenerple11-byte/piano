@@ -641,6 +641,9 @@ button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
 
 /* Highlight states. Marked !important so they beat the base fill regardless of
    which class was written first in the file. */
+/* "Play these next" — a quiet tint, written BEFORE .kbd-hi so a key you are
+   actually holding still shows in full accent on top of it. */
+.kbd-next { fill: var(--accent-soft) !important; stroke: var(--accent) !important; }
 .kbd-hi { fill: var(--accent) !important; stroke: var(--accent) !important; }
 .kbd-good { fill: var(--good) !important; stroke: var(--good) !important; }
 .kbd-bad { fill: var(--bad) !important; stroke: var(--bad) !important; }
@@ -893,6 +896,14 @@ button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
    the current note's position without hiding it. */
 .staff-cursor { fill: var(--accent); opacity: 0.14; }
 
+/* A left-hand hold: a line running from the struck note to the end of what it
+   has to be held under, piano-roll style. Dim until struck, accent while held,
+   then green if it lasted or red if the hand let go early. */
+.hold-line { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; opacity: 0.35; }
+.hold-line-on { stroke: var(--accent); opacity: 0.7; }
+.hold-line-good { stroke: var(--good); opacity: 0.75; }
+.hold-line-bad { stroke: var(--bad); opacity: 0.85; }
+
 /* Hint echo: the note you just played, popped onto the staff at the column you
    are actually reading, and animated. Bounces up and in, settles, then fades.
    transform-box:fill-box pins the scale to the group's own centre; WebKit (the
@@ -1050,6 +1061,17 @@ button, .quiz-choice-btn, .quiz-btn, .drill-btn, .drill-ans, .midi-btn, .card {
   color: var(--muted);
 }
 .chord-plus { color: var(--muted); font-size: 1rem; }
+
+/* Which position an inversion drill is asking for, riding next to the symbol. */
+.chord-inv {
+  font-size: 0.42em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 0.45em;
+  vertical-align: middle;
+}
 
 /* The chord coming next in a progression — deliberately small and dim. Looking
    ahead is the skill; shouting it would do the looking for you. */

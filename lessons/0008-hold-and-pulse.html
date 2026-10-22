@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Piano">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Lesson 8 · Hold and pulse</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/glass.js" defer></script>
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/rhythm.js"></script>
+<script src="../assets/holddrill.js"></script>
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<div class="kicker">Lesson 08 · Hold and pulse</div>
+<h1>The left hand holds, the right hand pulses</h1>
+<p class="subtitle">Four bars, four chords, and the first time your two hands do
+different things over the same stretch of time.</p>
+
+<h2>The pattern</h2>
+
+<p>Every bar works the same way. The <strong>left hand</strong> plays an octave
+once, on beat one, and <strong>holds it</strong>. Over that, the <strong>right
+hand</strong> plays a chord on every beat: one, two, three, four. Then both hands
+move to the next bar.</p>
+
+<table>
+  <tr><th>Bar</th><th>Left hand (held)</th><th>Right hand (×4)</th><th>Chord</th></tr>
+  <tr><td>1</td><td>C octave</td><td>C · E · G</td><td><strong>C</strong></td></tr>
+  <tr><td>2</td><td>F octave</td><td>C · F · A</td><td><strong>F</strong></td></tr>
+  <tr><td>3</td><td>G octave</td><td>D · G · B</td><td><strong>G</strong></td></tr>
+  <tr><td>4</td><td>A octave</td><td>C · E · A</td><td><strong>Am</strong></td></tr>
+</table>
+
+<p>Those are the same four chords as Lesson 6, in the order I–IV–V–vi. What's new
+is the <em>texture</em>: the left hand gives you the low end, and the right hand
+gives you the beat.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<h2>Left hand: octaves, pinky and thumb</h2>
+
+<p>An <strong>octave</strong> is the same letter eight white keys apart. Put your
+<strong>pinky</strong> on the low one and your <strong>thumb</strong> on the high
+one, and keep that stretch fixed. Then the whole hand moves as one shape: C to F,
+F to G, G to A. Look at the low note, and the thumb is already in place.</p>
+
+<p>The octaves here sit below middle C: C2–C3, F2–F3, G2–G3 and A2–A3. On the
+staff, the pinky's note is the lower of the two, down on the ledger lines.</p>
+
+<div id="lh-staff" data-staff data-clefs="both"></div>
+<div id="lh-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="lh-staff" data-kb="lh-kb" data-bars="bars"
+     data-hands="left" data-loops="2" data-show-keys="true"
+     data-title="Left hand alone — C, F, G, A octaves"
+     data-caption="Two times through. The next octave is tinted on the keyboard until it's under your hand. <strong>Spread</strong> is how far apart pinky and thumb land. Aim for one sound, not two."></div>
+
+<h2>Right hand: four chords that hardly move</h2>
+
+<p>You could play these as root-position triads, with C–E–G, F–A–C, G–B–D and
+A–C–E all stacked from the bottom. But then your right hand would leap up the
+keyboard every bar. Instead, each chord is rearranged (an
+<strong>inversion</strong>) so it stays close to the one before:</p>
+
+<div class="callout">
+  <span class="callout-label">Watch the thumb</span>
+  <strong>C → F:</strong> the thumb stays on C. The other two fingers each step up
+  one key (E→F, G→A).<br>
+  <strong>F → G:</strong> the whole shape shifts up one white key (C·F·A →
+  D·G·B).<br>
+  <strong>G → Am:</strong> back down, with the thumb returning to C.<br><br>
+  For three bars out of four, your thumb sits on <strong>middle C</strong>. The
+  left hand already plays each chord's name in the bass, so the right hand doesn't
+  need the root at the bottom. That's what an inversion buys you.
+</div>
+
+<div id="rh-staff" data-staff data-clefs="both"></div>
+<div id="rh-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="rh-staff" data-kb="rh-kb" data-bars="bars"
+     data-hands="right" data-hits="4" data-show-keys="true"
+     data-title="Right hand alone — each chord four times"
+     data-caption="Four strikes per chord, sixteen in all. Lift the hand just enough to re-strike, and keep the shape. The keys stay tinted, so watch the change between bars: which fingers move, and which stay put?"></div>
+
+<h2>Hands together: hold under the pulse</h2>
+
+<p>Here's the real skill. On beat one, both hands land together. Then the right
+hand lifts and strikes three more times, and <strong>the left hand stays
+down</strong>. Your hands will want to copy each other. Every time the right hand
+bounces, the left will want to bounce too. Don't let it.</p>
+
+<p>On the staff, the line after each left-hand octave shows how long it has to be
+held. It turns <span style="color:var(--accent)">blue</span> while you're holding,
+<span style="color:var(--good)">green</span> if you held through the fourth chord,
+and <span style="color:var(--bad)">red</span> if you let go early.</p>
+
+<div id="both-staff" data-staff data-clefs="both"></div>
+<div id="both-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="both-staff" data-kb="both-kb" data-bars="bars"
+     data-hands="both" data-hits="4"
+     data-title="Both hands — no clock"
+     data-caption="Take as long as you need. Each column waits for you. The left hand only counts as held if it's still down when the fourth chord lands. <strong>Holds are graded from a MIDI keyboard only</strong>, because on-screen taps can't hold one key while pressing others."></div>
+
+<h2>Now with the click</h2>
+
+<p>Same four bars, played twice through, against a metronome. Four clicks count
+you in. Then the left hand and the first chord land on the accented click, and
+the right hand plays one chord per click after that. Each note is graded in
+milliseconds against the beat, like Lesson 4. The left hand must still be down
+when the fourth click of its bar sounds. You can lift it right after that to
+move.</p>
+
+<div id="click-staff" data-staff data-clefs="both"></div>
+<div id="click-kb" data-keyboard data-from="36" data-octaves="3"
+     data-labels="none" data-groups="true" data-interactive="true"></div>
+
+<div data-holddrill
+     data-staff="click-staff" data-kb="click-kb" data-bars="bars"
+     data-hands="both" data-hits="4" data-loops="2"
+     data-clock="click" data-bpm="60"
+     data-title="Both hands — against the click"
+     data-caption="It starts at 60bpm, one chord per second. Missing? Press <strong>−10</strong>. Clean at 60? Go up 10 at a time. <strong>In time</strong> means within 140ms of the click. The chord coming next is named small under the current one. Read it during beat four, so your hands are already moving."></div>
+
+<script type="application/json" id="bars">
+[
+  { "name": "C",  "lh": [36, 48], "rh": [60, 64, 67] },
+  { "name": "F",  "lh": [41, 53], "rh": [60, 65, 69] },
+  { "name": "G",  "lh": [43, 55], "rh": [62, 67, 71] },
+  { "name": "Am", "lh": [45, 57], "rh": [60, 64, 69] }
+]
+</script>
+
+<h2>Check yourself</h2>
+
+<div class="retrieval-quiz" data-quiz="hold-quiz"></div>
+
+<script type="application/json" id="hold-quiz">
+[
+  { "q": "In this pattern, how many times does the left hand play per bar?",
+    "a": "Once, then holds", "choices": ["Once, then holds", "Four times, with the right", "Twice, on beats one and three", "Not at all on beat one"] },
+  { "q": "A left-hand octave is played with which two fingers?",
+    "a": "Pinky and thumb", "choices": ["Pinky and thumb", "Thumb and index", "Middle and pinky", "Index and ring"] },
+  { "q": "The right hand plays C·F·A over an F in the bass. Which chord is that?",
+    "a": "F major", "choices": ["F major", "C major", "A minor", "D minor"] },
+  { "q": "Which right-hand chord is the only one with no C in it?",
+    "a": "D·G·B (the G chord)", "choices": ["D·G·B (the G chord)", "C·F·A (the F chord)", "C·E·A (the Am chord)", "C·E·G (the C chord)"] },
+  { "q": "Why use C·F·A instead of F·A·C for the F chord here?",
+    "a": "The right hand barely moves from C", "choices": ["The right hand barely moves from C", "F·A·C is a different chord", "C·F·A is easier to read", "It's the only way to play F"] },
+  { "q": "Against the click, how long must the left hand stay down?",
+    "a": "Until the fourth beat of the bar", "choices": ["Until the fourth beat of the bar", "Only for beat one", "Until the next bar has started", "Until beat two"] }
+]
+</script>
+
+<h2>Between now and next time</h2>
+
+<p>Ten minutes. Two on the left-hand octaves until the hand jumps as a single
+shape. Three on the right-hand chords, saying which fingers move at each change.
+Five on the click drill. Start at 60, and go up only once <strong>holds
+kept</strong> reads four out of four and <strong>In time</strong> is above 80%.</p>
+
+<p>Then switch the drill off and just play it, round and round. Once that feels
+easy, try the right hand in rhythm: <em>one, two-and, three, four</em>. That's
+the same pattern, and it sounds like a song.</p>
+
+<div class="ask-agent">
+  <strong>Where this can go.</strong> Some next steps you can ask for: the same
+  pattern in another order (C–G–Am–F is Lesson 6's famous one), the right hand
+  in eighth notes, the left hand walking the octave (low, high, low, high), or
+  this exact texture under a melody. Tell me your <strong>tempo</strong> and
+  <strong>holds kept</strong> from the click drill, and I'll pitch the next one
+  to match.
+</div>
+
+<div class="nav">
+  <span><a href="0007-anchors.html">← Lesson 7: More anchors</a></span>
+  <span><a href="0009-key-of-d.html">Lesson 9: The key of D →</a></span>
+</div>
+
+</body>
+</html>

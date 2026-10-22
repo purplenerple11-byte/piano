@@ -23,7 +23,15 @@
 
    `pattern` is the only mode where ORDER matters, because the left-hand
    patterns are defined by their order — Alberti is lowest–highest–middle–highest
-   and playing those four notes in any other sequence is a different pattern. */
+   and playing those four notes in any other sequence is a different pattern.
+
+   `inversion` asks for a chord AND a position — root position, 1st or 2nd
+   inversion — and grades the set of pitch classes plus which one is LOWEST.
+   That is the whole definition of an inversion, so the order you press the keys
+   in doesn't matter, only what ends up on the bottom. Extra attributes:
+     data-inversions="0 1 2"     positions to ask for
+     data-order="walk"           walk: each chord through every position in turn;
+                                 random (default): chord and position shuffled */
 (function () {
   var TOGETHER = 60, LOOSE = 150;
 
@@ -52,6 +60,25 @@
     var syms = (mount.getAttribute("data-chords") || "C G Am F").trim().split(/\s+/);
     var rounds = parseInt(mount.getAttribute("data-rounds") || "8", 10);
     var patName = mount.getAttribute("data-pattern") || "block";
+    var invPool = (mount.getAttribute("data-inversions") || "0 1 2").trim().split(/\s+/).map(Number);
+    var walk = mount.getAttribute("data-order") === "walk";
+    var seq = [], seqIdx = 0, targetInv = 0;
+
+    // Inversion mode's question list: every chord × every position. A walk keeps
+    // them in order (D root, D 1st, D 2nd, Em root, …); random shuffles the lot
+    // but never asks the same thing twice running.
+    function buildSeq() {
+      var s = [];
+      syms.forEach(function (sym) { invPool.forEach(function (inv) { s.push({ sym: sym, inv: inv }); }); });
+      if (!walk) {
+        s = shuffle(s);
+        for (var i = 1; i < s.length; i++) {
+          if (s[i].sym === s[i - 1].sym && i + 1 < s.length) { var t = s[i]; s[i] = s[i + 1]; s[i + 1] = t; }
+        }
+      }
+      return s;
+    }
+    function invLabel(it) { return it.sym + " · " + window.Chords.INVERSIONS[it.inv]; }
     var kbEl = document.getElementById(mount.getAttribute("data-kb"));
     var kb = kbEl && kbEl.keyboard;
 
@@ -159,18 +186,38 @@
     function ask() {
       if (round >= rounds) return finish();
       round++;
-      target = nextSymbol();
+      if (mode === "inversion") {
+        if (seqIdx >= seq.length) { seq = buildSeq(); seqIdx = 0; }
+        var it = seq[seqIdx++];
+        target = it.sym;
+        targetInv = it.inv;
+      } else {
+        target = nextSymbol();
+      }
       hadError = false;
       cue.className = "drill-cue";
       cue.textContent = target;
+      if (mode === "inversion") {
+        // The position stays on screen in the cue; the line below it gets
+        // overwritten by feedback as soon as a note lands.
+        var inv = document.createElement("span");
+        inv.className = "chord-inv";
+        inv.textContent = ["root", "1st inv", "2nd inv"][targetInv];
+        cue.appendChild(inv);
+      }
       nextCue.textContent = mode === "progression"
-        ? "next: " + syms[round % syms.length] : "";
+        ? "next: " + syms[round % syms.length]
+        : mode === "inversion" && walk && round < rounds && seq[seqIdx]
+        ? "next: " + invLabel(seq[seqIdx]) : "";
       strikes = mode === "pattern" ? window.Chords.pattern(patName) : [[0, 1, 2]];
       strikeIdx = 0;
       armStrike();
       sub.className = "drill-sub";
       sub.textContent = mode === "pattern"
         ? (window.Chords.PATTERNS[patName] || {}).blurb || ""
+        : mode === "inversion"
+        ? window.Chords.INVERSIONS[targetInv].replace(/^./, function (c) { return c.toUpperCase(); }) +
+          " — the " + window.Chords.roles(targetInv)[0] + " goes on the bottom."
         : "Play it — any octave.";
       renderStats();
     }
@@ -229,9 +276,28 @@
       }
       want.done = true;
       want.at = performance.now();
+      want.midi = e.note;
       if (kb) kb.markPC(want.pc, "kbd-good");
 
       if (pending.some(function (p) { return !p.done; })) return;   // strike incomplete
+
+      if (mode === "inversion") {
+        var lowest = Math.min.apply(null, pending.map(function (p) { return p.midi; }));
+        var cps = window.Chords.pcs(target);
+        var gotInv = cps.indexOf(pcOf(lowest));
+        if (gotInv !== targetInv) {
+          // Right chord, wrong note underneath. Say what they did play, then let
+          // them try the same question again rather than moving on.
+          hadError = true;
+          sub.className = "drill-sub drill-sub-bad";
+          sub.textContent = "That's " + target + " in " + window.Chords.INVERSIONS[gotInv] +
+            " — " + window.Chords.nameOfPc(lowest) + " was on the bottom. " +
+            window.Chords.INVERSIONS[targetInv].replace(/^./, function (c) { return c.toUpperCase(); }) +
+            " wants " + window.Chords.nameOfPc(cps[targetInv]) + " lowest.";
+          setTimeout(function () { if (running) armStrike(); }, 900);
+          return;
+        }
+      }
 
       // Strike finished. Report spread only when it asked for more than one note.
       if (pending.length > 1) {
@@ -266,6 +332,11 @@
           : ch > 3 ? "Slow the changes down and look ahead — read the NEXT chord while the current one is still ringing."
           : "Getting there. The change is the skill, not the chord.";
         sub.textContent = pct + "% clean, median change " + ch.toFixed(2) + "s";
+      } else if (mode === "inversion") {
+        cue.textContent = pct >= 80 ? "You can put any note of the chord on the bottom."
+          : "Build it in root position first, then move the bottom note up an octave — once for 1st, twice for 2nd.";
+        sub.textContent = pct + "% right first time" +
+          (spreads.length ? ", spread " + Math.round(median(spreads)) + "ms" : "");
       } else {
         cue.textContent = pct >= 80 ? "Solid. Take it to the progression."
                                     : "Say the notes out loud as you play them.";
@@ -282,6 +353,7 @@
       startBtn.textContent = "Stop";
       round = 0; done = 0; correct = 0; spreads = []; changes = []; queue = [];
       target = null; lastDoneAt = 0;
+      seq = buildSeq(); seqIdx = 0;
       ask();
     };
 
