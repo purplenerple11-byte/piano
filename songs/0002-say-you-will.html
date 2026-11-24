@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Piano">
+<link rel="icon" href="../icons/icon-192.png">
+<title>Guided song · Say You Will</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/glass.js" defer></script>
+<script src="../assets/midi.js"></script>
+<script src="../assets/keyboard.js"></script>
+<script src="../assets/staff.js"></script>
+<script src="../assets/drillcore.js"></script>
+<script src="../assets/staffdrill.js"></script>
+<script src="../assets/songplayer.js"></script>
+</head>
+<body>
+
+<div class="kicker">Guided song</div>
+<h1>Say You Will</h1>
+<p class="subtitle">Kanye West, from 808s &amp; Heartbreak. Four chords in C minor,
+going round and round. Learn them and you can play the whole song's harmony.</p>
+
+<div class="callout">
+  <span class="callout-label">What this is, honestly</span>
+  There's no MIDI for this one, so this page teaches the <strong>chords</strong>,
+  not the vocal melody. The key and progression come from published analyses
+  (Hooktheory and Chordify both list C minor): <strong>A♭maj7 → Fm → Dm7♭5 → G7</strong>,
+  looped. The left-hand roots are exact. The right-hand shapes are my voicings,
+  picked so your hand barely moves. The record's synths voice them their own way.
+  <br><br>
+  If you send me a MIDI or sheet music, I can add the melody the same way
+  <a href="0001-never-see-me-again.html">Never See Me Again</a> has it.
+</div>
+
+<h2>Connect first</h2>
+
+<p>Plug in and connect so it grades what you actually play. No keyboard to hand?
+Tap the on-screen keys. On iPad, see <a href="../index.html#ipad">the setup
+notes</a>.</p>
+
+<div data-midi-bar data-diag="../diag.html"></div>
+
+<h2>The idea in one minute</h2>
+
+<p>The loop is a slow walk down: <strong>A♭ → F → D → G</strong> in the bass.
+G7 at the end pulls you back to the start. That pull is what makes the song
+feel like it never resolves.</p>
+
+<p>Two tricks make it easy under the hand:</p>
+
+<ul>
+  <li><strong>A♭maj7 is just C minor with A♭ underneath.</strong> Left hand plays
+  A♭, right hand plays C–E♭–G. You already know that triad.</li>
+  <li><strong>Fm and Dm7♭5 use the same right hand.</strong> C–F–A♭ stays put.
+  Only the left hand moves, F down to D. Same three notes on top, darker sound,
+  because the bass changed.</li>
+</ul>
+
+<p>For G7, move two fingers: C goes up to D, A♭ goes up to B. F stays.
+That B is the note that wants to climb back to C, which pulls you round to the top.</p>
+
+<h2>How this works</h2>
+
+<p>First each hand alone, as short lines. Press <strong>Start</strong> and play
+each note as the cursor reaches it. Right notes go green, wrong ones red. Turn on
+<strong>Hints</strong> if a position won't stick. The drill grades notes, not speed,
+so go slow. The record sits around ♩=87, which is already relaxed.</p>
+
+<p>Then the last block puts both hands together, one chord per column, twice
+through the loop.</p>
+
+<div id="song" data-song data-song-src="song-data"></div>
+
+<script type="application/json" id="song-data">
+{
+  "sections": [
+    { "title": "Left hand · the four roots",
+      "notes": [44, 41, 38, 43, 44, 41, 38, 43],
+      "note": "A♭ F D G, twice. Low on the keyboard, the second octave down from middle C. Every step goes down except the last, which hops up to G." },
+    { "title": "Right hand · A♭maj7 and Fm",
+      "notes": [60, 63, 67, 60, 65, 68],
+      "note": "Played as broken chords, bottom note first. C E♭ G is the top of A♭maj7. Then keep your thumb on C and move up: C F A♭ is Fm." },
+    { "title": "Right hand · Dm7♭5 and G7",
+      "notes": [60, 65, 68, 62, 65, 71],
+      "note": "C F A♭ again, the same shape, because Dm7♭5 shares it. Then G7: D F B. Thumb goes up one step to D, pinky goes up to B." }
+  ],
+  "chordsTitle": "Both hands — the loop",
+  "chordsNote": "Now together. The left hand plays the root, the right hand the shape above it. Twice through: A♭maj7, Fm, Dm7♭5, G7. Watch the second and third columns. Your right hand doesn't move, only the bass.",
+  "chords": [
+    { "treble": [60, 63, 67], "bass": [44] },
+    { "treble": [60, 65, 68], "bass": [41] },
+    { "treble": [60, 65, 68], "bass": [38] },
+    { "treble": [62, 65, 71], "bass": [43] },
+    { "treble": [60, 63, 67], "bass": [44] },
+    { "treble": [60, 65, 68], "bass": [41] },
+    { "treble": [60, 65, 68], "bass": [38] },
+    { "treble": [62, 65, 71], "bass": [43] }
+  ]
+}
+</script>
+
+<div class="ask-agent">
+  <strong>Want more?</strong> Things I can add: the melody (send a MIDI or sheet),
+  a slow-pulse version where you hold each chord for four counts like Lesson 8,
+  or a rhythm pattern for the left hand. Tell me which.
+</div>
+
+<div class="nav">
+  <span><a href="../index.html">← Course index</a></span>
+</div>
+
+</body>
+</html>
