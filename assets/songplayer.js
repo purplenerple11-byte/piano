@@ -50,11 +50,14 @@
     return d;
   }
 
+  var spelling = null;   // set per song from its "spelling" field ("flat" for flat keys)
+
   function makeStaff(id, clefs) {
     var d = el("div");
     d.id = id;
     d.setAttribute("data-staff", "");
     d.setAttribute("data-clefs", clefs);
+    if (spelling) d.setAttribute("data-spelling", spelling);
     return d;
   }
 
@@ -205,6 +208,7 @@
     var song = JSON.parse(srcEl.textContent);
     var sections = song.sections || [];
     if (!sections.length) return;
+    spelling = song.spelling || null;
 
     mount.innerHTML = "";
     var idBase = mount.id || "song";

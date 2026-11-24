@@ -115,9 +115,10 @@
     return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
   }
 
-  function nameOf(midi) {
-    var info = window.StaffWidget.stepOf(midi);
-    return info.letter + (info.sharp ? "♯" : "") + info.octave;
+  // Spell through the drill's staff when there is one, so a flat-key staff names A♭, not G♯.
+  function nameOf(midi, staff) {
+    var info = (staff && staff.stepOf ? staff.stepOf : window.StaffWidget.stepOf)(midi);
+    return info.letter + (info.sharp ? "♯" : info.flat ? "♭" : "") + info.octave;
   }
 
   function samePC(a, b) { return (((a % 12) + 12) % 12) === (((b % 12) + 12) % 12); }
@@ -367,13 +368,13 @@
       if (kb) { if (!ok) kb.mark(e.note, "kbd-bad"); kb.mark(want, "kbd-good"); }
       if (ok) {
         sub.className = "drill-sub drill-sub-good";
-        sub.textContent = nameOf(want) + " — " + (ms / 1000).toFixed(2) + "s";
+        sub.textContent = nameOf(want, staff) + " — " + (ms / 1000).toFixed(2) + "s";
       } else {
         sub.className = "drill-sub drill-sub-bad";
         sub.textContent = rightLetter
-          ? "Right letter, wrong octave. That was " + nameOf(e.note) +
-            "; the staff says " + nameOf(want) + "."
-          : "That was " + nameOf(e.note) + ". The staff says " + nameOf(want) + ".";
+          ? "Right letter, wrong octave. That was " + nameOf(e.note, staff) +
+            "; the staff says " + nameOf(want, staff) + "."
+          : "That was " + nameOf(e.note, staff) + ". The staff says " + nameOf(want, staff) + ".";
       }
       score(ok, ms);
     });
@@ -579,9 +580,9 @@
         if (kb) kb.mark(e.note, "kbd-bad");
         sub.className = "drill-sub drill-sub-bad";
         sub.textContent = samePC(e.note, want)
-          ? "Right letter, wrong octave — " + nameOf(e.note) +
+          ? "Right letter, wrong octave — " + nameOf(e.note, staff) +
             " names it but at the wrong end. Play the one on the staff."
-          : "Not it — that was " + nameOf(e.note) +
+          : "Not it — that was " + nameOf(e.note, staff) +
             ". Read it as a step or skip from the note before, and try again.";
         // Stuck twice on the same note: reveal the key so a line never dead-ends.
         if (missesHere >= 2 && kb) kb.mark(want, "kbd-good");

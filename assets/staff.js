@@ -49,18 +49,20 @@
 
   /* Diatonic step of a MIDI note. Black keys have no step of their own, so they
      borrow the step below and carry a sharp — which is exactly how notation
-     treats them. */
-  function stepOf(midi) {
+     treats them. Flat keys (a staff with data-spelling="flat") borrow the step
+     above and carry a flat instead: A♭ sits on the A line, not the G. */
+  function stepOf(midi, flat) {
     var pc = ((midi % 12) + 12) % 12;
     var oct = Math.floor(midi / 12) - 1;
     var deg = DEGREE[pc];
-    var sharp = false;
-    if (deg === null) { deg = DEGREE[pc - 1]; sharp = true; }
-    return { step: oct * 7 + deg, sharp: sharp, letter: LETTER[deg], octave: oct };
+    var sharp = false, isFlat = false;
+    if (deg === null && flat) { deg = DEGREE[pc + 1]; isFlat = true; }
+    else if (deg === null) { deg = DEGREE[pc - 1]; sharp = true; }
+    return { step: oct * 7 + deg, sharp: sharp, flat: isFlat, letter: LETTER[deg], octave: oct };
   }
 
-  function yFor(midi, clef) {
-    var s = stepOf(midi).step;
+  function yFor(midi, clef, flat) {
+    var s = stepOf(midi, flat).step;
     return clef === "bass"
       ? BASS_BOTTOM - (s - 18) * HALF
       : TREBLE_BOTTOM - (s - 30) * HALF;
@@ -92,6 +94,9 @@
     var clefs = mount.getAttribute("data-clefs") || "both";
     var showTreble = clefs === "both" || clefs === "treble";
     var showBass = clefs === "both" || clefs === "bass";
+    var flat = mount.getAttribute("data-spelling") === "flat";
+    function spell(midi) { return stepOf(midi, flat); }
+    function yAt(midi, clef) { return yFor(midi, clef, flat); }
 
     mount.classList.add("staff-box");
     var titleText = mount.getAttribute("data-title");
@@ -196,7 +201,7 @@
        Drawn on every OTHER diatonic step (i.e. each full line position) between
        the staff edge and the note. */
     function ledgers(layer, midi, clef, x) {
-      var s = stepOf(midi).step;
+      var s = spell(midi).step;
       var bottomStep = clef === "bass" ? 18 : 30;
       var topStep = bottomStep + 8;
       var y;
@@ -218,17 +223,17 @@
     }
 
     function drawNote(layer, midi, clef, x, cls, label) {
-      var y = yFor(midi, clef);
-      var info = stepOf(midi);
+      var y = yAt(midi, clef);
+      var info = spell(midi);
       ledgers(layer, midi, clef, x);
       var head = el("ellipse", {
         class: "staff-note " + (cls || ""), cx: x, cy: y, rx: 7.6, ry: 5.6,
         transform: "rotate(-18 " + x + " " + y + ")"
       });
       layer.appendChild(head);
-      if (info.sharp) {
+      if (info.sharp || info.flat) {
         var acc = el("text", { class: "staff-acc", x: x - 16, y: y + 5 });
-        acc.textContent = "♯";
+        acc.textContent = info.flat ? "♭" : "♯";
         layer.appendChild(acc);
       }
       if (label) {
@@ -240,8 +245,8 @@
     }
 
     var api = {
-      yFor: yFor,
-      stepOf: stepOf,
+      yFor: yAt,
+      stepOf: spell,
       show: function (midi, clef, cls) {
         noteLayer.innerHTML = "";
         return drawNote(noteLayer, midi, clef || "treble", NOTE_X, cls || "");
@@ -391,7 +396,7 @@
         drawNote(g, midi, useClef,
                  typeof opts.x === "number" ? opts.x : NOTE_X,
                  verdict ? "staff-note-" + verdict : "staff-note-hint",
-                 stepOf(midi).letter);
+                 spell(midi).letter);
         var gone = function () { if (g.parentNode) g.parentNode.removeChild(g); };
         g.addEventListener("animationend", gone);
         setTimeout(gone, 1500);   // belt-and-braces if animationend never fires

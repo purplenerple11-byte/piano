@@ -26,19 +26,19 @@
 
 <div class="kicker">Guided song</div>
 <h1>Say You Will</h1>
-<p class="subtitle">Kanye West, from 808s &amp; Heartbreak. Four chords in C minor,
-going round and round. Learn them and you can play the whole song's harmony.</p>
+<p class="subtitle">Kanye West, from 808s &amp; Heartbreak. Nine chords in C minor,
+first each hand alone, then both together.</p>
 
 <div class="callout">
   <span class="callout-label">What this is, honestly</span>
-  There's no MIDI for this one, so this page teaches the <strong>chords</strong>,
-  not the vocal melody. The key and progression come from published analyses
-  (Hooktheory and Chordify both list C minor): <strong>A♭maj7 → Fm → Dm7♭5 → G7</strong>,
-  looped. The left-hand roots are exact. The right-hand shapes are my voicings,
-  picked so your hand barely moves. The record's synths voice them their own way.
+  The chords and voicings here come from the chord chart you sent, in its order:
+  <strong>Cm → Fm/C → B♭ → E♭ → A♭maj7 → Fm7 → D dim → C → G7♭9</strong>. It's
+  in C minor, which matches Hooktheory and Chordify. This page teaches the
+  <strong>chords</strong>, not the vocal melody. There's no MIDI for this one, and
+  I won't guess the tune.
   <br><br>
-  If you send me a MIDI or sheet music, I can add the melody the same way
-  <a href="0001-never-see-me-again.html">Never See Me Again</a> has it.
+  Your chart didn't give a bass note for chord 8, just a single C. So chord 8 is
+  one right-hand note with no left hand. If you find out what goes there, tell me.
 </div>
 
 <h2>Connect first</h2>
@@ -51,59 +51,66 @@ notes</a>.</p>
 
 <h2>The idea in one minute</h2>
 
-<p>The loop is a slow walk down: <strong>A♭ → F → D → G</strong> in the bass.
-G7 at the end pulls you back to the start. That pull is what makes the song
-feel like it never resolves.</p>
-
-<p>Two tricks make it easy under the hand:</p>
+<p>The song has two halves.</p>
 
 <ul>
-  <li><strong>A♭maj7 is just C minor with A♭ underneath.</strong> Left hand plays
-  A♭, right hand plays C–E♭–G. You already know that triad.</li>
-  <li><strong>Fm and Dm7♭5 use the same right hand.</strong> C–F–A♭ stays put.
-  Only the left hand moves, F down to D. Same three notes on top, darker sound,
-  because the bass changed.</li>
+  <li><strong>Chords 1–4</strong> sit near home: Cm, then Fm over a C bass, then
+  B♭ and E♭. The left hand holds C for two chords, then steps to B♭ and up to E♭.</li>
+  <li><strong>Chords 5–9</strong> walk the bass down: <strong>A♭ → F → D</strong>,
+  then the lone C, then <strong>G</strong>. G7♭9 at the end pulls hard back to Cm,
+  so the loop starts again.</li>
 </ul>
 
-<p>For G7, move two fingers: C goes up to D, A♭ goes up to B. F stays.
-That B is the note that wants to climb back to C, which pulls you round to the top.</p>
+<p>Things that make it easier under the hand:</p>
+
+<ul>
+  <li><strong>A♭maj7 is C minor with A♭ underneath.</strong> Right hand plays
+  C–E♭–G, the same notes as the Cm you opened with.</li>
+  <li><strong>Fm7 → D dim → G7♭9 keep F and A♭ on the bottom.</strong> Thumb on F,
+  next finger on A♭, for all three. Only the top changes: C–E♭, then D, then B–D.</li>
+  <li><strong>The B in G7♭9</strong> is the note that wants to climb to C. That's
+  what makes the end of the loop feel like it has to come back round.</li>
+</ul>
 
 <h2>How this works</h2>
 
-<p>First each hand alone, as short lines. Press <strong>Start</strong> and play
-each note as the cursor reaches it. Right notes go green, wrong ones red. Turn on
-<strong>Hints</strong> if a position won't stick. The drill grades notes, not speed,
-so go slow. The record sits around ♩=87, which is already relaxed.</p>
+<p>Each hand alone first, as short lines. The right-hand chords are played as
+broken chords, bottom note up. Press <strong>Start</strong> and play each note
+as the cursor reaches it. Right notes go green, wrong ones red. Turn on
+<strong>Hints</strong> if a position won't stick. It grades notes, not speed,
+so go slow. The record sits around ♩=87.</p>
 
-<p>Then the last block puts both hands together, one chord per column, twice
-through the loop.</p>
+<p>Then the last block puts both hands together, one chord per column. Hold the
+whole chord down at once.</p>
 
 <div id="song" data-song data-song-src="song-data"></div>
 
 <script type="application/json" id="song-data">
 {
+  "spelling": "flat",
   "sections": [
-    { "title": "Left hand · the four roots",
-      "notes": [44, 41, 38, 43, 44, 41, 38, 43],
-      "note": "A♭ F D G, twice. Low on the keyboard, the second octave down from middle C. Every step goes down except the last, which hops up to G." },
-    { "title": "Right hand · A♭maj7 and Fm",
-      "notes": [60, 63, 67, 60, 65, 68],
-      "note": "Played as broken chords, bottom note first. C E♭ G is the top of A♭maj7. Then keep your thumb on C and move up: C F A♭ is Fm." },
-    { "title": "Right hand · Dm7♭5 and G7",
-      "notes": [60, 65, 68, 62, 65, 71],
-      "note": "C F A♭ again, the same shape, because Dm7♭5 shares it. Then G7: D F B. Thumb goes up one step to D, pinky goes up to B." }
+    { "title": "Left hand · the bass line",
+      "notes": [48, 48, 46, 51, 44, 41, 38, 43],
+      "note": "C C B♭ E♭, then A♭ F D G. Chord 8 has no bass note, so it's skipped here. The first C is the one just below middle C. From A♭ on it walks down, then hops up to G." },
+    { "title": "Right hand · chords 1–4",
+      "notes": [67, 72, 75, 79, 68, 72, 77, 70, 74, 77, 70, 75, 79],
+      "note": "Cm: G C E♭ G. Fm/C: A♭ C F. B♭: B♭ D F. E♭: B♭ E♭ G. All above middle C. Notice B♭ and E♭ share the B♭ on the bottom." },
+    { "title": "Right hand · chords 5–9",
+      "notes": [72, 75, 79, 65, 68, 72, 75, 65, 68, 74, 72, 65, 68, 71, 74],
+      "note": "A♭maj7: C E♭ G. Then drop down for Fm7: F A♭ C E♭. D dim: F A♭ D. The lone C. G7♭9: F A♭ B D. From Fm7 on, F and A♭ stay under your thumb and second finger." }
   ],
-  "chordsTitle": "Both hands — the loop",
-  "chordsNote": "Now together. The left hand plays the root, the right hand the shape above it. Twice through: A♭maj7, Fm, Dm7♭5, G7. Watch the second and third columns. Your right hand doesn't move, only the bass.",
+  "chordsTitle": "Both hands — the whole progression",
+  "chordsNote": "Now together, all nine chords. Left hand the bass, right hand the chord. Chord 8 is the single C in the right hand, with no left hand.",
   "chords": [
-    { "treble": [60, 63, 67], "bass": [44] },
-    { "treble": [60, 65, 68], "bass": [41] },
-    { "treble": [60, 65, 68], "bass": [38] },
-    { "treble": [62, 65, 71], "bass": [43] },
-    { "treble": [60, 63, 67], "bass": [44] },
-    { "treble": [60, 65, 68], "bass": [41] },
-    { "treble": [60, 65, 68], "bass": [38] },
-    { "treble": [62, 65, 71], "bass": [43] }
+    { "treble": [67, 72, 75, 79], "bass": [48] },
+    { "treble": [68, 72, 77], "bass": [48] },
+    { "treble": [70, 74, 77], "bass": [46] },
+    { "treble": [70, 75, 79], "bass": [51] },
+    { "treble": [72, 75, 79], "bass": [44] },
+    { "treble": [65, 68, 72, 75], "bass": [41] },
+    { "treble": [65, 68, 74], "bass": [38] },
+    { "treble": [72], "bass": [] },
+    { "treble": [65, 68, 71, 74], "bass": [43] }
   ]
 }
 </script>
@@ -111,7 +118,7 @@ through the loop.</p>
 <div class="ask-agent">
   <strong>Want more?</strong> Things I can add: the melody (send a MIDI or sheet),
   a slow-pulse version where you hold each chord for four counts like Lesson 8,
-  or a rhythm pattern for the left hand. Tell me which.
+  or the real bass note for chord 8 once you know it. Tell me which.
 </div>
 
 <div class="nav">
